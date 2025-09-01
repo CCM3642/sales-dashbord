@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ar">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Dashboard - Crispy Chicken (Cancellations & Refunds)</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"/>
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css"/>
+<style>
+  body{padding:18px;font-family:Arial,Helvetica,sans-serif}
+  .card{margin-bottom:14px}
+  .rtl{direction:rtl;text-align:right}
+</style>
+</head>
+<body class="rtl">
+<div class="container-fluid">
+  <h3 class="mb-3">Dashboard – إلغاءات & تعويضات (Crispy Chicken)</h3>
+
+  <!-- Controls -->
+  <div class="row mb-2">
+    <div class="col-md-4">
+      <select id="branchFilter" class="form-select">
+        <option value="">كل الفروع</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <select id="channelFilter" class="form-select">
+        <option value="">كل القنوات</option>
+      </select>
+    </div>
+    <div class="col-md-4 text-start">
+      <button id="downloadCSV" class="btn btn-primary">تصدير CSV</button>
+      <button id="downloadExcel" class="btn btn-outline-secondary">تصدير Excel</button>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="row">
+    <div class="col-md-3"><div class="card p-2"><strong>إجمالي المبلغ</strong><div id="sumAmount">-</div></div></div>
+    <div class="col-md-3"><div class="card p-2"><strong>إجمالي الخصومات</strong><div id="sumDeducted">-</div></div></div>
+    <div class="col-md-3"><div class="card p-2"><strong>عدد الأوامر</strong><div id="countOrders">-</div></div></div>
+    <div class="col-md-3"><div class="card p-2"><strong>متوسط الطلب</strong><div id="avgAmount">-</div></div></div>
+  </div>
+
+  <!-- Charts -->
+  <div class="row mt-3">
+    <div class="col-md-6"><div class="card p-3"><canvas id="barChart"></canvas></div></div>
+    <div class="col-md-6"><div class="card p-3"><canvas id="doughnutChart"></canvas></div></div>
+  </div>
+
+  <!-- Table -->
+  <div class="row mt-3">
+    <div class="col-12">
+      <table id="ordersTable" class="display nowrap" style="width:100%">
+        <thead>
+          <tr>
+            <th>Order ID</th><th>Outlet Area</th><th>Order Date</th><th>Basket</th><th>Refund</th><th>Status</th><th>Reason</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyData"></tbody>
+        <tfoot>
+          <tr><th colspan="3">المجموع</th><th id="tfootBasket"></th><th id="tfootRefund"></th><th colspan="2"></th></tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- libs -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+/* ----- SAMPLE DATA (استبدلها ببياناتك) ----- */
+const data = [
+  { id:127619367, area:'Al Danah', date:'31 Aug 2025 17:21', basket:21.6, refund:-20, status:'Deducted', reason:'Missing or unavailable items' },
+  { id:127614385, area:'Al Markaziyah', date:'31 Aug 2025 16:45', basket:16.2, refund:-5, status:'Deducted', reason:'Missing or unavailable items' },
+  { id:127601866, area:'Al Danah', date:'31 Aug 2025 15:12', basket:23.68, refund:-9, status:'Deducted', reason:'Missing or unavailable items' },
+  /* ... انسخ باقي صفوفك هنا بنفس الصيغة ... */
+];
+
+/* ---- populate filters ---- */
+const branches = [...new Set(data.map(r=>r.area))].sort();
+branches.forEach(b=>$('#branchFilter').append(`<option value="${b}">${b}</option>`));
+
+/* ---- render table ---- */
+function renderTable(filtered){
+  const tbody = $('#tbodyData').empty();
+  let sumB=0, sumR=0;
+  filtered.forEach(r=>{
+    tbody.append(`<tr>
+      <td>${r.id}</td>
+      <td>${r.area}</td>
+      <td>${r.date}</td>
+      <td class="num">${r.basket.toFixed(2)}</td>
+      <td class="num">${r.refund.toFixed(2)}</td>
+      <td>${r.status}</td>
+      <td>${r.reason}</td>
+    </tr>`);
+    sumB += r.basket; sumR += r.refund;
+  });
+  $('#tfootBasket').text(sumB.toFixed(2));
+  $('#tfootRefund').text(sumR.toFixed(2));
+  $('#sumAmount').text(sumB.toFixed(2)+' AED');
+  $('#sumDeducted').text(sumR.toFixed(2)+' AED');
+  $('#countOrders').text(filtered.length);
+  $('#avgAmount').text(filtered.length? (sumB/filtered.length).toFixed(2)+' AED' : '-');
+
+  // init / reinit DataTable with export buttons
+  if ($.fn.DataTable.isDataTable('#ordersTable')) { $('#ordersTable').DataTable().destroy(); }
+  $('#ordersTable').DataTable({
+    dom: 'Bfrtip',
+    buttons: [
+      { extend: 'csvHtml5', text: 'CSV' },
+      { extend: 'excelHtml5', text: 'Excel' }
+    ],
+    paging:true,
+    order:[[2,'desc']]
+  });
+}
+
+/* ---- charts ---- */
+let barChart, doughnutChart;
+function redrawCharts(filtered){
+  // aggregated by branch: total basket and total refunds
+  const agg = {};
+  filtered.forEach(r=>{
+    if(!agg[r.area]) agg[r.area]={basket:0,refund:0,count:0};
+    agg[r.area].basket += r.basket; agg[r.area].refund += r.refund; agg[r.area].count++;
+  });
+  const labels = Object.keys(agg);
+  const baskets = labels.map(l=>agg[l].basket.toFixed(2));
+  const refunds = labels.map(l=>Math.abs(agg[l].refund.toFixed(2)));
+
+  const ctx1 = document.getElementById('barChart').getContext('2d');
+  if(barChart) barChart.destroy();
+  barChart = new Chart(ctx1, {
+    type:'bar',
+    data:{ labels, datasets:[
+      { label:'Total Basket (AED)', data:baskets },
+      { label:'Total Deducted (AED)', data:refunds }
+    ]},
+    options:{ responsive:true, plugins:{legend:{position:'top'}} }
+  });
+
+  const ctx2 = document.getElementById('doughnutChart').getContext('2d');
+  if(doughnutChart) doughnutChart.destroy();
+  doughnutChart = new Chart(ctx2, {
+    type:'doughnut',
+    data:{ labels, datasets:[{ data: baskets, label:'Basket by Branch' }]},
+    options:{ responsive:true }
+  });
+}
+
+/* ---- filters handlers ---- */
+function applyFilters(){
+  const branch = $('#branchFilter').val();
+  let filtered = data.slice();
+  if(branch) filtered = filtered.filter(r=>r.area===branch);
+  renderTable(filtered);
+  redrawCharts(filtered);
+}
+
+$(document).ready(function(){
+  // initial render
+  applyFilters();
+
+  $('#branchFilter').on('change', applyFilters);
+
+  // export custom buttons (download CSV /Excel)
+  $('#downloadCSV').on('click', function(){
+    $('#ordersTable').DataTable().button(0).trigger();
+  });
+  $('#downloadExcel').on('click', function(){
+    $('#ordersTable').DataTable().button(1).trigger();
+  });
+});
+</script>
+</body>
+</html>
