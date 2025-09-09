@@ -1,983 +1,663 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enhanced Message Tracking System</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <style>
-    :root {
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --primary-light: #dbeafe;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --info: #06b6d4;
-      --bg: #f8fafc;
-      --surface: #ffffff;
-      --text-primary: #1e293b;
-      --text-secondary: #64748b;
-      --border: #e2e8f0;
-      --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-      --whatsapp: #25D366;
-      --whatsapp-dark: #128C7E;
-      --crispy-red: #ff6b6b;
-      --crispy-orange: #feca57;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام تتبع الرسائل المتكامل</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #06b6d4;
+            --whatsapp: #25D366;
+            --whatsapp-dark: #128C7E;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background-color: var(--bg);
-      color: var(--text-primary);
-      line-height: 1.6;
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
 
-    .main-container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
+        .navbar-custom {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            box-shadow: var(--shadow-lg);
+        }
 
-    .page-header {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      color: white;
-      padding: 2rem 0;
-      margin-bottom: 2rem;
-      box-shadow: var(--shadow-lg);
-    }
+        .sidebar {
+            background: var(--surface);
+            border-left: 1px solid var(--border);
+            box-shadow: var(--shadow-lg);
+            height: calc(100vh - 76px);
+            position: fixed;
+            top: 76px;
+            right: 0;
+            width: 280px;
+            padding: 1.5rem;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
 
-    .page-title {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
+        .sidebar.collapsed {
+            transform: translateX(100%);
+        }
 
-    .page-subtitle {
-      opacity: 0.9;
-      font-size: 1.1rem;
-    }
+        .main-content {
+            margin-right: 280px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
 
-    /* Card styles */
-    .card {
-      background: var(--surface);
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      transition: all 0.2s ease;
-      margin-bottom: 1.5rem;
-    }
+        .main-content.expanded {
+            margin-right: 0;
+        }
 
-    .card:hover {
-      box-shadow: var(--shadow-lg);
-      transform: translateY(-2px);
-    }
+        .stat-card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
 
-    .card-header {
-      padding: 1.5rem;
-      border-bottom: 1px solid var(--border);
-      background: var(--surface);
-    }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
 
-    .card-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 0;
-    }
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
 
-    .card-body {
-      padding: 1.5rem;
-    }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
 
-    /* Stats grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
 
-    .stat-card {
-      background: var(--surface);
-      border-radius: 12px;
-      padding: 1.5rem;
-      border: 1px solid var(--border);
-      position: relative;
-      overflow: hidden;
-    }
+        .card-header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1.2rem 1.5rem;
+        }
 
-    .stat-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 4px;
-      height: 100%;
-    }
+        .card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
 
-    .stat-card.sent::before { background: var(--success); }
-    .stat-card.pending::before { background: var(--warning); }
-    .stat-card.failed::before { background: var(--danger); }
-    .stat-card.delivered::before { background: var(--info); }
-    .stat-card.whatsapp::before { background: var(--whatsapp); }
-    .stat-card.crispy::before { background: var(--crispy-red); }
-    .stat-card.customers::before { background: var(--primary); }
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+        }
 
-    .stat-value {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 1rem 0;
+        }
 
-    .stat-card.sent .stat-value { color: var(--success); }
-    .stat-card.pending .stat-value { color: var(--warning); }
-    .stat-card.failed .stat-value { color: var(--danger); }
-    .stat-card.delivered .stat-value { color: var(--info); }
-    .stat-card.whatsapp .stat-value { color: var(--whatsapp); }
-    .stat-card.crispy .stat-value { color: var(--crispy-red); }
-    .stat-card.customers .stat-value { color: var(--primary); }
+        .whatsapp-bg {
+            background: linear-gradient(135deg, var(--whatsapp) 0%, var(--whatsapp-dark) 100%);
+            color: white;
+        }
 
-    .stat-label {
-      color: var(--text-secondary);
-      font-size: 0.875rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
+        .settings-section {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+        }
 
-    /* WhatsApp Offer System */
-    .whatsapp-offer {
-      background: linear-gradient(135deg, var(--crispy-red) 0%, var(--crispy-orange) 100%);
-      color: white;
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
+        .settings-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-left: 1rem;
+        }
 
-    .whatsapp-offer-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
+        .nav-pills .nav-link.active {
+            background: var(--primary);
+        }
 
-    .whatsapp-offer-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+        }
 
-    .whatsapp-offer-form {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 1.5rem;
-    }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
 
-    .whatsapp-offer-input, .whatsapp-offer-textarea {
-      background: rgba(255, 255, 255, 0.9);
-      border: none;
-      color: var(--text-primary);
-    }
+        .btn {
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+        }
 
-    .whatsapp-offer-input:focus, .whatsapp-offer-textarea:focus {
-      background: white;
-      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
-    }
+        .btn-primary {
+            background: var(--primary);
+            border: none;
+        }
 
-    .whatsapp-offer-textarea {
-      min-height: 200px;
-      font-family: monospace;
-    }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
 
-    .whatsapp-offer-label {
-      color: white;
-      font-weight: 500;
-      margin-bottom: 0.5rem;
-    }
+        .btn-whatsapp {
+            background: var(--whatsapp);
+            color: white;
+            border: none;
+        }
 
-    .offer-preview {
-      background: white;
-      border-radius: 8px;
-      padding: 1rem;
-      margin-top: 1rem;
-      color: var(--text-primary);
-      max-height: 300px;
-      overflow-y: auto;
-    }
+        .btn-whatsapp:hover {
+            background: var(--whatsapp-dark);
+        }
 
-    .template-selector {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
+        .table th {
+            font-weight: 600;
+            color: var(--text-primary);
+            border-top: none;
+        }
 
-    .template-btn {
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      border: none;
-      font-size: 0.875rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
+        .table-hover tbody tr:hover {
+            background-color: var(--primary-light);
+        }
 
-    .template-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
 
-    .template-btn.active {
-      background: white;
-      color: var(--crispy-red);
-    }
+        .status-delivered {
+            background: #d1fae5;
+            color: #065f46;
+        }
 
-    /* Enhanced Dashboard Elements */
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
 
-    .dashboard-card {
-      background: var(--surface);
-      border-radius: 12px;
-      padding: 1.5rem;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-    }
+        .status-failed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
 
-    .dashboard-card-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      color: var(--text-primary);
-    }
+        .toggle-sidebar {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1001;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+        }
 
-    .recent-activity {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 240px;
+            }
+            .main-content {
+                margin-right: 240px;
+            }
+        }
 
-    .recent-activity-item {
-      padding: 0.75rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .recent-activity-item:last-child {
-      border-bottom: none;
-    }
-
-    .activity-time {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-    }
-
-    .activity-message {
-      font-size: 0.875rem;
-      color: var(--text-primary);
-    }
-
-    /* File Upload Improvements */
-    .file-validation {
-      margin-top: 1rem;
-      padding: 1rem;
-      background: var(--bg);
-      border-radius: 8px;
-      display: none;
-    }
-
-    .file-validation.active {
-      display: block;
-    }
-
-    .validation-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .validation-item:last-child {
-      border-bottom: none;
-    }
-
-    .validation-status {
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-
-    .validation-status.valid {
-      color: var(--success);
-    }
-
-    .validation-status.invalid {
-      color: var(--danger);
-    }
-
-    .validation-status.warning {
-      color: var(--warning);
-    }
-
-    /* WhatsApp Configuration */
-    .whatsapp-config {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .whatsapp-config-title {
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: white;
-    }
-
-    /* Targeting Options */
-    .targeting-options {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .targeting-title {
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: white;
-    }
-
-    /* Scheduling Options */
-    .scheduling-options {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .scheduling-title {
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: white;
-    }
-
-    /* Toast notifications */
-    .toast-container {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 1050;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .toast {
-      background: var(--surface);
-      border-radius: 8px;
-      box-shadow: var(--shadow-lg);
-      padding: 1rem;
-      min-width: 300px;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      animation: slideIn 0.3s ease-out;
-      border-left: 4px solid;
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-
-    .toast-success {
-      border-left-color: var(--success);
-    }
-
-    .toast-error {
-      border-left-color: var(--danger);
-    }
-
-    .toast-warning {
-      border-left-color: var(--warning);
-    }
-
-    .toast-info {
-      border-left-color: var(--info);
-    }
-
-    .toast-whatsapp {
-      border-left-color: var(--whatsapp);
-    }
-
-    .toast-crispy {
-      border-left-color: var(--crispy-red);
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .dashboard-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .template-selector {
-        flex-direction: column;
-      }
-      
-      .template-btn {
-        width: 100%;
-      }
-    }
-  </style>
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                transform: translateX(100%);
+            }
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-right: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="main-container">
-      <div class="d-flex justify-content-between align-items-center">
-        <div>
-          <h1 class="page-title">Enhanced Message Tracking System</h1>
-          <p class="page-subtitle">Monitor and track all message delivery status with real-time analytics</p>
-        </div>
-        <div class="d-flex gap-3">
-          <button class="btn btn-light" onclick="exportReport()">
-            <i class="bi bi-download"></i> Export Report
-          </button>
-          <button class="btn btn-light" onclick="showSettings()">
-            <i class="bi bi-gear"></i> Settings
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Main Content -->
-  <div class="main-container">
-    <!-- Customer Management Section -->
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h2 class="card-title mb-0">
-          <i class="bi bi-people"></i> Customer Management
-        </h2>
-        <div>
-          <button class="btn btn-sm btn-primary" onclick="toggleCustomerForm()">
-            <i class="bi bi-plus"></i> Add Customer
-          </button>
-          <button class="btn btn-sm btn-success" onclick="showUploadModal()">
-            <i class="bi bi-upload"></i> Upload Data
-          </button>
-        </div>
-      </div>
-      <div class="card-body">
-        <!-- Add Customer Form -->
-        <div class="customer-form" id="customerForm" style="display: none;">
-          <h5 class="mb-3">Add New Customer</h5>
-          <form id="addCustomerForm">
-            <div class="row">
-              <div class="col-md-4 mb-3">
-                <label for="customerName" class="form-label">Full Name</label>
-                <input type="text" class="form-control" id="customerName" required>
-              </div>
-              <div class="col-md-4 mb-3">
-                <label for="customerPhone" class="form-label">Phone Number</label>
-                <input type="tel" class="form-control" id="customerPhone" required>
-              </div>
-              <div class="col-md-4 mb-3">
-                <label for="customerEmail" class="form-label">Email</label>
-                <input type="email" class="form-control" id="customerEmail">
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="customerCity" class="form-label">City</label>
-                <input type="text" class="form-control" id="customerCity">
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="customerStatus" class="form-label">Status</label>
-                <select class="form-select" id="customerStatus">
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                </select>
-              </div>
-            </div>
-            <div class="d-flex gap-2">
-              <button type="submit" class="btn btn-primary">
-                <i class="bi bi-save"></i> Save Customer
-              </button>
-              <button type="button" class="btn btn-outline-secondary" onclick="toggleCustomerForm()">
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-        
-        <!-- Customer List -->
-        <div class="customer-list" id="customerList">
-          <!-- Customers will be populated here -->
-        </div>
-      </div>
-    </div>
-    
-    <!-- WhatsApp Offer System -->
-    <div class="whatsapp-offer">
-      <div class="whatsapp-offer-header">
-        <div>
-          <h2 class="whatsapp-offer-title">
-            <i class="bi bi-whatsapp"></i> WhatsApp Offer System
-          </h2>
-          <p>Send promotional offers to all customers via WhatsApp Business</p>
-        </div>
-        <div>
-          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="50">
-        </div>
-      </div>
-      <div class="whatsapp-offer-form">
-        <!-- WhatsApp Configuration -->
-        <div class="whatsapp-config">
-          <div class="whatsapp-config-title">WhatsApp Configuration</div>
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label for="whatsappNumber" class="whatsapp-offer-label">WhatsApp Business Number</label>
-              <input type="text" class="form-control whatsapp-offer-input" id="whatsappNumber" value="0501882206">
-            </div>
-            <div class="col-md-6 mb-3">
-              <label for="whatsappApiKey" class="whatsapp-offer-label">API Key</label>
-              <input type="password" class="form-control whatsapp-offer-input" id="whatsappApiKey" placeholder="Enter your WhatsApp API key">
-            </div>
-          </div>
-        </div>
-        
-        <!-- Targeting Options -->
-        <div class="targeting-options">
-          <div class="targeting-title">Targeting Options</div>
-          <div class="row">
-            <div class="col-md-4 mb-3">
-              <label class="whatsapp-offer-label">Send To</label>
-              <select class="form-select whatsapp-offer-input" id="sendTo">
-                <option value="all">All Active Customers</option>
-                <option value="city">By City</option>
-                <option value="recent">Recent Customers (Last 30 days)</option>
-                <option value="inactive">Inactive Customers</option>
-              </select>
-            </div>
-            <div class="col-md-4 mb-3" id="cityFilterContainer" style="display: none;">
-              <label class="whatsapp-offer-label">Select City</label>
-              <select class="form-select whatsapp-offer-input" id="cityFilter">
-                <!-- Cities will be populated dynamically -->
-              </select>
-            </div>
-            <div class="col-md-4 mb-3">
-              <label class="whatsapp-offer-label">Customers Count</label>
-              <input type="text" class="form-control whatsapp-offer-input" id="customerCount" readonly>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Scheduling Options -->
-        <div class="scheduling-options">
-          <div class="scheduling-title">Scheduling</div>
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label class="whatsapp-offer-label">Send Time</label>
-              <select class="form-select whatsapp-offer-input" id="sendTime">
-                <option value="now">Send Now</option>
-                <option value="schedule">Schedule for Later</option>
-              </select>
-            </div>
-            <div class="col-md-6 mb-3" id="scheduleDateTimeContainer" style="display: none;">
-              <label class="whatsapp-offer-label">Schedule Date & Time</label>
-              <input type="datetime-local" class="form-control whatsapp-offer-input" id="scheduleDateTime">
-            </div>
-          </div>
-        </div>
-        
-        <form id="whatsappOfferForm">
-          <div class="mb-3">
-            <label class="whatsapp-offer-label">Offer Templates</label>
-            <div class="template-selector">
-              <button type="button" class="template-btn active" onclick="selectTemplate('crispy')">CRISPY CHICKEN Offer</button>
-              <button type="button" class="template-btn" onclick="selectTemplate('special')">Special Discount</button>
-              <button type="button" class="template-btn" onclick="selectTemplate('new')">New Product</button>
-              <button type="button" class="template-btn" onclick="selectTemplate('custom')">Custom Template</button>
-            </div>
-          </div>
-          
-          <div class="mb-3">
-            <label for="offerMessage" class="whatsapp-offer-label">Offer Message</label>
-            <textarea class="form-control whatsapp-offer-textarea" id="offerMessage" rows="10">🔥 CRISPY CHICKEN - ULTIMATE OFFER 🔥
-
-🍗 12 Crispy Chicken Pieces + 3 Garlic Sauce
-
-Only 30 AED
-
-⏰ Valid: Monday & Tuesday Only
-
-🎁 Special Bonus!
-Get a FREE drink with every order above 50 AED!
-
-📞 To Order Directly: 600527488
-
-Order Now!
-
-⏳ Limited Time!
-Order within 2 hours only!
-
-👉 Share with friends & get extra discount!
-
-#CrispyChicken #SpecialOffer #CrispyChickenDeal</textarea>
-          </div>
-          
-          <div class="mb-3">
-            <label class="whatsapp-offer-label">Message Preview</label>
-            <div class="offer-preview">
-              <div class="offer-preview-title">CRISPY CHICKEN Offer Preview</div>
-              <div class="offer-preview-content" id="offerPreview">🔥 CRISPY CHICKEN - ULTIMATE OFFER 🔥
-
-🍗 12 Crispy Chicken Pieces + 3 Garlic Sauce
-
-Only 30 AED
-
-⏰ Valid: Monday & Tuesday Only
-
-🎁 Special Bonus!
-Get a FREE drink with every order above 50 AED!
-
-📞 To Order Directly: 600527488
-
-Order Now!
-
-⏳ Limited Time!
-Order within 2 hours only!
-
-👉 Share with friends & get extra discount!
-
-#CrispyChicken #SpecialOffer #CrispyChickenDeal</div>
-            </div>
-          </div>
-          
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="whatsapp-stats">
-              <div class="whatsapp-stat">
-                <div class="whatsapp-stat-value" id="totalSentOffers">0</div>
-                <div class="whatsapp-stat-label">Offers Sent</div>
-              </div>
-              <div class="whatsapp-stat">
-                <div class="whatsapp-stat-value" id="totalDeliveredOffers">0</div>
-                <div class="whatsapp-stat-label">Delivered</div>
-              </div>
-              <div class="whatsapp-stat">
-                <div class="whatsapp-stat-value" id="totalFailedOffers">0</div>
-                <div class="whatsapp-stat-label">Failed</div>
-              </div>
-              <div class="whatsapp-stat">
-                <div class="whatsapp-stat-value" id="totalOpenedOffers">0</div>
-                <div class="whatsapp-stat-label">Opened</div>
-              </div>
-            </div>
-            <button type="submit" class="btn btn-crispy">
-              <i class="bi bi-send"></i> Send Offer to Selected Customers
+    <!-- شريط التنقل -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fab fa-whatsapp me-2"></i> نظام تتبع الرسائل المتكامل
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
             </button>
-          </div>
-        </form>
-      </div>
-    </div>
-    
-    <!-- Enhanced Dashboard -->
-    <div class="dashboard-grid">
-      <!-- Statistics Cards -->
-      <div class="stats-grid">
-        <div class="stat-card customers">
-          <div class="stat-value" id="totalCustomers">0</div>
-          <div class="stat-label">Total Customers</div>
-          <div class="stat-change positive">
-            <i class="bi bi-arrow-up"></i> +5% this week
-          </div>
-        </div>
-        <div class="stat-card sent">
-          <div class="stat-value" id="totalSent">0</div>
-          <div class="stat-label">Messages Sent</div>
-          <div class="stat-change positive">
-            <i class="bi bi-arrow-up"></i> +15% from yesterday
-          </div>
-        </div>
-        <div class="stat-card pending">
-          <div class="stat-value" id="totalPending">0</div>
-          <div class="stat-label">Pending</div>
-          <div class="stat-change">
-            <i class="bi bi-clock"></i> Processing...
-          </div>
-        </div>
-        <div class="stat-card delivered">
-          <div class="stat-value" id="totalDelivered">0</div>
-          <div class="stat-label">Delivered</div>
-          <div class="stat-change positive">
-            <i class="bi bi-arrow-up"></i> 92% success rate
-          </div>
-        </div>
-        <div class="stat-card failed">
-          <div class="stat-value" id="totalFailed">0</div>
-          <div class="stat-label">Failed</div>
-          <div class="stat-change negative">
-            <i class="bi bi-arrow-down"></i> 8% failure rate
-          </div>
-        </div>
-        <div class="stat-card crispy">
-          <div class="stat-value" id="totalCrispy">0</div>
-          <div class="stat-label">CRISPY Offers</div>
-          <div class="stat-change positive">
-            <i class="bi bi-arrow-up"></i> Hot deals!
-          </div>
-        </div>
-      </div>
-      
-      <!-- Recent Activity -->
-      <div class="dashboard-card">
-        <h3 class="dashboard-card-title">
-          <i class="bi bi-clock-history"></i> Recent Activity
-        </h3>
-        <ul class="recent-activity" id="recentActivity">
-          <!-- Recent activity will be populated here -->
-        </ul>
-      </div>
-      
-      <!-- Performance Metrics -->
-      <div class="dashboard-card">
-        <h3 class="dashboard-card-title">
-          <i class="bi bi-speedometer2"></i> Performance Metrics
-        </h3>
-        <div class="chart-container" style="height: 200px;">
-          <canvas id="performanceChart"></canvas>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Charts Section -->
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-header">
-            <h2 class="card-title">
-              <i class="bi bi-graph-up"></i> Delivery Analytics
-            </h2>
-          </div>
-          <div class="card-body">
-            <div class="chart-container">
-              <canvas id="deliveryChart"></canvas>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="fas fa-home me-1"></i> الرئيسية</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-chart-bar me-1"></i> التقارير</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-cog me-1"></i> الإعدادات</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-user me-1"></i> الملف الشخصي</a>
+                    </li>
+                </ul>
             </div>
-          </div>
         </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-header">
-            <h2 class="card-title">
-              <i class="bi bi-pie-chart"></i> Status Distribution
-            </h2>
-          </div>
-          <div class="card-body">
-            <div class="chart-container">
-              <canvas id="statusChart"></canvas>
+    </nav>
+
+    <!-- الشريط الجانبي -->
+    <div class="sidebar">
+        <h5 class="mb-3 border-bottom pb-2">إعدادات سريعة</h5>
+        
+        <div class="settings-section">
+            <div class="d-flex align-items-center mb-3">
+                <div class="settings-icon bg-primary text-white">
+                    <i class="fas fa-bullhorn"></i>
+                </div>
+                <h6 class="mb-0">إرسال رسالة جماعية</h6>
             </div>
-          </div>
+            <button class="btn btn-whatsapp w-100 mb-3">
+                <i class="fab fa-whatsapp me-2"></i> إرسال عبر واتساب
+            </button>
         </div>
-      </div>
-    </div>
-    
-    <!-- Filters Section -->
-    <div class="filter-section">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5><i class="bi bi-funnel"></i> Filters</h5>
-        <div>
-          <button class="btn btn-sm btn-outline-primary" onclick="refreshData()">
-            <i class="bi bi-arrow-clockwise"></i> Refresh
-          </button>
-          <button class="btn btn-sm btn-outline-secondary" onclick="clearFilters()">
-            <i class="bi bi-x"></i> Clear Filters
-          </button>
-        </div>
-      </div>
-      <div class="filter-row">
-        <div class="filter-group">
-          <label class="form-label">Date Range</label>
-          <select class="form-select" id="dateFilter">
-            <option value="today">Today</option>
-            <option value="week">This Week</option>
-            <option value="month">This Month</option>
-            <option value="custom">Custom Range</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label class="form-label">Status</label>
-          <select class="form-select" id="statusFilter">
-            <option value="all">All Status</option>
-            <option value="sent">Sent</option>
-            <option value="pending">Pending</option>
-            <option value="delivered">Delivered</option>
-            <option value="failed">Failed</option>
-            <option value="crispy">CRISPY Offers</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label class="form-label">Platform</label>
-          <select class="form-select" id="platformFilter">
-            <option value="all">All Platforms</option>
-            <option value="sms">SMS</option>
-            <option value="whatsapp">WhatsApp</option>
-            <option value="email">Email</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label class="form-label">Search</label>
-          <input type="text" class="form-control" id="searchInput" placeholder="Search by recipient or message...">
-        </div>
-      </div>
-    </div>
-    
-    <!-- Results Table -->
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h2 class="card-title mb-0">
-          <i class="bi bi-table"></i> Message Results
-        </h2>
-        <div>
-          <button class="btn btn-sm btn-outline-primary" onclick="exportTable()">
-            <i class="bi bi-download"></i> Export CSV
-          </button>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Message ID</th>
-                <th>Recipient</th>
-                <th>Message</th>
-                <th>Platform</th>
-                <th>Status</th>
-                <th>Sent At</th>
-                <th>Delivered At</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="messageTableBody">
-              <!-- Messages will be populated here -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Message Detail Modal -->
-    <div class="modal fade" id="messageModal" tabindex="-1">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Message Details</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <div id="messageDetails">
-              <!-- Message details will be populated here -->
+
+        <div class="settings-section">
+            <div class="d-flex align-items-center mb-3">
+                <div class="settings-icon bg-success text-white">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <h6 class="mb-0">تقارير الأداء</h6>
             </div>
-          </div>
+            <div class="mb-2">
+                <small class="text-muted">معدل التسليم:</small>
+                <div class="progress mb-2" style="height: 8px;">
+                    <div class="progress-bar bg-success" style="width: 92%"></div>
+                </div>
+            </div>
+            <div class="mb-2">
+                <small class="text-muted">معدل الفشل:</small>
+                <div class="progress mb-2" style="height: 8px;">
+                    <div class="progress-bar bg-danger" style="width: 8%"></div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    
-    <!-- Customer Edit Modal -->
-    <div class="modal fade" id="customerModal" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Edit Customer</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <form id="editCustomerForm">
-              <input type="hidden" id="editCustomerId">
-              <div class="mb-3">
-                <label for="editCustomerName" class="form-label">Full Name</label>
-                <input type="text" class="form-control" id="editCustomerName" required>
-              </div>
-              <div class="mb-3">
-                <label for="editCustomerPhone" class="form-label">Phone Number</label>
-                <input type="tel" class="form-control" id="editCustomerPhone" required>
-              </div>
-              <div class="mb-3">
-                <label for="editCustomerEmail" class="form-label">Email</label>
-                <input type="email" class="form-control" id="editCustomerEmail">
-              </div>
-              <div class="mb-3">
-                <label for="editCustomerCity" class="form-label">City</label>
-                <input type="text" class="form-control" id="editCustomerCity">
-              </div>
-              <div class="mb-3">
-                <label for="editCustomerStatus" class="form-label">Status</label>
-                <select class="form-select" id="editCustomerStatus">
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                </select>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary" onclick="saveEditedCustomer()">Save Changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Upload Data Modal -->
-    <div class="modal fade" id="uploadModal" tabindex="-1">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Upload Customer Data</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <div class="file-upload-area" id="fileUploadArea">
-              <div class="file-upload-icon">
-                <i class="bi bi-cloud-upload"></i>
-              </div>
-              <div class="file-upload-text">Drag & drop your file here or click to browse</div>
-              <div class="file-upload-hint">Supported formats: CSV, Excel (.xlsx, .xls)</div>
-              <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" style="display: none;">
+
+        <div class="settings-section">
+            <div class="d-flex align-items-center mb-3">
+                <div class="settings-icon bg-info text-white">
+                    <i class="fas fa-sliders-h"></i>
+                </div>
+                <h6 class="mb-0">إعدادات النظام</h6>
             </div>
             
-            <!-- File Validation -->
-            <div class="file-validation" id="fileValidation">
-              <h6>File Validation</h6>
-              <div class="validation-item">
-                <span>File Format:</span>
-                <span id="formatValidation" class="validation-status">Checking...</span>
-              </div>
-              <div class="validation-item">
-                <span>Required Columns:</span>
-                <span id="columnsValidation" class="validation-status">Checking...</span>
-              </div>
-              <div class="validation-item">
-                <span>Data Integrity:</span>
-                <span id="dataValidation" class="validation-status">Checking...</span>
-              </div>
+            <div class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" id="notificationsSwitch" checked>
+                <label class="form-check-label" for="notificationsSwitch">التنبيهات</label>
             </div>
             
-            <div class="file-info" id
+            <div class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" id="autoSendSwitch" checked>
+                <label class="form-check-label" for="autoSendSwitch">الإرسال التلقائي</label>
+            </div>
+            
+            <div class="form-check form-switch mb-3">
+                <input class="form-check-input" type="checkbox" id="backupSwitch">
+                <label class="form-check-label" for="backupSwitch">نسخ احتياطي تلقائي</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="main-content">
+        <div class="container-fluid">
+            <!-- إحصائيات سريعة -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-primary text-white">
+                            <i class="fas fa-paper-plane"></i>
+                        </div>
+                        <div class="stat-value">1,248</div>
+                        <div class="stat-label">الرسائل المرسلة</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-success text-white">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-value">1,148</div>
+                        <div class="stat-label">الرسائل المستلمة</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-warning text-white">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-value">62</div>
+                        <div class="stat-label">قيد الانتظار</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-danger text-white">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="stat-value">38</div>
+                        <div class="stat-label">فشل في الإرسال</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- الرسوم البيانية -->
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">إحصائيات الرسائل خلال الأسبوع</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="messageChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">نسبة نجاح الإرسال</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="successRateChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- قسم واتساب -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card whatsapp-bg">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h4 class="card-title"><i class="fab fa-whatsapp me-2"></i> إرسال رسالة عبر واتساب</h4>
+                                    <p class="card-text">أرسل رسائل جماعية إلى عملائك عبر واتساب بسهولة وسرعة</p>
+                                    <div class="row mt-4">
+                                        <div class="col-md-6">
+                                            <div class="form-group mb-3">
+                                                <label class="form-label">رقم واتساب</label>
+                                                <input type="text" class="form-control" value="+965 500 12345">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group mb-3">
+                                                <label class="form-label">عدد العملاء</label>
+                                                <input type="text" class="form-control" value="1,248 عميل" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="100" class="mb-3">
+                                    <button class="btn btn-light btn-lg">
+                                        <i class="fab fa-whatsapp me-2"></i> إرسال الآن
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- جدول الرسائل -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">آخر الرسائل</h5>
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary me-2">
+                                    <i class="fas fa-filter me-1"></i> تصفية
+                                </button>
+                                <button class="btn btn-sm btn-primary">
+                                    <i class="fas fa-download me-1"></i> تصدير
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>المستلم</th>
+                                            <th>نوع الرسالة</th>
+                                            <th>الحالة</th>
+                                            <th>التاريخ</th>
+                                            <th>الإجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>محمد أحمد</td>
+                                            <td>رسالة ترحيب</td>
+                                            <td><span class="status-badge status-delivered">تم التسليم</span></td>
+                                            <td>2023-10-15 10:30</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                                <button class="btn btn-sm btn-outline-success"><i class="fas fa-redo"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>سارة عبدالله</td>
+                                            <td>عرض ترويجي</td>
+                                            <td><span class="status-badge status-pending">قيد الانتظار</span></td>
+                                            <td>2023-10-15 09:15</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                                <button class="btn btn-sm btn-outline-success"><i class="fas fa-redo"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>علي حسن</td>
+                                            <td>تذكير</td>
+                                            <td><span class="status-badge status-delivered">تم التسليم</span></td>
+                                            <td>2023-10-14 16:45</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                                <button class="btn btn-sm btn-outline-success"><i class="fas fa-redo"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>فاطمة عمر</td>
+                                            <td>عرض خاص</td>
+                                            <td><span class="status-badge status-failed">فشل الإرسال</span></td>
+                                            <td>2023-10-14 14:20</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                                <button class="btn btn-sm btn-outline-success"><i class="fas fa-redo"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>5</td>
+                                            <td>خالد سعيد</td>
+                                            <td>نشرة إخبارية</td>
+                                            <td><span class="status-badge status-delivered">تم التسليم</span></td>
+                                            <td>2023-10-14 11:05</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                                <button class="btn btn-sm btn-outline-success"><i class="fas fa-redo"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1">السابق</a>
+                                    </li>
+                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">التالي</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- زر تبديل الشريط الجانبي -->
+    <div class="toggle-sidebar" id="toggleSidebar">
+        <i class="fas fa-cog"></i>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // تهيئة الرسوم البيانية
+        document.addEventListener('DOMContentLoaded', function() {
+            // رسم بياني للرسائل خلال الأسبوع
+            const messageCtx = document.getElementById('messageChart').getContext('2d');
+            const messageChart = new Chart(messageCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'],
+                    datasets: [{
+                        label: 'المرسلة',
+                        data: [120, 150, 180, 90, 130, 160, 110],
+                        backgroundColor: '#2563eb',
+                        borderColor: '#2563eb',
+                        borderWidth: 1
+                    }, {
+                        label: 'المستلمة',
+                        data: [110, 140, 170, 85, 120, 150, 105],
+                        backgroundColor: '#10b981',
+                        borderColor: '#10b981',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // رسم بياني دائري لنسبة النجاح
+            const successRateCtx = document.getElementById('successRateChart').getContext('2d');
+            const successRateChart = new Chart(successRateCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['ناجح', 'فاشل', 'قيد الانتظار'],
+                    datasets: [{
+                        data: [92, 5, 3],
+                        backgroundColor: [
+                            '#10b981',
+                            '#ef4444',
+                            '#f59e0b'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // تبديل الشريط الجانبي
+            const toggleSidebarBtn = document.getElementById('toggleSidebar');
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+
+            toggleSidebarBtn.addEventListener('click', function() {
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('expanded');
+                
+                if (sidebar.classList.contains('collapsed')) {
+                    toggleSidebarBtn.innerHTML = '<i class="fas fa-cog"></i>';
+                } else {
+                    toggleSidebarBtn.innerHTML = '<i class="fas fa-times"></i>';
+                }
+            });
+
+            // لمشاهدة responsive على الشاشات الصغيرة
+            if (window.innerWidth < 768) {
+                sidebar.classList.add('collapsed');
+                mainContent.classList.add('expanded');
+            }
+        });
+    </script>
+</body>
+</html>
