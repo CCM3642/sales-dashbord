@@ -1,186 +1,1854 @@
-<!doctype html>
-<html lang="ar">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Dashboard - Crispy Chicken (Cancellations & Refunds)</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"/>
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css"/>
-<style>
-  body{padding:18px;font-family:Arial,Helvetica,sans-serif}
-  .card{margin-bottom:14px}
-  .rtl{direction:rtl;text-align:right}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Message Tracking System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-light: #dbeafe;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #06b6d4;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --border: #e2e8f0;
+      --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --whatsapp: #25D366;
+      --whatsapp-dark: #128C7E;
+      --crispy-red: #ff6b6b;
+      --crispy-orange: #feca57;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+    /* Layout */
+    .main-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .page-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 2rem 0;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-lg);
+    }
+    .page-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .page-subtitle {
+      opacity: 0.9;
+      font-size: 1.1rem;
+    }
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      transition: all 0.2s ease;
+      margin-bottom: 1.5rem;
+    }
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    .card-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0;
+    }
+    .card-body {
+      padding: 1.5rem;
+    }
+    /* Forms */
+    .form-label {
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .form-control, .form-select {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      outline: none;
+    }
+    /* Buttons */
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow);
+    }
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+    .btn-warning {
+      background: var(--warning);
+      color: white;
+    }
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+    .btn-outline:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+    .btn-sm {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+    }
+    .btn-icon {
+      padding: 0.5rem;
+      border-radius: 6px;
+    }
+    .btn-whatsapp {
+      background: var(--whatsapp);
+      color: white;
+    }
+    .btn-whatsapp:hover {
+      background: var(--whatsapp-dark);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow);
+    }
+    .btn-crispy {
+      background: linear-gradient(135deg, var(--crispy-red) 0%, var(--crispy-orange) 100%);
+      color: white;
+    }
+    .btn-crispy:hover {
+      background: linear-gradient(135deg, var(--crispy-red) 0%, var(--crispy-orange) 100%);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow);
+    }
+    /* Statistics */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+    }
+    .stat-card.sent::before {
+      background: var(--success);
+    }
+    .stat-card.pending::before {
+      background: var(--warning);
+    }
+    .stat-card.failed::before {
+      background: var(--danger);
+    }
+    .stat-card.delivered::before {
+      background: var(--info);
+    }
+    .stat-card.whatsapp::before {
+      background: var(--whatsapp);
+    }
+    .stat-card.crispy::before {
+      background: var(--crispy-red);
+    }
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .stat-card.sent .stat-value {
+      color: var(--success);
+    }
+    .stat-card.pending .stat-value {
+      color: var(--warning);
+    }
+    .stat-card.failed .stat-value {
+      color: var(--danger);
+    }
+    .stat-card.delivered .stat-value {
+      color: var(--info);
+    }
+    .stat-card.whatsapp .stat-value {
+      color: var(--whatsapp);
+    }
+    .stat-card.crispy .stat-value {
+      color: var(--crispy-red);
+    }
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .stat-change {
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-top: 0.5rem;
+    }
+    .stat-change.positive {
+      color: var(--success);
+    }
+    .stat-change.negative {
+      color: var(--danger);
+    }
+    /* Status badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .status-badge.sent {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    .status-badge.pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .status-badge.failed {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .status-badge.delivered {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+    .status-badge.whatsapp {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    .status-badge.crispy {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .status-badge i {
+      font-size: 0.75rem;
+    }
+    /* Charts */
+    .chart-container {
+      position: relative;
+      height: 300px;
+      margin: 1rem 0;
+    }
+    /* Tables */
+    .table {
+      background: var(--surface);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .table thead {
+      background: var(--primary-light);
+      border-bottom: 2px solid var(--primary);
+    }
+    .table th {
+      font-weight: 600;
+      color: var(--primary);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      padding: 1rem;
+    }
+    .table td {
+      padding: 1rem;
+      vertical-align: middle;
+      border-bottom: 1px solid var(--border);
+    }
+    .table tbody tr:hover {
+      background: var(--bg);
+    }
+    /* Message status timeline */
+    .timeline {
+      position: relative;
+      padding: 1rem 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+    .timeline-item {
+      position: relative;
+      padding-left: 50px;
+      margin-bottom: 1.5rem;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 14px;
+      top: 5px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--border);
+      border: 2px solid var(--surface);
+    }
+    .timeline-item.sent::before {
+      background: var(--success);
+    }
+    .timeline-item.pending::before {
+      background: var(--warning);
+    }
+    .timeline-item.failed::before {
+      background: var(--danger);
+    }
+    .timeline-item.delivered::before {
+      background: var(--info);
+    }
+    .timeline-item.whatsapp::before {
+      background: var(--whatsapp);
+    }
+    .timeline-item.crispy::before {
+      background: var(--crispy-red);
+    }
+    .timeline-content {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 1rem;
+      border: 1px solid var(--border);
+    }
+    .timeline-time {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+    .timeline-message {
+      font-size: 0.875rem;
+      color: var(--text-primary);
+    }
+    /* Filters */
+    .filter-section {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+    }
+    .filter-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+    }
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1050;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .toast {
+      background: var(--surface);
+      border-radius: 8px;
+      box-shadow: var(--shadow-lg);
+      padding: 1rem;
+      min-width: 300px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      animation: slideIn 0.3s ease-out;
+      border-left: 4px solid;
+    }
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    .toast-success {
+      border-left-color: var(--success);
+    }
+    .toast-error {
+      border-left-color: var(--danger);
+    }
+    .toast-warning {
+      border-left-color: var(--warning);
+    }
+    .toast-info {
+      border-left-color: var(--info);
+    }
+    .toast-whatsapp {
+      border-left-color: var(--whatsapp);
+    }
+    .toast-crispy {
+      border-left-color: var(--crispy-red);
+    }
+    /* Loading */
+    .loading {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    /* Responsive */
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .filter-row {
+        grid-template-columns: 1fr;
+      }
+      
+      .table-responsive {
+        border-radius: 0;
+      }
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-secondary);
+    }
+    /* Progress bars */
+    .progress {
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--border);
+    }
+    .progress-bar {
+      transition: width 0.3s ease;
+    }
+    /* Message preview */
+    .message-preview {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 0.5rem 0;
+      border: 1px solid var(--border);
+    }
+    .message-preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .message-preview-body {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    /* WhatsApp Offer System */
+    .whatsapp-offer {
+      background: linear-gradient(135deg, var(--crispy-red) 0%, var(--crispy-orange) 100%);
+      color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .whatsapp-offer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .whatsapp-offer-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .whatsapp-offer-form {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    .whatsapp-offer-input {
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      color: var(--text-primary);
+    }
+    .whatsapp-offer-input:focus {
+      background: white;
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+    }
+    .whatsapp-offer-textarea {
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      color: var(--text-primary);
+      min-height: 200px;
+      font-family: monospace;
+    }
+    .whatsapp-offer-textarea:focus {
+      background: white;
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+    }
+    .whatsapp-offer-label {
+      color: white;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .whatsapp-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .whatsapp-stat {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .whatsapp-stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .whatsapp-stat-label {
+      font-size: 0.875rem;
+      opacity: 0.9;
+    }
+    .offer-preview {
+      background: white;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+      color: var(--text-primary);
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .offer-preview-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--crispy-red);
+    }
+    .offer-preview-content {
+      font-size: 0.875rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .template-selector {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .template-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .template-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    .template-btn.active {
+      background: white;
+      color: var(--crispy-red);
+    }
+  </style>
 </head>
-<body class="rtl">
-<div class="container-fluid">
-  <h3 class="mb-3">Dashboard – إلغاءات & تعويضات (Crispy Chicken)</h3>
-
-  <!-- Controls -->
-  <div class="row mb-2">
-    <div class="col-md-4">
-      <select id="branchFilter" class="form-select">
-        <option value="">كل الفروع</option>
-      </select>
-    </div>
-    <div class="col-md-4">
-      <select id="channelFilter" class="form-select">
-        <option value="">كل القنوات</option>
-      </select>
-    </div>
-    <div class="col-md-4 text-start">
-      <button id="downloadCSV" class="btn btn-primary">تصدير CSV</button>
-      <button id="downloadExcel" class="btn btn-outline-secondary">تصدير Excel</button>
-    </div>
-  </div>
-
-  <!-- KPIs -->
-  <div class="row">
-    <div class="col-md-3"><div class="card p-2"><strong>إجمالي المبلغ</strong><div id="sumAmount">-</div></div></div>
-    <div class="col-md-3"><div class="card p-2"><strong>إجمالي الخصومات</strong><div id="sumDeducted">-</div></div></div>
-    <div class="col-md-3"><div class="card p-2"><strong>عدد الأوامر</strong><div id="countOrders">-</div></div></div>
-    <div class="col-md-3"><div class="card p-2"><strong>متوسط الطلب</strong><div id="avgAmount">-</div></div></div>
-  </div>
-
-  <!-- Charts -->
-  <div class="row mt-3">
-    <div class="col-md-6"><div class="card p-3"><canvas id="barChart"></canvas></div></div>
-    <div class="col-md-6"><div class="card p-3"><canvas id="doughnutChart"></canvas></div></div>
-  </div>
-
-  <!-- Table -->
-  <div class="row mt-3">
-    <div class="col-12">
-      <table id="ordersTable" class="display nowrap" style="width:100%">
-        <thead>
-          <tr>
-            <th>Order ID</th><th>Outlet Area</th><th>Order Date</th><th>Basket</th><th>Refund</th><th>Status</th><th>Reason</th>
-          </tr>
-        </thead>
-        <tbody id="tbodyData"></tbody>
-        <tfoot>
-          <tr><th colspan="3">المجموع</th><th id="tfootBasket"></th><th id="tfootRefund"></th><th colspan="2"></th></tr>
-        </tfoot>
-      </table>
+<body>
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="main-container">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h1 class="page-title">Message Tracking System</h1>
+          <p class="page-subtitle">Monitor and track all message delivery status with real-time analytics</p>
+        </div>
+        <div class="d-flex gap-3">
+          <button class="btn btn-light" onclick="exportReport()">
+            <i class="bi bi-download"></i> Export Report
+          </button>
+          <button class="btn btn-light" onclick="showSettings()">
+            <i class="bi bi-gear"></i> Settings
+          </button>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+  <!-- Main Content -->
+  <div class="main-container">
+    <!-- WhatsApp Offer System -->
+    <div class="whatsapp-offer">
+      <div class="whatsapp-offer-header">
+        <div>
+          <h2 class="whatsapp-offer-title">
+            <i class="bi bi-whatsapp"></i> WhatsApp Offer System
+          </h2>
+          <p>Send promotional offers to all customers via WhatsApp Business</p>
+        </div>
+        <div>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="50">
+        </div>
+      </div>
+      <div class="whatsapp-offer-form">
+        <form id="whatsappOfferForm">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="whatsappNumber" class="whatsapp-offer-label">WhatsApp Business Number</label>
+              <input type="text" class="form-control whatsapp-offer-input" id="whatsappNumber" value="0501882206">
+            </div>
+            <div class="col-md-6">
+              <label class="whatsapp-offer-label">Customers Count</label>
+              <input type="text" class="form-control whatsapp-offer-input" id="customerCount" readonly>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label class="whatsapp-offer-label">Offer Templates</label>
+            <div class="template-selector">
+              <button type="button" class="template-btn active" onclick="selectTemplate('crispy')">CRISPY CHICKEN Offer</button>
+              <button type="button" class="template-btn" onclick="selectTemplate('special')">Special Discount</button>
+              <button type="button" class="template-btn" onclick="selectTemplate('new')">New Product</button>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="offerMessage" class="whatsapp-offer-label">Offer Message</label>
+            <textarea class="form-control whatsapp-offer-textarea" id="offerMessage" rows="10">🔥 CRISPY CHICKEN - ULTIMATE OFFER 🔥
 
-<!-- libs -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+🍗 12 Crispy Chicken Pieces + 3 Garlic Sauce
 
-<script>
-/* ----- SAMPLE DATA (استبدلها ببياناتك) ----- */
-const data = [
-  { id:127619367, area:'Al Danah', date:'31 Aug 2025 17:21', basket:21.6, refund:-20, status:'Deducted', reason:'Missing or unavailable items' },
-  { id:127614385, area:'Al Markaziyah', date:'31 Aug 2025 16:45', basket:16.2, refund:-5, status:'Deducted', reason:'Missing or unavailable items' },
-  { id:127601866, area:'Al Danah', date:'31 Aug 2025 15:12', basket:23.68, refund:-9, status:'Deducted', reason:'Missing or unavailable items' },
-  /* ... انسخ باقي صفوفك هنا بنفس الصيغة ... */
-];
+Only 30 AED
 
-/* ---- populate filters ---- */
-const branches = [...new Set(data.map(r=>r.area))].sort();
-branches.forEach(b=>$('#branchFilter').append(`<option value="${b}">${b}</option>`));
+⏰ Valid: Monday & Tuesday Only
 
-/* ---- render table ---- */
-function renderTable(filtered){
-  const tbody = $('#tbodyData').empty();
-  let sumB=0, sumR=0;
-  filtered.forEach(r=>{
-    tbody.append(`<tr>
-      <td>${r.id}</td>
-      <td>${r.area}</td>
-      <td>${r.date}</td>
-      <td class="num">${r.basket.toFixed(2)}</td>
-      <td class="num">${r.refund.toFixed(2)}</td>
-      <td>${r.status}</td>
-      <td>${r.reason}</td>
-    </tr>`);
-    sumB += r.basket; sumR += r.refund;
-  });
-  $('#tfootBasket').text(sumB.toFixed(2));
-  $('#tfootRefund').text(sumR.toFixed(2));
-  $('#sumAmount').text(sumB.toFixed(2)+' AED');
-  $('#sumDeducted').text(sumR.toFixed(2)+' AED');
-  $('#countOrders').text(filtered.length);
-  $('#avgAmount').text(filtered.length? (sumB/filtered.length).toFixed(2)+' AED' : '-');
+🎁 Special Bonus!
+Get a FREE drink with every order above 50 AED!
 
-  // init / reinit DataTable with export buttons
-  if ($.fn.DataTable.isDataTable('#ordersTable')) { $('#ordersTable').DataTable().destroy(); }
-  $('#ordersTable').DataTable({
-    dom: 'Bfrtip',
-    buttons: [
-      { extend: 'csvHtml5', text: 'CSV' },
-      { extend: 'excelHtml5', text: 'Excel' }
-    ],
-    paging:true,
-    order:[[2,'desc']]
-  });
-}
+📞 To Order Directly: 600527488
 
-/* ---- charts ---- */
-let barChart, doughnutChart;
-function redrawCharts(filtered){
-  // aggregated by branch: total basket and total refunds
-  const agg = {};
-  filtered.forEach(r=>{
-    if(!agg[r.area]) agg[r.area]={basket:0,refund:0,count:0};
-    agg[r.area].basket += r.basket; agg[r.area].refund += r.refund; agg[r.area].count++;
-  });
-  const labels = Object.keys(agg);
-  const baskets = labels.map(l=>agg[l].basket.toFixed(2));
-  const refunds = labels.map(l=>Math.abs(agg[l].refund.toFixed(2)));
+Order Now!
 
-  const ctx1 = document.getElementById('barChart').getContext('2d');
-  if(barChart) barChart.destroy();
-  barChart = new Chart(ctx1, {
-    type:'bar',
-    data:{ labels, datasets:[
-      { label:'Total Basket (AED)', data:baskets },
-      { label:'Total Deducted (AED)', data:refunds }
-    ]},
-    options:{ responsive:true, plugins:{legend:{position:'top'}} }
-  });
+⏳ Limited Time!
+Order within 2 hours only!
 
-  const ctx2 = document.getElementById('doughnutChart').getContext('2d');
-  if(doughnutChart) doughnutChart.destroy();
-  doughnutChart = new Chart(ctx2, {
-    type:'doughnut',
-    data:{ labels, datasets:[{ data: baskets, label:'Basket by Branch' }]},
-    options:{ responsive:true }
-  });
-}
+👉 Share with friends & get extra discount!
 
-/* ---- filters handlers ---- */
-function applyFilters(){
-  const branch = $('#branchFilter').val();
-  let filtered = data.slice();
-  if(branch) filtered = filtered.filter(r=>r.area===branch);
-  renderTable(filtered);
-  redrawCharts(filtered);
-}
+#CrispyChicken #SpecialOffer #CrispyChickenDeal</textarea>
+          </div>
+          
+          <div class="mb-3">
+            <label class="whatsapp-offer-label">Message Preview</label>
+            <div class="offer-preview">
+              <div class="offer-preview-title">CRISPY CHICKEN Offer Preview</div>
+              <div class="offer-preview-content" id="offerPreview">🔥 CRISPY CHICKEN - ULTIMATE OFFER 🔥
 
-$(document).ready(function(){
-  // initial render
-  applyFilters();
+🍗 12 Crispy Chicken Pieces + 3 Garlic Sauce
 
-  $('#branchFilter').on('change', applyFilters);
+Only 30 AED
 
-  // export custom buttons (download CSV /Excel)
-  $('#downloadCSV').on('click', function(){
-    $('#ordersTable').DataTable().button(0).trigger();
-  });
-  $('#downloadExcel').on('click', function(){
-    $('#ordersTable').DataTable().button(1).trigger();
-  });
-});
-</script>
+⏰ Valid: Monday & Tuesday Only
+
+🎁 Special Bonus!
+Get a FREE drink with every order above 50 AED!
+
+📞 To Order Directly: 600527488
+
+Order Now!
+
+⏳ Limited Time!
+Order within 2 hours only!
+
+👉 Share with friends & get extra discount!
+
+#CrispyChicken #SpecialOffer #CrispyChickenDeal</div>
+            </div>
+          </div>
+          
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="whatsapp-stats">
+              <div class="whatsapp-stat">
+                <div class="whatsapp-stat-value" id="totalSentOffers">0</div>
+                <div class="whatsapp-stat-label">Offers Sent</div>
+              </div>
+              <div class="whatsapp-stat">
+                <div class="whatsapp-stat-value" id="totalDeliveredOffers">0</div>
+                <div class="whatsapp-stat-label">Delivered</div>
+              </div>
+              <div class="whatsapp-stat">
+                <div class="whatsapp-stat-value" id="totalFailedOffers">0</div>
+                <div class="whatsapp-stat-label">Failed</div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-crispy">
+              <i class="bi bi-send"></i> Send Offer to All Customers
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Statistics Dashboard -->
+    <div class="stats-grid">
+      <div class="stat-card sent">
+        <div class="stat-value" id="totalSent">0</div>
+        <div class="stat-label">Messages Sent</div>
+        <div class="stat-change positive">
+          <i class="bi bi-arrow-up"></i> +15% from yesterday
+        </div>
+      </div>
+      <div class="stat-card pending">
+        <div class="stat-value" id="totalPending">0</div>
+        <div class="stat-label">Pending</div>
+        <div class="stat-change">
+          <i class="bi bi-clock"></i> Processing...
+        </div>
+      </div>
+      <div class="stat-card delivered">
+        <div class="stat-value" id="totalDelivered">0</div>
+        <div class="stat-label">Delivered</div>
+        <div class="stat-change positive">
+          <i class="bi bi-arrow-up"></i> 92% success rate
+        </div>
+      </div>
+      <div class="stat-card failed">
+        <div class="stat-value" id="totalFailed">0</div>
+        <div class="stat-label">Failed</div>
+        <div class="stat-change negative">
+          <i class="bi bi-arrow-down"></i> 8% failure rate
+        </div>
+      </div>
+      <div class="stat-card whatsapp">
+        <div class="stat-value" id="totalWhatsapp">0</div>
+        <div class="stat-label">WhatsApp Offers</div>
+        <div class="stat-change positive">
+          <i class="bi bi-arrow-up"></i> New feature
+        </div>
+      </div>
+      <div class="stat-card crispy">
+        <div class="stat-value" id="totalCrispy">0</div>
+        <div class="stat-label">CRISPY Offers</div>
+        <div class="stat-change positive">
+          <i class="bi bi-arrow-up"></i> Hot deals!
+        </div>
+      </div>
+    </div>
+    <!-- Charts Section -->
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">
+              <i class="bi bi-graph-up"></i> Delivery Analytics
+            </h2>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="deliveryChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">
+              <i class="bi bi-pie-chart"></i> Status Distribution
+            </h2>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="statusChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Filters Section -->
+    <div class="filter-section">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5><i class="bi bi-funnel"></i> Filters</h5>
+        <div>
+          <button class="btn btn-sm btn-outline-primary" onclick="refreshData()">
+            <i class="bi bi-arrow-clockwise"></i> Refresh
+          </button>
+          <button class="btn btn-sm btn-outline-secondary" onclick="clearFilters()">
+            <i class="bi bi-x"></i> Clear Filters
+          </button>
+        </div>
+      </div>
+      <div class="filter-row">
+        <div class="filter-group">
+          <label class="form-label">Date Range</label>
+          <select class="form-select" id="dateFilter">
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+            <option value="custom">Custom Range</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="statusFilter">
+            <option value="all">All Status</option>
+            <option value="sent">Sent</option>
+            <option value="pending">Pending</option>
+            <option value="delivered">Delivered</option>
+            <option value="failed">Failed</option>
+            <option value="whatsapp">WhatsApp Offers</option>
+            <option value="crispy">CRISPY Offers</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="form-label">Platform</label>
+          <select class="form-select" id="platformFilter">
+            <option value="all">All Platforms</option>
+            <option value="sms">SMS</option>
+            <option value="whatsapp">WhatsApp</option>
+            <option value="email">Email</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="form-label">Search</label>
+          <input type="text" class="form-control" id="searchInput" placeholder="Search by recipient or message...">
+        </div>
+      </div>
+    </div>
+    <!-- Results Table -->
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="card-title mb-0">
+          <i class="bi bi-table"></i> Message Results
+        </h2>
+        <div>
+          <button class="btn btn-sm btn-outline-primary" onclick="exportTable()">
+            <i class="bi bi-download"></i> Export CSV
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Message ID</th>
+                <th>Recipient</th>
+                <th>Message</th>
+                <th>Platform</th>
+                <th>Status</th>
+                <th>Sent At</th>
+                <th>Delivered At</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="messageTableBody">
+              <!-- Messages will be populated here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- Message Detail Modal -->
+    <div class="modal fade" id="messageModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Message Details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div id="messageDetails">
+              <!-- Message details will be populated here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Global variables
+    let messages = [];
+    let filteredMessages = [];
+    let deliveryChart = null;
+    let statusChart = null;
+    let whatsappOffers = [];
+    let crispyOffers = [];
+    
+    // Offer templates
+    const offerTemplates = {
+      crispy: `🔥 CRISPY CHICKEN - ULTIMATE OFFER 🔥
+
+🍗 12 Crispy Chicken Pieces + 3 Garlic Sauce
+
+Only 30 AED
+
+⏰ Valid: Monday & Tuesday Only
+
+🎁 Special Bonus!
+Get a FREE drink with every order above 50 AED!
+
+📞 To Order Directly: 600527488
+
+Order Now!
+
+⏳ Limited Time!
+Order within 2 hours only!
+
+👉 Share with friends & get extra discount!
+
+#CrispyChicken #SpecialOffer #CrispyChickenDeal`,
+      
+      special: `🎉 SPECIAL DISCOUNT FROM CRISPY CHICKEN 🎉
+
+Get 25% OFF on your next order!
+
+Use code: CRISPY25
+
+Valid for all menu items
+
+📞 Call now: 600527488
+
+Offer valid until the end of the month!
+
+Don't miss out on this amazing deal!
+
+#CrispyChicken #SpecialDiscount #CrispyDeals`,
+      
+      new: `🆕 NEW PRODUCT ALERT FROM CRISPY CHICKEN 🆕
+
+Introducing our Spicy Crispy Burger!
+
+🌶️ Extra spicy, extra crispy!
+🧀 Double cheese patty
+🍔 Fresh vegetables
+
+Special launch price: 35 AED only!
+
+📞 Order now: 600527488
+
+Limited time offer!
+
+#CrispyChicken #NewProduct #SpicyBurger`
+    };
+    
+    // Initialize the application
+    document.addEventListener('DOMContentLoaded', function() {
+      generateSampleData();
+      setupEventListeners();
+      updateStatistics();
+      updateCharts();
+      updateTable();
+      updateWhatsappStats();
+      updateCrispyStats();
+      updateCustomerCount();
+      updateOfferPreview();
+    });
+    
+    function generateSampleData() {
+      const sampleMessages = [
+        {
+          id: 'MSG001',
+          recipient: 'John Smith',
+          phone: '+971501234567',
+          message: 'Your order has been delivered successfully',
+          platform: 'SMS',
+          status: 'delivered',
+          sentAt: new Date(Date.now() - 1000 * 60 * 5),
+          deliveredAt: new Date(Date.now() - 1000 * 60 * 3),
+          retryCount: 0
+        },
+        {
+          id: 'MSG002',
+          recipient: 'Alice Johnson',
+          phone: '+971551234568',
+          message: 'Reminder: Your appointment is tomorrow at 2 PM',
+          platform: 'WhatsApp',
+          status: 'sent',
+          sentAt: new Date(Date.now() - 1000 * 60 * 10),
+          deliveredAt: null,
+          retryCount: 0
+        },
+        {
+          id: 'MSG003',
+          recipient: 'Bob Wilson',
+          phone: '+971561234569',
+          message: 'Payment received. Thank you for your purchase',
+          platform: 'SMS',
+          status: 'pending',
+          sentAt: new Date(Date.now() - 1000 * 60 * 15),
+          deliveredAt: null,
+          retryCount: 0
+        },
+        {
+          id: 'MSG004',
+          recipient: 'Emma Davis',
+          phone: '+971581234570',
+          message: 'Your support ticket has been resolved',
+          platform: 'Email',
+          status: 'failed',
+          sentAt: new Date(Date.now() - 1000 * 60 * 20),
+          deliveredAt: null,
+          retryCount: 2
+        },
+        {
+          id: 'MSG005',
+          recipient: 'Michael Brown',
+          phone: '+971501234571',
+          message: 'Welcome to our service! Here\'s your discount code',
+          platform: 'WhatsApp',
+          status: 'delivered',
+          sentAt: new Date(Date.now() - 1000 * 60 * 25),
+          deliveredAt: new Date(Date.now() - 1000 * 60 * 23),
+          retryCount: 0
+        },
+        {
+          id: 'MSG006',
+          recipient: 'Sarah Johnson',
+          phone: '+971551234572',
+          message: 'Your order is out for delivery',
+          platform: 'SMS',
+          status: 'sent',
+          sentAt: new Date(Date.now() - 1000 * 60 * 30),
+          deliveredAt: null,
+          retryCount: 0
+        },
+        {
+          id: 'MSG007',
+          recipient: 'David Wilson',
+          phone: '+971561234573',
+          message: 'Payment failed. Please update your payment method',
+          platform: 'SMS',
+          status: 'failed',
+          sentAt: new Date(Date.now() - 1000 * 60 * 35),
+          deliveredAt: null,
+          retryCount: 1
+        },
+        {
+          id: 'MSG008',
+          recipient: 'Lisa Davis',
+          phone: '+971581234574',
+          message: 'Your feedback is important to us',
+          platform: 'Email',
+          status: 'pending',
+          sentAt: new Date(Date.now() - 1000 * 60 * 40),
+          deliveredAt: null,
+          retryCount: 0
+        }
+      ];
+      
+      messages = sampleMessages;
+      filteredMessages = [...messages];
+    }
+    
+    function setupEventListeners() {
+      // Filters
+      document.getElementById('dateFilter').addEventListener('change', applyFilters);
+      document.getElementById('statusFilter').addEventListener('change', applyFilters);
+      document.getElementById('platformFilter').addEventListener('change', applyFilters);
+      document.getElementById('searchInput').addEventListener('input', applyFilters);
+      
+      // WhatsApp Offer Form
+      document.getElementById('whatsappOfferForm').addEventListener('submit', sendWhatsappOffer);
+      
+      // Offer message textarea
+      document.getElementById('offerMessage').addEventListener('input', updateOfferPreview);
+    }
+    
+    function updateStatistics() {
+      const sent = messages.filter(m => m.status === 'sent').length;
+      const pending = messages.filter(m => m.status === 'pending').length;
+      const delivered = messages.filter(m => m.status === 'delivered').length;
+      const failed = messages.filter(m => m.status === 'failed').length;
+      const whatsapp = messages.filter(m => m.platform === 'WhatsApp').length;
+      const crispy = messages.filter(m => m.status === 'crispy').length;
+      
+      document.getElementById('totalSent').textContent = sent;
+      document.getElementById('totalPending').textContent = pending;
+      document.getElementById('totalDelivered').textContent = delivered;
+      document.getElementById('totalFailed').textContent = failed;
+      document.getElementById('totalWhatsapp').textContent = whatsapp;
+      document.getElementById('totalCrispy').textContent = crispy;
+    }
+    
+    function updateWhatsappStats() {
+      const sent = whatsappOffers.filter(o => o.status === 'sent').length;
+      const delivered = whatsappOffers.filter(o => o.status === 'delivered').length;
+      const failed = whatsappOffers.filter(o => o.status === 'failed').length;
+      
+      document.getElementById('totalSentOffers').textContent = sent;
+      document.getElementById('totalDeliveredOffers').textContent = delivered;
+      document.getElementById('totalFailedOffers').textContent = failed;
+    }
+    
+    function updateCrispyStats() {
+      const sent = crispyOffers.filter(o => o.status === 'sent').length;
+      const delivered = crispyOffers.filter(o => o.status === 'delivered').length;
+      const failed = crispyOffers.filter(o => o.status === 'failed').length;
+      
+      // Update crispy stats in the main dashboard
+      const totalCrispy = sent + delivered + failed;
+      document.getElementById('totalCrispy').textContent = totalCrispy;
+    }
+    
+    function updateCustomerCount() {
+      const uniquePhones = [...new Set(messages.map(m => m.phone).filter(phone => phone))];
+      document.getElementById('customerCount').value = uniquePhones.length;
+    }
+    
+    function updateOfferPreview() {
+      const message = document.getElementById('offerMessage').value;
+      document.getElementById('offerPreview').textContent = message;
+    }
+    
+    function updateCharts() {
+      // Delivery Chart
+      const deliveryCtx = document.getElementById('deliveryChart').getContext('2d');
+      
+      if (deliveryChart) {
+        deliveryChart.destroy();
+      }
+      
+      const hourlyData = getHourlyDeliveryData();
+      
+      deliveryChart = new Chart(deliveryCtx, {
+        type: 'line',
+        data: {
+          labels: hourlyData.labels,
+          datasets: [{
+            label: 'Messages Sent',
+            data: hourlyData.sent,
+            borderColor: '#2563eb',
+            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+            tension: 0.4
+          }, {
+            label: 'Messages Delivered',
+            data: hourlyData.delivered,
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+      
+      // Status Chart
+      const statusCtx = document.getElementById('statusChart').getContext('2d');
+      
+      if (statusChart) {
+        statusChart.destroy();
+      }
+      
+      const statusCounts = {
+        sent: messages.filter(m => m.status === 'sent').length,
+        pending: messages.filter(m => m.status === 'pending').length,
+        delivered: messages.filter(m => m.status === 'delivered').length,
+        failed: messages.filter(m => m.status === 'failed').length,
+        crispy: messages.filter(m => m.status === 'crispy').length
+      };
+      
+      statusChart = new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Sent', 'Pending', 'Delivered', 'Failed', 'CRISPY Offers'],
+          datasets: [{
+            data: [statusCounts.sent, statusCounts.pending, statusCounts.delivered, statusCounts.failed, statusCounts.crispy],
+            backgroundColor: ['#2563eb', '#f59e0b', '#10b981', '#ef4444', '#ff6b6b']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+    }
+    
+    function getHourlyDeliveryData() {
+      const hours = [];
+      const sent = [];
+      const delivered = [];
+      
+      for (let i = 0; i < 24; i++) {
+        hours.push(`${i}:00`);
+        const hourMessages = messages.filter(m => {
+          const messageHour = new Date(m.sentAt || m.deliveredAt).getHours();
+          return messageHour === i;
+        });
+        
+        sent.push(hourMessages.filter(m => m.status === 'sent' || m.status === 'delivered' || m.status === 'failed' || m.status === 'crispy').length);
+        delivered.push(hourMessages.filter(m => m.status === 'delivered').length);
+      }
+      
+      return { labels: hours, sent, delivered };
+    }
+    
+    function applyFilters() {
+      const dateFilter = document.getElementById('dateFilter').value;
+      const statusFilter = document.getElementById('statusFilter').value;
+      const platformFilter = document.getElementById('platformFilter').value;
+      const searchInput = document.getElementById('searchInput').value.toLowerCase();
+      
+      filteredMessages = messages.filter(message => {
+        // Date filter
+        let passesDateFilter = true;
+        if (dateFilter !== 'all') {
+          const messageDate = new Date(message.sentAt);
+          const now = new Date();
+          
+          if (dateFilter === 'today') {
+            passesDateFilter = messageDate.toDateString() === now.toDateString();
+          } else if (dateFilter === 'week') {
+            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            passesDateFilter = messageDate >= weekAgo;
+          } else if (dateFilter === 'month') {
+            const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+            passesDateFilter = messageDate >= monthAgo;
+          }
+        }
+        
+        // Status filter
+        const passesStatusFilter = statusFilter === 'all' || message.status === statusFilter;
+        
+        // Platform filter
+        const passesPlatformFilter = platformFilter === 'all' || message.platform === platformFilter;
+        
+        // Search filter
+        const passesSearchFilter = searchInput === '' || 
+          message.recipient.toLowerCase().includes(searchInput) || 
+          message.message.toLowerCase().includes(searchInput) ||
+          message.id.toLowerCase().includes(searchInput);
+        
+        return passesDateFilter && passesStatusFilter && passesPlatformFilter && passesSearchFilter;
+      });
+      
+      updateTable();
+      updateStatistics();
+      updateCharts();
+    }
+    
+    function updateTable() {
+      const tableBody = document.getElementById('messageTableBody');
+      tableBody.innerHTML = '';
+      
+      if (filteredMessages.length === 0) {
+        const emptyRow = document.createElement('tr');
+        emptyRow.innerHTML = `
+          <td colspan="8" class="text-center py-4">
+            <div class="text-muted">No messages found matching your criteria</div>
+          </td>
+        `;
+        tableBody.appendChild(emptyRow);
+        return;
+      }
+      
+      filteredMessages.forEach(message => {
+        const row = document.createElement('tr');
+        
+        // Format dates
+        const sentAt = message.sentAt ? new Date(message.sentAt).toLocaleString() : 'N/A';
+        const deliveredAt = message.deliveredAt ? new Date(message.deliveredAt).toLocaleString() : 'N/A';
+        
+        // Create status badge
+        let statusBadge = '';
+        switch (message.status) {
+          case 'sent':
+            statusBadge = '<span class="status-badge sent"><i class="bi bi-send"></i> Sent</span>';
+            break;
+          case 'pending':
+            statusBadge = '<span class="status-badge pending"><i class="bi bi-clock"></i> Pending</span>';
+            break;
+          case 'delivered':
+            statusBadge = '<span class="status-badge delivered"><i class="bi bi-check-circle"></i> Delivered</span>';
+            break;
+          case 'failed':
+            statusBadge = '<span class="status-badge failed"><i class="bi bi-exclamation-circle"></i> Failed</span>';
+            break;
+          case 'whatsapp':
+            statusBadge = '<span class="status-badge whatsapp"><i class="bi bi-whatsapp"></i> WhatsApp Offer</span>';
+            break;
+          case 'crispy':
+            statusBadge = '<span class="status-badge crispy"><i class="bi bi-fire"></i> CRISPY Offer</span>';
+            break;
+        }
+        
+        // Create platform icon
+        let platformIcon = '';
+        switch (message.platform) {
+          case 'SMS':
+            platformIcon = '<i class="bi bi-chat-text"></i> SMS';
+            break;
+          case 'WhatsApp':
+            platformIcon = '<i class="bi bi-whatsapp"></i> WhatsApp';
+            break;
+          case 'Email':
+            platformIcon = '<i class="bi bi-envelope"></i> Email';
+            break;
+        }
+        
+        row.innerHTML = `
+          <td>${message.id}</td>
+          <td>${message.recipient}</td>
+          <td>
+            <div class="message-preview">
+              <div class="message-preview-body">${message.message.substring(0, 100)}${message.message.length > 100 ? '...' : ''}</div>
+            </div>
+          </td>
+          <td>${platformIcon}</td>
+          <td>${statusBadge}</td>
+          <td>${sentAt}</td>
+          <td>${deliveredAt}</td>
+          <td>
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm btn-outline-primary btn-icon" onclick="viewMessageDetails('${message.id}')" title="View Details">
+                <i class="bi bi-eye"></i>
+              </button>
+              ${message.status === 'failed' ? `
+                <button class="btn btn-sm btn-outline-warning btn-icon" onclick="retryMessage('${message.id}')" title="Retry">
+                  <i class="bi bi-arrow-clockwise"></i>
+                </button>
+              ` : ''}
+            </div>
+          </td>
+        `;
+        
+        tableBody.appendChild(row);
+      });
+    }
+    
+    function viewMessageDetails(messageId) {
+      const message = messages.find(m => m.id === messageId);
+      if (!message) return;
+      
+      const modal = new bootstrap.Modal(document.getElementById('messageModal'));
+      const detailsContainer = document.getElementById('messageDetails');
+      
+      // Format dates
+      const sentAt = message.sentAt ? new Date(message.sentAt).toLocaleString() : 'N/A';
+      const deliveredAt = message.deliveredAt ? new Date(message.deliveredAt).toLocaleString() : 'N/A';
+      
+      // Create status badge
+      let statusBadge = '';
+      switch (message.status) {
+        case 'sent':
+          statusBadge = '<span class="status-badge sent"><i class="bi bi-send"></i> Sent</span>';
+          break;
+        case 'pending':
+          statusBadge = '<span class="status-badge pending"><i class="bi bi-clock"></i> Pending</span>';
+          break;
+        case 'delivered':
+          statusBadge = '<span class="status-badge delivered"><i class="bi bi-check-circle"></i> Delivered</span>';
+          break;
+        case 'failed':
+          statusBadge = '<span class="status-badge failed"><i class="bi bi-exclamation-circle"></i> Failed</span>';
+          break;
+        case 'whatsapp':
+          statusBadge = '<span class="status-badge whatsapp"><i class="bi bi-whatsapp"></i> WhatsApp Offer</span>';
+          break;
+        case 'crispy':
+          statusBadge = '<span class="status-badge crispy"><i class="bi bi-fire"></i> CRISPY Offer</span>';
+          break;
+      }
+      
+      // Create timeline
+      let timelineHtml = `
+        <div class="timeline">
+          <div class="timeline-item sent">
+            <div class="timeline-content">
+              <div class="timeline-time">${sentAt}</div>
+              <div class="timeline-message">Message sent</div>
+            </div>
+          </div>
+      `;
+      
+      if (message.deliveredAt) {
+        timelineHtml += `
+          <div class="timeline-item delivered">
+            <div class="timeline-content">
+              <div class="timeline-time">${deliveredAt}</div>
+              <div class="timeline-message">Message delivered</div>
+            </div>
+          </div>
+        `;
+      }
+      
+      if (message.status === 'failed') {
+        timelineHtml += `
+          <div class="timeline-item failed">
+            <div class="timeline-content">
+              <div class="timeline-time">${sentAt}</div>
+              <div class="timeline-message">Delivery failed</div>
+            </div>
+          </div>
+        `;
+      }
+      
+      if (message.status === 'crispy') {
+        timelineHtml += `
+          <div class="timeline-item crispy">
+            <div class="timeline-content">
+              <div class="timeline-time">${sentAt}</div>
+              <div class="timeline-message">CRISPY CHICKEN offer sent</div>
+            </div>
+          </div>
+        `;
+        
+        if (message.deliveredAt) {
+          timelineHtml += `
+            <div class="timeline-item delivered">
+              <div class="timeline-content">
+                <div class="timeline-time">${deliveredAt}</div>
+                <div class="timeline-message">Offer delivered</div>
+              </div>
+            </div>
+          `;
+        }
+      }
+      
+      timelineHtml += '</div>';
+      
+      detailsContainer.innerHTML = `
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <h6>Message Information</h6>
+            <table class="table table-sm">
+              <tr>
+                <td><strong>Message ID:</strong></td>
+                <td>${message.id}</td>
+              </tr>
+              <tr>
+                <td><strong>Recipient:</strong></td>
+                <td>${message.recipient}</td>
+              </tr>
+              <tr>
+                <td><strong>Phone/Email:</strong></td>
+                <td>${message.phone || 'N/A'}</td>
+              </tr>
+              <tr>
+                <td><strong>Platform:</strong></td>
+                <td>${message.platform}</td>
+              </tr>
+              <tr>
+                <td><strong>Status:</strong></td>
+                <td>${statusBadge}</td>
+              </tr>
+              <tr>
+                <td><strong>Retry Count:</strong></td>
+                <td>${message.retryCount || 0}</td>
+              </tr>
+            </table>
+          </div>
+          <div class="col-md-6">
+            <h6>Timestamps</h6>
+            <table class="table table-sm">
+              <tr>
+                <td><strong>Sent At:</strong></td>
+                <td>${sentAt}</td>
+              </tr>
+              <tr>
+                <td><strong>Delivered At:</strong></td>
+                <td>${deliveredAt}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="mb-4">
+          <h6>Message Content</h6>
+          <div class="message-preview">
+            <div class="message-preview-body" style="white-space: pre-wrap;">${message.message}</div>
+          </div>
+        </div>
+        <div>
+          <h6>Delivery Timeline</h6>
+          ${timelineHtml}
+        </div>
+      `;
+      
+      modal.show();
+    }
+    
+    function retryMessage(messageId) {
+      const messageIndex = messages.findIndex(m => m.id === messageId);
+      if (messageIndex === -1) return;
+      
+      // Update message status and retry count
+      messages[messageIndex].status = 'pending';
+      messages[messageIndex].retryCount = (messages[messageIndex].retryCount || 0) + 1;
+      messages[messageIndex].sentAt = new Date();
+      
+      // Show success toast
+      showToast('Message retry initiated', 'success');
+      
+      // Apply filters to update the view
+      applyFilters();
+      
+      // Simulate delivery after a delay
+      setTimeout(() => {
+        const success = Math.random() > 0.3; // 70% success rate for retries
+        
+        if (success) {
+          messages[messageIndex].status = 'delivered';
+          messages[messageIndex].deliveredAt = new Date();
+          showToast('Message delivered successfully', 'success');
+        } else {
+          messages[messageIndex].status = 'failed';
+          showToast('Message delivery failed again', 'error');
+        }
+        
+        applyFilters();
+      }, 3000);
+    }
+    
+    function refreshData() {
+      showToast('Refreshing data...', 'info');
+      
+      // Simulate data refresh
+      setTimeout(() => {
+        // Add some new messages
+        const newMessage = {
+          id: 'MSG' + String(messages.length + 1).padStart(3, '0'),
+          recipient: 'New User',
+          phone: '+9715012345' + String(Math.floor(Math.random() * 1000)).padStart(3, '0'),
+          message: 'This is a new message',
+          platform: ['SMS', 'WhatsApp', 'Email'][Math.floor(Math.random() * 3)],
+          status: ['sent', 'pending', 'delivered', 'failed'][Math.floor(Math.random() * 4)],
+          sentAt: new Date(),
+          deliveredAt: Math.random() > 0.5 ? new Date(Date.now() - 1000 * 60 * Math.floor(Math.random() * 10)) : null,
+          retryCount: 0
+        };
+        
+        messages.unshift(newMessage);
+        applyFilters();
+        updateCustomerCount();
+        showToast('Data refreshed successfully', 'success');
+      }, 1000);
+    }
+    
+    function clearFilters() {
+      document.getElementById('dateFilter').value = 'today';
+      document.getElementById('statusFilter').value = 'all';
+      document.getElementById('platformFilter').value = 'all';
+      document.getElementById('searchInput').value = '';
+      
+      applyFilters();
+      showToast('Filters cleared', 'info');
+    }
+    
+    function exportReport() {
+      showToast('Generating report...', 'info');
+      
+      // Simulate report generation
+      setTimeout(() => {
+        // Create a CSV string
+        let csv = 'Message ID,Recipient,Platform,Status,Sent At,Delivered At\n';
+        
+        filteredMessages.forEach(message => {
+          const sentAt = message.sentAt ? new Date(message.sentAt).toLocaleString() : 'N/A';
+          const deliveredAt = message.deliveredAt ? new Date(message.deliveredAt).toLocaleString() : 'N/A';
+          
+          csv += `${message.id},${message.recipient},${message.platform},${message.status},${sentAt},${deliveredAt}\n`;
+        });
+        
+        // Create a download link
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('hidden', '');
+        a.setAttribute('href', url);
+        a.setAttribute('download', 'message_report.csv');
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        showToast('Report exported successfully', 'success');
+      }, 1000);
+    }
+    
+    function exportTable() {
+      exportReport(); // Same functionality as exportReport
+    }
+    
+    function showSettings() {
+      showToast('Settings panel would open here', 'info');
+    }
+    
+    function showToast(message, type = 'info') {
+      const toastContainer = document.getElementById('toastContainer');
+      
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      
+      let icon = '';
+      switch (type) {
+        case 'success':
+          icon = '<i class="bi bi-check-circle-fill"></i>';
+          break;
+        case 'error':
+          icon = '<i class="bi bi-exclamation-circle-fill"></i>';
+          break;
+        case 'warning':
+          icon = '<i class="bi bi-exclamation-triangle-fill"></i>';
+          break;
+        case 'whatsapp':
+          icon = '<i class="bi bi-whatsapp"></i>';
+          break;
+        case 'crispy':
+          icon = '<i class="bi bi-fire"></i>';
+          break;
+        case 'info':
+        default:
+          icon = '<i class="bi bi-info-circle-fill"></i>';
+          break;
+      }
+      
+      toast.innerHTML = `
+        ${icon}
+        <div>${message}</div>
+      `;
+      
+      toastContainer.appendChild(toast);
+      
+      // Auto remove after 3 seconds
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        
+        setTimeout(() => {
+          toastContainer.removeChild(toast);
+        }, 300);
+      }, 3000);
+    }
+    
+    // WhatsApp Offer System Functions
+    function sendWhatsappOffer(e) {
+      e.preventDefault();
+      
+      const whatsappNumber = document.getElementById('whatsappNumber').value;
+      const offerMessage = document.getElementById('offerMessage').value;
+      
+      // Ensure the message contains "CRISPY CHICKEN"
+      if (!offerMessage.includes('CRISPY CHICKEN')) {
+        showToast('The offer message must include "CRISPY CHICKEN"', 'warning');
+        return;
+      }
+      
+      const uniquePhones = [...new Set(messages.map(m => m.phone).filter(phone => phone))];
+      
+      if (uniquePhones.length === 0) {
+        showToast('No customer phone numbers found', 'warning');
+        return;
+      }
+      
+      // Create new WhatsApp offers for each unique phone
+      const newOffers = uniquePhones.map((phone, index) => {
+        // Find the recipient name from existing messages for this phone, if available
+        const existingMessage = messages.find(m => m.phone === phone);
+        const recipient = existingMessage ? existingMessage.recipient : phone;
+        
+        return {
+          id: 'CRS' + String(crispyOffers.length + index + 1).padStart(3, '0'),
+          recipient: recipient,
+          phone: phone,
+          message: offerMessage,
+          platform: 'WhatsApp',
+          status: 'pending',
+          sentAt: new Date(),
+          deliveredAt: null,
+          retryCount: 0,
+          whatsappNumber: whatsappNumber
+        };
+      });
+      
+      // Add the new offers to the crispyOffers array
+      crispyOffers = [...newOffers, ...crispyOffers];
+      
+      // Also add to the messages array for tracking
+      messages = [...newOffers, ...messages];
+      
+      // Update the UI
+      updateCustomerCount();
+      updateWhatsappStats();
+      updateCrispyStats();
+      applyFilters();
+      
+      showToast(`Sending CRISPY CHICKEN offer to ${uniquePhones.length} customers...`, 'crispy');
+      
+      // Simulate sending process
+      setTimeout(() => {
+        // Update status to 'crispy'
+        newOffers.forEach(offer => {
+          const index = messages.findIndex(m => m.id === offer.id);
+          if (index !== -1) {
+            messages[index].status = 'crispy';
+          }
+          
+          const offerIndex = crispyOffers.findIndex(o => o.id === offer.id);
+          if (offerIndex !== -1) {
+            crispyOffers[offerIndex].status = 'sent';
+          }
+        });
+        
+        updateWhatsappStats();
+        updateCrispyStats();
+        applyFilters();
+        showToast('CRISPY CHICKEN offers sent successfully', 'crispy');
+        
+        // Simulate delivery after a delay
+        setTimeout(() => {
+          newOffers.forEach(offer => {
+            const index = messages.findIndex(m => m.id === offer.id);
+            if (index !== -1) {
+              // 90% success rate for delivery
+              const success = Math.random() > 0.1;
+              if (success) {
+                messages[index].status = 'delivered';
+                messages[index].deliveredAt = new Date();
+                
+                const offerIndex = crispyOffers.findIndex(o => o.id === offer.id);
+                if (offerIndex !== -1) {
+                  crispyOffers[offerIndex].status = 'delivered';
+                  crispyOffers[offerIndex].deliveredAt = new Date();
+                }
+              } else {
+                messages[index].status = 'failed';
+                
+                const offerIndex = crispyOffers.findIndex(o => o.id === offer.id);
+                if (offerIndex !== -1) {
+                  crispyOffers[offerIndex].status = 'failed';
+                }
+              }
+            }
+          });
+          
+          updateWhatsappStats();
+          updateCrispyStats();
+          applyFilters();
+          showToast('CRISPY CHICKEN offer delivery process completed', 'crispy');
+        }, 3000);
+      }, 1000);
+    }
+    
+    // Template selection function
+    function selectTemplate(templateName) {
+      // Update active button
+      document.querySelectorAll('.template-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // Update textarea with selected template
+      document.getElementById('offerMessage').value = offerTemplates[templateName];
+      
+      // Update preview
+      updateOfferPreview();
+      
+      // Show notification
+      showToast(`Template "${templateName}" selected`, 'info');
+    }
+  </script>
 </body>
 </html>
