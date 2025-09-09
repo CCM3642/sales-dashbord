@@ -815,6 +815,38 @@
     .result-status.warning {
       color: var(--warning);
     }
+    .column-mapping {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: var(--bg);
+      border-radius: 8px;
+      display: none;
+    }
+    .column-mapping.active {
+      display: block;
+    }
+    .mapping-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .sample-data {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: var(--bg);
+      border-radius: 8px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .sample-table {
+      font-size: 0.875rem;
+    }
+    .sample-table th,
+    .sample-table td {
+      padding: 0.5rem;
+      border: 1px solid var(--border);
+    }
   </style>
 </head>
 <body>
@@ -1235,7 +1267,7 @@ Order within 2 hours only!
     </div>
     <!-- Upload Data Modal -->
     <div class="modal fade" id="uploadModal" tabindex="-1">
-      <div class="modal-dialog modal-lg">
+      <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Upload Customer Data</h5>
@@ -1259,6 +1291,66 @@ Order within 2 hours only!
                 </div>
                 <div class="col-md-6">
                   <strong>File Size:</strong> <span id="fileSize"></span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="column-mapping" id="columnMapping">
+              <h6>Column Mapping</h6>
+              <p class="text-muted">Map the columns from your file to customer fields:</p>
+              <div class="mapping-row">
+                <div>
+                  <label class="form-label">Name Column</label>
+                  <select class="form-select" id="nameColumn">
+                    <option value="">Select column...</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label">Phone Column</label>
+                  <select class="form-select" id="phoneColumn">
+                    <option value="">Select column...</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mapping-row">
+                <div>
+                  <label class="form-label">Email Column</label>
+                  <select class="form-select" id="emailColumn">
+                    <option value="">Select column...</option>
+                    <option value="">Skip</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label">City Column</label>
+                  <select class="form-select" id="cityColumn">
+                    <option value="">Select column...</option>
+                    <option value="">Skip</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mapping-row">
+                <div>
+                  <label class="form-label">Status Column</label>
+                  <select class="form-select" id="statusColumn">
+                    <option value="">Select column...</option>
+                    <option value="">Skip</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label">Default Status</label>
+                  <select class="form-select" id="defaultStatus">
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="sample-data">
+                <h6>Sample Data (First 5 rows)</h6>
+                <div class="table-responsive">
+                  <table class="table sample-table" id="sampleTable">
+                    <!-- Sample data will be populated here -->
+                  </table>
                 </div>
               </div>
             </div>
@@ -1314,6 +1406,8 @@ Order within 2 hours only!
     let crispyOffers = [];
     let customers = [];
     let selectedFile = null;
+    let fileData = null;
+    let columnMapping = {};
     
     // Offer templates
     const offerTemplates = {
@@ -2476,8 +2570,11 @@ Limited time offer!
     
     function resetUploadForm() {
       selectedFile = null;
+      fileData = null;
+      columnMapping = {};
       document.getElementById('fileInput').value = '';
       document.getElementById('fileInfo').classList.remove('active');
+      document.getElementById('columnMapping').classList.remove('active');
       document.getElementById('uploadProgress').classList.remove('active');
       document.getElementById('uploadResults').classList.remove('active');
       document.getElementById('uploadBtn').disabled = true;
@@ -2527,7 +2624,171 @@ Limited time offer!
       document.getElementById('fileName').textContent = file.name;
       document.getElementById('fileSize').textContent = formatFileSize(file.size);
       document.getElementById('fileInfo').classList.add('active');
-      document.getElementById('uploadBtn').disabled = false;
+      
+      // Read file for preview
+      const reader = new FileReader();
+      
+      reader.onload = function(e) {
+        try {
+          let data = [];
+          
+          if (selectedFile.name.endsWith('.csv')) {
+            // Parse CSV using SheetJS
+            const workbook = XLSX.read(e.target.result, { type: 'string' });
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+            data = XLSX.utils.sheet_to_json(worksheet);
+          } else {
+            // Parse Excel
+            const workbook = XLSX.read(e.target.result, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+            data = XLSX.utils.sheet_to_json(worksheet);
+          }
+          
+          fileData = data;
+          
+          // Show column mapping section
+          showColumnMapping(data);
+          
+          // Enable upload button
+          document.getElementById('uploadBtn').disabled = false;
+          
+        } catch (error) {
+          showToast('Error reading file: ' + error.message, 'error');
+        }
+      };
+      
+      reader.onerror = function() {
+        showToast('Error reading file', 'error');
+      };
+      
+      // Read file
+      if (selectedFile.name.endsWith('.csv')) {
+        reader.readAsText(selectedFile);
+      } else {
+        reader.readAsArrayBuffer(selectedFile);
+      }
+    }
+    
+    function showColumnMapping(data) {
+      if (!data || data.length === 0) {
+        showToast('No data found in the file', 'error');
+        return;
+      }
+      
+      // Get column headers
+      const headers = Object.keys(data[0]);
+      
+      // Populate column mapping dropdowns
+      const nameColumn = document.getElementById('nameColumn');
+      const phoneColumn = document.getElementById('phoneColumn');
+      const emailColumn = document.getElementById('emailColumn');
+      const cityColumn = document.getElementById('cityColumn');
+      const statusColumn = document.getElementById('statusColumn');
+      
+      // Clear existing options
+      nameColumn.innerHTML = '<option value="">Select column...</option>';
+      phoneColumn.innerHTML = '<option value="">Select column...</option>';
+      emailColumn.innerHTML = '<option value="">Select column...</option>';
+      cityColumn.innerHTML = '<option value="">Select column...</option>';
+      statusColumn.innerHTML = '<option value="">Select column...</option>';
+      
+      // Add column options
+      headers.forEach(header => {
+        const option = `<option value="${header}">${header}</option>`;
+        nameColumn.innerHTML += option;
+        phoneColumn.innerHTML += option;
+        emailColumn.innerHTML += option;
+        cityColumn.innerHTML += option;
+        statusColumn.innerHTML += option;
+      });
+      
+      // Try to auto-map columns based on common patterns
+      autoMapColumns(headers);
+      
+      // Show sample data
+      showSampleData(data);
+      
+      // Show column mapping section
+      document.getElementById('columnMapping').classList.add('active');
+    }
+    
+    function autoMapColumns(headers) {
+      const namePatterns = ['name', 'customer', 'recipient', 'client', 'contact', 'full name'];
+      const phonePatterns = ['phone', 'mobile', 'telephone', 'contact number', 'cell'];
+      const emailPatterns = ['email', 'mail', 'e-mail'];
+      const cityPatterns = ['city', 'location', 'town', 'address'];
+      const statusPatterns = ['status', 'active', 'state'];
+      
+      // Auto-map name column
+      const nameColumn = findColumnByPattern(headers, namePatterns);
+      if (nameColumn) {
+        document.getElementById('nameColumn').value = nameColumn;
+      }
+      
+      // Auto-map phone column
+      const phoneColumn = findColumnByPattern(headers, phonePatterns);
+      if (phoneColumn) {
+        document.getElementById('phoneColumn').value = phoneColumn;
+      }
+      
+      // Auto-map email column
+      const emailColumn = findColumnByPattern(headers, emailPatterns);
+      if (emailColumn) {
+        document.getElementById('emailColumn').value = emailColumn;
+      }
+      
+      // Auto-map city column
+      const cityColumn = findColumnByPattern(headers, cityPatterns);
+      if (cityColumn) {
+        document.getElementById('cityColumn').value = cityColumn;
+      }
+      
+      // Auto-map status column
+      const statusColumn = findColumnByPattern(headers, statusPatterns);
+      if (statusColumn) {
+        document.getElementById('statusColumn').value = statusColumn;
+      }
+    }
+    
+    function findColumnByPattern(headers, patterns) {
+      for (const pattern of patterns) {
+        const found = headers.find(header => 
+          header.toLowerCase().includes(pattern.toLowerCase())
+        );
+        if (found) return found;
+      }
+      return null;
+    }
+    
+    function showSampleData(data) {
+      const sampleTable = document.getElementById('sampleTable');
+      sampleTable.innerHTML = '';
+      
+      if (!data || data.length === 0) return;
+      
+      // Create table header
+      const headers = Object.keys(data[0]);
+      const headerRow = document.createElement('tr');
+      headers.forEach(header => {
+        const th = document.createElement('th');
+        th.textContent = header;
+        headerRow.appendChild(th);
+      });
+      sampleTable.appendChild(headerRow);
+      
+      // Create table rows (first 5 rows)
+      const sampleRows = data.slice(0, 5);
+      sampleRows.forEach(row => {
+        const tr = document.createElement('tr');
+        headers.forEach(header => {
+          const td = document.createElement('td');
+          td.textContent = row[header] || '';
+          tr.appendChild(td);
+        });
+        sampleTable.appendChild(tr);
+      });
     }
     
     function formatFileSize(bytes) {
@@ -2539,153 +2800,116 @@ Limited time offer!
     }
     
     function processFile() {
-      if (!selectedFile) return;
+      if (!fileData || fileData.length === 0) {
+        showToast('No data to process', 'error');
+        return;
+      }
+      
+      // Get column mapping
+      const nameColumn = document.getElementById('nameColumn').value;
+      const phoneColumn = document.getElementById('phoneColumn').value;
+      const emailColumn = document.getElementById('emailColumn').value;
+      const cityColumn = document.getElementById('cityColumn').value;
+      const statusColumn = document.getElementById('statusColumn').value;
+      const defaultStatus = document.getElementById('defaultStatus').value;
+      
+      // Validate required columns
+      if (!nameColumn || !phoneColumn) {
+        showToast('Please map the Name and Phone columns', 'warning');
+        return;
+      }
       
       // Show progress
       document.getElementById('uploadProgress').classList.add('active');
       document.getElementById('progressBar').style.width = '0%';
       document.getElementById('progressText').textContent = 'Processing...';
       
-      const reader = new FileReader();
-      
-      reader.onload = function(e) {
-        try {
-          let data = [];
-          
-          if (selectedFile.name.endsWith('.csv')) {
-            // Parse CSV
-            data = parseCSV(e.target.result);
-          } else {
-            // Parse Excel
-            data = parseExcel(e.target.result);
+      // Process data
+      setTimeout(() => {
+        let successCount = 0;
+        let duplicateCount = 0;
+        let errorCount = 0;
+        
+        // Process each row
+        fileData.forEach((row, index) => {
+          try {
+            // Extract data using column mapping
+            const name = row[nameColumn];
+            const phone = row[phoneColumn];
+            const email = emailColumn && emailColumn !== '' ? row[emailColumn] : '';
+            const city = cityColumn && cityColumn !== '' ? row[cityColumn] : '';
+            const status = statusColumn && statusColumn !== '' ? row[statusColumn] : defaultStatus;
+            
+            // Validate required fields
+            if (!name || !phone) {
+              errorCount++;
+              return;
+            }
+            
+            // Clean phone number
+            const cleanPhone = phone.toString().replace(/[^0-9+]/g, '');
+            
+            // Check if phone already exists
+            const existingCustomer = customers.find(c => 
+              c.phone.replace(/[^0-9+]/g, '') === cleanPhone
+            );
+            if (existingCustomer) {
+              duplicateCount++;
+              return;
+            }
+            
+            // Create new customer
+            const newCustomer = {
+              id: customers.length > 0 ? Math.max(...customers.map(c => c.id)) + 1 : 1,
+              name: name.toString().trim(),
+              phone: cleanPhone,
+              email: email.toString().trim(),
+              city: city.toString().trim(),
+              status: status.toString().toLowerCase(),
+              createdAt: new Date()
+            };
+            
+            // Add to customers array
+            customers.push(newCustomer);
+            successCount++;
+            
+            // Update progress
+            const progress = (index + 1) / fileData.length * 100;
+            updateProgress(progress, `Processing row ${index + 1} of ${fileData.length}...`);
+            
+          } catch (error) {
+            errorCount++;
           }
-          
-          // Process data
-          processCustomerData(data);
-        } catch (error) {
-          showToast('Error processing file: ' + error.message, 'error');
-          resetUploadProgress();
-        }
-      };
-      
-      reader.onerror = function() {
-        showToast('Error reading file', 'error');
-        resetUploadProgress();
-      };
-      
-      // Read file
-      if (selectedFile.name.endsWith('.csv')) {
-        reader.readAsText(selectedFile);
-      } else {
-        reader.readAsArrayBuffer(selectedFile);
-      }
-    }
-    
-    function parseCSV(csvText) {
-      const lines = csvText.split('\n');
-      const headers = lines[0].split(',').map(h => h.trim());
-      const data = [];
-      
-      for (let i = 1; i < lines.length; i++) {
-        if (lines[i].trim() === '') continue;
-        
-        const values = lines[i].split(',').map(v => v.trim());
-        const row = {};
-        
-        headers.forEach((header, index) => {
-          row[header] = values[index] || '';
         });
         
-        data.push(row);
-      }
-      
-      return data;
-    }
-    
-    function parseExcel(arrayBuffer) {
-      const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
-      const data = XLSX.utils.sheet_to_json(worksheet);
-      
-      return data;
-    }
-    
-    function processCustomerData(data) {
-      let successCount = 0;
-      let duplicateCount = 0;
-      let errorCount = 0;
-      
-      // Update progress
-      updateProgress(10, 'Validating data...');
-      
-      // Process each row
-      data.forEach((row, index) => {
-        try {
-          // Validate required fields
-          if (!row.name || !row.phone) {
-            errorCount++;
-            return;
-          }
-          
-          // Check if phone already exists
-          const existingCustomer = customers.find(c => c.phone === row.phone);
-          if (existingCustomer) {
-            duplicateCount++;
-            return;
-          }
-          
-          // Create new customer
-          const newCustomer = {
-            id: customers.length > 0 ? Math.max(...customers.map(c => c.id)) + 1 : 1,
-            name: row.name,
-            phone: row.phone,
-            email: row.email || '',
-            city: row.city || '',
-            status: row.status || 'active',
-            createdAt: new Date()
-          };
-          
-          // Add to customers array
-          customers.push(newCustomer);
-          successCount++;
-          
-          // Update progress
-          const progress = 10 + (index + 1) / data.length * 80;
-          updateProgress(progress, `Processing row ${index + 1} of ${data.length}...`);
-          
-        } catch (error) {
-          errorCount++;
-        }
-      });
-      
-      // Save to localStorage
-      saveCustomersToStorage();
-      
-      // Update progress
-      updateProgress(100, 'Completed!');
-      
-      // Show results
-      setTimeout(() => {
-        document.getElementById('totalRecords').textContent = data.length;
-        document.getElementById('successCount').textContent = successCount;
-        document.getElementById('duplicateCount').textContent = duplicateCount;
-        document.getElementById('errorCount').textContent = errorCount;
-        document.getElementById('uploadResults').classList.add('active');
+        // Save to localStorage
+        saveCustomersToStorage();
         
-        // Update UI
-        updateCustomerList();
-        updateCustomerCount();
-        updateStatistics();
+        // Update progress
+        updateProgress(100, 'Completed!');
         
-        // Show success message
-        showToast(`Upload completed: ${successCount} customers added, ${duplicateCount} duplicates skipped, ${errorCount} errors`, 'success');
-        
-        // Reset progress after delay
+        // Show results
         setTimeout(() => {
-          resetUploadProgress();
-        }, 3000);
-      }, 500);
+          document.getElementById('totalRecords').textContent = fileData.length;
+          document.getElementById('successCount').textContent = successCount;
+          document.getElementById('duplicateCount').textContent = duplicateCount;
+          document.getElementById('errorCount').textContent = errorCount;
+          document.getElementById('uploadResults').classList.add('active');
+          
+          // Update UI
+          updateCustomerList();
+          updateCustomerCount();
+          updateStatistics();
+          
+          // Show success message
+          showToast(`Upload completed: ${successCount} customers added, ${duplicateCount} duplicates skipped, ${errorCount} errors`, 'success');
+          
+          // Reset progress after delay
+          setTimeout(() => {
+            resetUploadProgress();
+          }, 3000);
+        }, 500);
+      }, 100);
     }
     
     function updateProgress(percent, text) {
