@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Enhanced Message Tracking System</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- SheetJS for Excel file processing -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     :root {
@@ -30,18 +29,20 @@
       --crispy-red: #ff6b6b;
       --crispy-orange: #feca57;
     }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       background-color: var(--bg);
       color: var(--text-primary);
       line-height: 1.6;
     }
-    /* Layout */
+
     .main-container {
       max-width: 1400px;
       margin: 0 auto;
       padding: 0 20px;
     }
+
     .page-header {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
       color: white;
@@ -49,16 +50,19 @@
       margin-bottom: 2rem;
       box-shadow: var(--shadow-lg);
     }
+
     .page-title {
       font-size: 2rem;
       font-weight: 700;
       margin-bottom: 0.5rem;
     }
+
     .page-subtitle {
       opacity: 0.9;
       font-size: 1.1rem;
     }
-    /* Cards */
+
+    /* Card styles */
     .card {
       background: var(--surface);
       border-radius: 12px;
@@ -67,120 +71,37 @@
       transition: all 0.2s ease;
       margin-bottom: 1.5rem;
     }
+
     .card:hover {
       box-shadow: var(--shadow-lg);
       transform: translateY(-2px);
     }
+
     .card-header {
       padding: 1.5rem;
       border-bottom: 1px solid var(--border);
       background: var(--surface);
     }
+
     .card-title {
       font-size: 1.25rem;
       font-weight: 600;
       color: var(--text-primary);
       margin-bottom: 0;
     }
+
     .card-body {
       padding: 1.5rem;
     }
-    /* Forms */
-    .form-label {
-      font-weight: 500;
-      color: var(--text-primary);
-      margin-bottom: 0.5rem;
-      font-size: 0.875rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .form-control, .form-select {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.75rem 1rem;
-      font-size: 0.875rem;
-      transition: all 0.2s ease;
-    }
-    .form-control:focus, .form-select:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-      outline: none;
-    }
-    /* Buttons */
-    .btn {
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      font-weight: 500;
-      font-size: 0.875rem;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      border: none;
-    }
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-    }
-    .btn-primary:hover {
-      background: var(--primary-dark);
-      transform: translateY(-1px);
-      box-shadow: var(--shadow);
-    }
-    .btn-success {
-      background: var(--success);
-      color: white;
-    }
-    .btn-warning {
-      background: var(--warning);
-      color: white;
-    }
-    .btn-danger {
-      background: var(--danger);
-      color: white;
-    }
-    .btn-outline {
-      background: transparent;
-      border: 1px solid var(--primary);
-      color: var(--primary);
-    }
-    .btn-outline:hover {
-      background: var(--primary-light);
-      color: var(--primary);
-    }
-    .btn-sm {
-      padding: 0.5rem 1rem;
-      font-size: 0.875rem;
-    }
-    .btn-icon {
-      padding: 0.5rem;
-      border-radius: 6px;
-    }
-    .btn-whatsapp {
-      background: var(--whatsapp);
-      color: white;
-    }
-    .btn-whatsapp:hover {
-      background: var(--whatsapp-dark);
-      transform: translateY(-1px);
-      box-shadow: var(--shadow);
-    }
-    .btn-crispy {
-      background: linear-gradient(135deg, var(--crispy-red) 0%, var(--crispy-orange) 100%);
-      color: white;
-    }
-    .btn-crispy:hover {
-      background: linear-gradient(135deg, var(--crispy-red) 0%, var(--crispy-orange) 100%);
-      transform: translateY(-1px);
-      box-shadow: var(--shadow);
-    }
-    /* Statistics */
+
+    /* Stats grid */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1.5rem;
       margin-bottom: 2rem;
     }
+
     .stat-card {
       background: var(--surface);
       border-radius: 12px;
@@ -189,6 +110,7 @@
       position: relative;
       overflow: hidden;
     }
+
     .stat-card::before {
       content: '';
       position: absolute;
@@ -197,232 +119,255 @@
       width: 4px;
       height: 100%;
     }
-    .stat-card.sent::before {
-      background: var(--success);
-    }
-    .stat-card.pending::before {
-      background: var(--warning);
-    }
-    .stat-card.failed::before {
-      background: var(--danger);
-    }
-    .stat-card.delivered::before {
-      background: var(--info);
-    }
-    .stat-card.whatsapp::before {
-      background: var(--whatsapp);
-    }
-    .stat-card.crispy::before {
-      background: var(--crispy-red);
-    }
-    .stat-card.customers::before {
-      background: var(--primary);
-    }
+
+    .stat-card.sent::before { background: var(--success); }
+    .stat-card.pending::before { background: var(--warning); }
+    .stat-card.failed::before { background: var(--danger); }
+    .stat-card.delivered::before { background: var(--info); }
+    .stat-card.whatsapp::before { background: var(--whatsapp); }
+    .stat-card.crispy::before { background: var(--crispy-red); }
+    .stat-card.customers::before { background: var(--primary); }
+
     .stat-value {
       font-size: 2.5rem;
       font-weight: 700;
       margin-bottom: 0.5rem;
     }
-    .stat-card.sent .stat-value {
-      color: var(--success);
-    }
-    .stat-card.pending .stat-value {
-      color: var(--warning);
-    }
-    .stat-card.failed .stat-value {
-      color: var(--danger);
-    }
-    .stat-card.delivered .stat-value {
-      color: var(--info);
-    }
-    .stat-card.whatsapp .stat-value {
-      color: var(--whatsapp);
-    }
-    .stat-card.crispy .stat-value {
-      color: var(--crispy-red);
-    }
-    .stat-card.customers .stat-value {
-      color: var(--primary);
-    }
+
+    .stat-card.sent .stat-value { color: var(--success); }
+    .stat-card.pending .stat-value { color: var(--warning); }
+    .stat-card.failed .stat-value { color: var(--danger); }
+    .stat-card.delivered .stat-value { color: var(--info); }
+    .stat-card.whatsapp .stat-value { color: var(--whatsapp); }
+    .stat-card.crispy .stat-value { color: var(--crispy-red); }
+    .stat-card.customers .stat-value { color: var(--primary); }
+
     .stat-label {
       color: var(--text-secondary);
       font-size: 0.875rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
-    .stat-change {
-      font-size: 0.75rem;
-      font-weight: 500;
-      margin-top: 0.5rem;
-    }
-    .stat-change.positive {
-      color: var(--success);
-    }
-    .stat-change.negative {
-      color: var(--danger);
-    }
-    /* Status badges */
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-size: 0.875rem;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .status-badge.sent {
-      background: #d1fae5;
-      color: #065f46;
-    }
-    .status-badge.pending {
-      background: #fef3c7;
-      color: #92400e;
-    }
-    .status-badge.failed {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-    .status-badge.delivered {
-      background: #dbeafe;
-      color: #1e40af;
-    }
-    .status-badge.whatsapp {
-      background: #d1fae5;
-      color: #065f46;
-    }
-    .status-badge.crispy {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-    .status-badge.active {
-      background: #d1fae5;
-      color: #065f46;
-    }
-    .status-badge.inactive {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-    .status-badge i {
-      font-size: 0.75rem;
-    }
-    /* Charts */
-    .chart-container {
-      position: relative;
-      height: 300px;
-      margin: 1rem 0;
-    }
-    /* Tables */
-    .table {
-      background: var(--surface);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-    }
-    .table thead {
-      background: var(--primary-light);
-      border-bottom: 2px solid var(--primary);
-    }
-    .table th {
-      font-weight: 600;
-      color: var(--primary);
-      text-transform: uppercase;
-      font-size: 0.75rem;
-      letter-spacing: 0.05em;
-      padding: 1rem;
-    }
-    .table td {
-      padding: 1rem;
-      vertical-align: middle;
-      border-bottom: 1px solid var(--border);
-    }
-    .table tbody tr:hover {
-      background: var(--bg);
-    }
-    /* Message status timeline */
-    .timeline {
-      position: relative;
-      padding: 1rem 0;
-    }
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 20px;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: var(--border);
-    }
-    .timeline-item {
-      position: relative;
-      padding-left: 50px;
-      margin-bottom: 1.5rem;
-    }
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      left: 14px;
-      top: 5px;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--border);
-      border: 2px solid var(--surface);
-    }
-    .timeline-item.sent::before {
-      background: var(--success);
-    }
-    .timeline-item.pending::before {
-      background: var(--warning);
-    }
-    .timeline-item.failed::before {
-      background: var(--danger);
-    }
-    .timeline-item.delivered::before {
-      background: var(--info);
-    }
-    .timeline-item.whatsapp::before {
-      background: var(--whatsapp);
-    }
-    .timeline-item.crispy::before {
-      background: var(--crispy-red);
-    }
-    .timeline-content {
-      background: var(--bg);
-      border-radius: 8px;
-      padding: 1rem;
-      border: 1px solid var(--border);
-    }
-    .timeline-time {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-      margin-bottom: 0.25rem;
-    }
-    .timeline-message {
-      font-size: 0.875rem;
-      color: var(--text-primary);
-    }
-    /* Filters */
-    .filter-section {
-      background: var(--surface);
+
+    /* WhatsApp Offer System */
+    .whatsapp-offer {
+      background: linear-gradient(135deg, var(--crispy-red) 0%, var(--crispy-orange) 100%);
+      color: white;
       border-radius: 12px;
       padding: 1.5rem;
       margin-bottom: 1.5rem;
-      border: 1px solid var(--border);
     }
-    .filter-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
+
+    .whatsapp-offer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 1rem;
     }
-    .filter-group {
-      display: flex;
-      flex-direction: column;
+
+    .whatsapp-offer-title {
+      font-size: 1.5rem;
+      font-weight: 700;
     }
-    /* Toast */
+
+    .whatsapp-offer-form {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .whatsapp-offer-input, .whatsapp-offer-textarea {
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      color: var(--text-primary);
+    }
+
+    .whatsapp-offer-input:focus, .whatsapp-offer-textarea:focus {
+      background: white;
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+    }
+
+    .whatsapp-offer-textarea {
+      min-height: 200px;
+      font-family: monospace;
+    }
+
+    .whatsapp-offer-label {
+      color: white;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .offer-preview {
+      background: white;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+      color: var(--text-primary);
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .template-selector {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .template-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .template-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .template-btn.active {
+      background: white;
+      color: var(--crispy-red);
+    }
+
+    /* Enhanced Dashboard Elements */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .dashboard-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .dashboard-card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    .recent-activity {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .recent-activity-item {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .recent-activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-time {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .activity-message {
+      font-size: 0.875rem;
+      color: var(--text-primary);
+    }
+
+    /* File Upload Improvements */
+    .file-validation {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: var(--bg);
+      border-radius: 8px;
+      display: none;
+    }
+
+    .file-validation.active {
+      display: block;
+    }
+
+    .validation-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .validation-item:last-child {
+      border-bottom: none;
+    }
+
+    .validation-status {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .validation-status.valid {
+      color: var(--success);
+    }
+
+    .validation-status.invalid {
+      color: var(--danger);
+    }
+
+    .validation-status.warning {
+      color: var(--warning);
+    }
+
+    /* WhatsApp Configuration */
+    .whatsapp-config {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .whatsapp-config-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: white;
+    }
+
+    /* Targeting Options */
+    .targeting-options {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .targeting-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: white;
+    }
+
+    /* Scheduling Options */
+    .scheduling-options {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .scheduling-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: white;
+    }
+
+    /* Toast notifications */
     .toast-container {
       position: fixed;
       top: 20px;
@@ -432,6 +377,7 @@
       flex-direction: column;
       gap: 10px;
     }
+
     .toast {
       background: var(--surface);
       border-radius: 8px;
@@ -444,6 +390,7 @@
       animation: slideIn 0.3s ease-out;
       border-left: 4px solid;
     }
+
     @keyframes slideIn {
       from {
         transform: translateX(100%);
@@ -454,472 +401,48 @@
         opacity: 1;
       }
     }
+
     .toast-success {
       border-left-color: var(--success);
     }
+
     .toast-error {
       border-left-color: var(--danger);
     }
+
     .toast-warning {
       border-left-color: var(--warning);
     }
+
     .toast-info {
       border-left-color: var(--info);
     }
+
     .toast-whatsapp {
       border-left-color: var(--whatsapp);
     }
+
     .toast-crispy {
       border-left-color: var(--crispy-red);
     }
-    /* Loading */
-    .loading {
-      display: inline-block;
-      width: 1rem;
-      height: 1rem;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top-color: white;
-      animation: spin 0.8s linear infinite;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    /* Responsive */
+
+    /* Responsive adjustments */
     @media (max-width: 768px) {
       .stats-grid {
         grid-template-columns: 1fr;
       }
       
-      .filter-row {
+      .dashboard-grid {
         grid-template-columns: 1fr;
       }
       
-      .table-responsive {
-        border-radius: 0;
+      .template-selector {
+        flex-direction: column;
       }
-    }
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: var(--bg);
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--text-secondary);
-    }
-    /* Progress bars */
-    .progress {
-      height: 8px;
-      border-radius: 4px;
-      overflow: hidden;
-      background: var(--border);
-    }
-    .progress-bar {
-      transition: width 0.3s ease;
-    }
-    /* Message preview */
-    .message-preview {
-      background: var(--bg);
-      border-radius: 8px;
-      padding: 1rem;
-      margin: 0.5rem 0;
-      border: 1px solid var(--border);
-    }
-    .message-preview-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.5rem;
-    }
-    .message-preview-body {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
-    /* WhatsApp Offer System */
-    .whatsapp-offer {
-      background: linear-gradient(135deg, var(--crispy-red) 0%, var(--crispy-orange) 100%);
-      color: white;
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-    .whatsapp-offer-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-    .whatsapp-offer-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
-    .whatsapp-offer-form {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 1.5rem;
-    }
-    .whatsapp-offer-input {
-      background: rgba(255, 255, 255, 0.9);
-      border: none;
-      color: var(--text-primary);
-    }
-    .whatsapp-offer-input:focus {
-      background: white;
-      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
-    }
-    .whatsapp-offer-textarea {
-      background: rgba(255, 255, 255, 0.9);
-      border: none;
-      color: var(--text-primary);
-      min-height: 200px;
-      font-family: monospace;
-    }
-    .whatsapp-offer-textarea:focus {
-      background: white;
-      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
-    }
-    .whatsapp-offer-label {
-      color: white;
-      font-weight: 500;
-      margin-bottom: 0.5rem;
-    }
-    .whatsapp-stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-    .whatsapp-stat {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 1rem;
-      text-align: center;
-    }
-    .whatsapp-stat-value {
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
-    .whatsapp-stat-label {
-      font-size: 0.875rem;
-      opacity: 0.9;
-    }
-    .offer-preview {
-      background: white;
-      border-radius: 8px;
-      padding: 1rem;
-      margin-top: 1rem;
-      color: var(--text-primary);
-      max-height: 300px;
-      overflow-y: auto;
-    }
-    .offer-preview-title {
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: var(--crispy-red);
-    }
-    .offer-preview-content {
-      font-size: 0.875rem;
-      line-height: 1.5;
-      white-space: pre-wrap;
-    }
-    .template-selector {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
-    .template-btn {
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      border: none;
-      font-size: 0.875rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .template-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
-    .template-btn.active {
-      background: white;
-      color: var(--crispy-red);
-    }
-    /* Customer Management */
-    .customer-section {
-      background: var(--surface);
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      margin-bottom: 1.5rem;
-    }
-    .customer-header {
-      padding: 1.5rem;
-      border-bottom: 1px solid var(--border);
-      background: var(--surface);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .customer-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 0;
-    }
-    .customer-body {
-      padding: 1.5rem;
-    }
-    .customer-form {
-      background: var(--bg);
-      border-radius: 8px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-    .customer-list {
-      max-height: 400px;
-      overflow-y: auto;
-    }
-    .customer-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .customer-item:last-child {
-      border-bottom: none;
-    }
-    .customer-info {
-      flex: 1;
-    }
-    .customer-name {
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-    }
-    .customer-contact {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-    }
-    .customer-actions {
-      display: flex;
-      gap: 0.5rem;
-    }
-    .customer-status {
-      font-size: 0.75rem;
-      padding: 0.25rem 0.5rem;
-      border-radius: 12px;
-      font-weight: 500;
-    }
-    .customer-status.active {
-      background: #d1fae5;
-      color: #065f46;
-    }
-    .customer-status.inactive {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-    .empty-state {
-      text-align: center;
-      padding: 2rem;
-      color: var(--text-secondary);
-    }
-    .empty-state i {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      opacity: 0.5;
-    }
-    /* File Upload */
-    .file-upload-area {
-      border: 2px dashed var(--border);
-      border-radius: 8px;
-      padding: 2rem;
-      text-align: center;
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-    .file-upload-area:hover {
-      border-color: var(--primary);
-      background: var(--primary-light);
-    }
-    .file-upload-area.dragover {
-      border-color: var(--primary);
-      background: var(--primary-light);
-    }
-    .file-upload-icon {
-      font-size: 3rem;
-      color: var(--text-secondary);
-      margin-bottom: 1rem;
-    }
-    .file-upload-text {
-      color: var(--text-secondary);
-      margin-bottom: 0.5rem;
-    }
-    .file-upload-hint {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-    }
-    .file-info {
-      margin-top: 1rem;
-      padding: 1rem;
-      background: var(--bg);
-      border-radius: 8px;
-      display: none;
-    }
-    .file-info.active {
-      display: block;
-    }
-    .upload-progress {
-      margin-top: 1rem;
-      display: none;
-    }
-    .upload-progress.active {
-      display: block;
-    }
-    .upload-results {
-      margin-top: 1rem;
-      display: none;
-    }
-    .upload-results.active {
-      display: block;
-    }
-    .result-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .result-item:last-child {
-      border-bottom: none;
-    }
-    .result-status {
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-    .result-status.success {
-      color: var(--success);
-    }
-    .result-status.error {
-      color: var(--danger);
-    }
-    .result-status.warning {
-      color: var(--warning);
-    }
-    /* New styles for enhanced features */
-    .whatsapp-config {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-    }
-    .whatsapp-config-title {
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: white;
-    }
-    .targeting-options {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-    }
-    .targeting-title {
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: white;
-    }
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-    .dashboard-card {
-      background: var(--surface);
-      border-radius: 12px;
-      padding: 1.5rem;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-    }
-    .dashboard-card-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      color: var(--text-primary);
-    }
-    .recent-activity {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .recent-activity-item {
-      padding: 0.75rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .recent-activity-item:last-child {
-      border-bottom: none;
-    }
-    .activity-time {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-    }
-    .activity-message {
-      font-size: 0.875rem;
-      color: var(--text-primary);
-    }
-    .file-validation {
-      margin-top: 1rem;
-      padding: 1rem;
-      background: var(--bg);
-      border-radius: 8px;
-      display: none;
-    }
-    .file-validation.active {
-      display: block;
-    }
-    .validation-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .validation-item:last-child {
-      border-bottom: none;
-    }
-    .validation-status {
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-    .validation-status.valid {
-      color: var(--success);
-    }
-    .validation-status.invalid {
-      color: var(--danger);
-    }
-    .validation-status.warning {
-      color: var(--warning);
-    }
-    .scheduling-options {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-    }
-    .scheduling-title {
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: white;
+      
+      .template-btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -943,12 +466,13 @@
       </div>
     </div>
   </div>
+
   <!-- Main Content -->
   <div class="main-container">
     <!-- Customer Management Section -->
-    <div class="customer-section">
-      <div class="customer-header">
-        <h2 class="customer-title">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="card-title mb-0">
           <i class="bi bi-people"></i> Customer Management
         </h2>
         <div>
@@ -960,7 +484,7 @@
           </button>
         </div>
       </div>
-      <div class="customer-body">
+      <div class="card-body">
         <!-- Add Customer Form -->
         <div class="customer-form" id="customerForm" style="display: none;">
           <h5 class="mb-3">Add New Customer</h5>
@@ -1456,603 +980,4 @@ Order within 2 hours only!
               </div>
             </div>
             
-            <div class="file-info" id="fileInfo">
-              <h6>File Information</h6>
-              <div class="row">
-                <div class="col-md-6">
-                  <strong>File Name:</strong> <span id="fileName"></span>
-                </div>
-                <div class="col-md-6">
-                  <strong>File Size:</strong> <span id="fileSize"></span>
-                </div>
-              </div>
-              <div class="row mt-2">
-                <div class="col-md-6">
-                  <strong>Total Rows:</strong> <span id="totalRows">0</span>
-                </div>
-                <div class="col-md-6">
-                  <strong>Estimated Customers:</strong> <span id="estimatedCustomers">0</span>
-                </div>
-              </div>
-            </div>
-            
-            <div class="upload-progress" id="uploadProgress">
-              <h6>Upload Progress</h6>
-              <div class="progress">
-                <div class="progress-bar" id="progressBar" role="progressbar" style="width: 0%"></div>
-              </div>
-              <div class="text-center mt-2">
-                <span id="progressText">Processing...</span>
-              </div>
-            </div>
-            
-            <div class="upload-results" id="uploadResults">
-              <h6>Upload Results</h6>
-              <div class="result-item">
-                <span>Total Records:</span>
-                <span id="totalRecords">0</span>
-              </div>
-              <div class="result-item">
-                <span>Successfully Added:</span>
-                <span id="successCount" class="result-status success">0</span>
-              </div>
-              <div class="result-item">
-                <span>Duplicates Skipped:</span>
-                <span id="duplicateCount" class="result-status warning">0</span>
-              </div>
-              <div class="result-item">
-                <span>Errors:</span>
-                <span id="errorCount" class="result-status error">0</span>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id="uploadBtn" onclick="processFile()" disabled>Upload</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Toast Container -->
-  <div class="toast-container" id="toastContainer"></div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    // Global variables
-    let messages = [];
-    let filteredMessages = [];
-    let deliveryChart = null;
-    let statusChart = null;
-    let performanceChart = null;
-    let whatsappOffers = [];
-    let crispyOffers = [];
-    let customers = [];
-    let selectedFile = null;
-    let recentActivities = [];
-    
-    // Offer templates
-    const offerTemplates = {
-      crispy: `🔥 CRISPY CHICKEN - ULTIMATE OFFER 🔥
-
-🍗 12 Crispy Chicken Pieces + 3 Garlic Sauce
-
-Only 30 AED
-
-⏰ Valid: Monday & Tuesday Only
-
-🎁 Special Bonus!
-Get a FREE drink with every order above 50 AED!
-
-📞 To Order Directly: 600527488
-
-Order Now!
-
-⏳ Limited Time!
-Order within 2 hours only!
-
-👉 Share with friends & get extra discount!
-
-#CrispyChicken #SpecialOffer #CrispyChickenDeal`,
-      
-      special: `🎉 SPECIAL DISCOUNT FROM CRISPY CHICKEN 🎉
-
-Get 25% OFF on your next order!
-
-Use code: CRISPY25
-
-Valid for all menu items
-
-📞 Call now: 600527488
-
-Offer valid until the end of the month!
-
-Don't miss out on this amazing deal!
-
-#CrispyChicken #SpecialDiscount #CrispyDeals`,
-      
-      new: `🆕 NEW PRODUCT ALERT FROM CRISPY CHICKEN 🆕
-
-Introducing our Spicy Crispy Burger!
-
-🌶️ Extra spicy, extra crispy!
-🧀 Double cheese patty
-🍔 Fresh vegetables
-
-Special launch price: 35 AED only!
-
-📞 Order now: 600527488
-
-Limited time offer!
-
-#CrispyChicken #NewProduct #SpicyBurger`,
-      
-      custom: `✨ CUSTOM OFFER TEMPLATE ✨
-
-Add your custom offer details here!
-
-📞 Contact: [Your Number]
-
-#CustomOffer #Promotion`
-    };
-    
-    // Initialize the application
-    document.addEventListener('DOMContentLoaded', function() {
-      loadCustomersFromStorage();
-      generateSampleData();
-      generateSampleCustomers();
-      generateSampleActivities();
-      setupEventListeners();
-      updateStatistics();
-      updateCharts();
-      updateTable();
-      updateWhatsappStats();
-      updateCrispyStats();
-      updateCustomerCount();
-      updateCustomerList();
-      updateOfferPreview();
-      updateRecentActivity();
-      populateCityFilter();
-    });
-    
-    function generateSampleData() {
-      const sampleMessages = [
-        {
-          id: 'MSG001',
-          recipient: 'John Smith',
-          phone: '+971501234567',
-          message: 'Your order has been delivered successfully',
-          platform: 'SMS',
-          status: 'delivered',
-          sentAt: new Date(Date.now() - 1000 * 60 * 5),
-          deliveredAt: new Date(Date.now() - 1000 * 60 * 3),
-          retryCount: 0
-        },
-        {
-          id: 'MSG002',
-          recipient: 'Alice Johnson',
-          phone: '+971551234568',
-          message: 'Reminder: Your appointment is tomorrow at 2 PM',
-          platform: 'WhatsApp',
-          status: 'sent',
-          sentAt: new Date(Date.now() - 1000 * 60 * 10),
-          deliveredAt: null,
-          retryCount: 0
-        },
-        {
-          id: 'MSG003',
-          recipient: 'Bob Wilson',
-          phone: '+971561234569',
-          message: 'Payment received. Thank you for your purchase',
-          platform: 'SMS',
-          status: 'pending',
-          sentAt: new Date(Date.now() - 1000 * 60 * 15),
-          deliveredAt: null,
-          retryCount: 0
-        },
-        {
-          id: 'MSG004',
-          recipient: 'Emma Davis',
-          phone: '+971581234570',
-          message: 'Your support ticket has been resolved',
-          platform: 'Email',
-          status: 'failed',
-          sentAt: new Date(Date.now() - 1000 * 60 * 20),
-          deliveredAt: null,
-          retryCount: 2
-        },
-        {
-          id: 'MSG005',
-          recipient: 'Michael Brown',
-          phone: '+971501234571',
-          message: 'Welcome to our service! Here\'s your discount code',
-          platform: 'WhatsApp',
-          status: 'delivered',
-          sentAt: new Date(Date.now() - 1000 * 60 * 25),
-          deliveredAt: new Date(Date.now() - 1000 * 60 * 23),
-          retryCount: 0
-        },
-        {
-          id: 'MSG006',
-          recipient: 'Sarah Johnson',
-          phone: '+971551234572',
-          message: 'Your order is out for delivery',
-          platform: 'SMS',
-          status: 'sent',
-          sentAt: new Date(Date.now() - 1000 * 60 * 30),
-          deliveredAt: null,
-          retryCount: 0
-        },
-        {
-          id: 'MSG007',
-          recipient: 'David Wilson',
-          phone: '+971561234573',
-          message: 'Payment failed. Please update your payment method',
-          platform: 'SMS',
-          status: 'failed',
-          sentAt: new Date(Date.now() - 1000 * 60 * 35),
-          deliveredAt: null,
-          retryCount: 1
-        },
-        {
-          id: 'MSG008',
-          recipient: 'Lisa Davis',
-          phone: '+971581234574',
-          message: 'Your feedback is important to us',
-          platform: 'Email',
-          status: 'pending',
-          sentAt: new Date(Date.now() - 1000 * 60 * 40),
-          deliveredAt: null,
-          retryCount: 0
-        }
-      ];
-      
-      messages = sampleMessages;
-      filteredMessages = [...messages];
-    }
-    
-    function generateSampleCustomers() {
-      // Only generate sample customers if none exist
-      if (customers.length === 0) {
-        const sampleCustomers = [
-          {
-            id: 1,
-            name: 'John Smith',
-            phone: '+971501234567',
-            email: 'john.smith@example.com',
-            city: 'Dubai',
-            status: 'active',
-            createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000)
-          },
-          {
-            id: 2,
-            name: 'Alice Johnson',
-            phone: '+971551234568',
-            email: 'alice.johnson@example.com',
-            city: 'Abu Dhabi',
-            status: 'active',
-            createdAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000)
-          },
-          {
-            id: 3,
-            name: 'Bob Wilson',
-            phone: '+971561234569',
-            email: 'bob.wilson@example.com',
-            city: 'Sharjah',
-            status: 'active',
-            createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000)
-          },
-          {
-            id: 4,
-            name: 'Emma Davis',
-            phone: '+971581234570',
-            email: 'emma.davis@example.com',
-            city: 'Dubai',
-            status: 'inactive',
-            createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000)
-          },
-          {
-            id: 5,
-            name: 'Michael Brown',
-            phone: '+971501234571',
-            email: 'michael.brown@example.com',
-            city: 'Ajman',
-            status: 'active',
-            createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)
-          }
-        ];
-        
-        customers = sampleCustomers;
-        saveCustomersToStorage();
-      }
-    }
-    
-    function generateSampleActivities() {
-      const sampleActivities = [
-        {
-          type: 'offer_sent',
-          message: 'CRISPY CHICKEN offer sent to 15 customers',
-          time: new Date(Date.now() - 1000 * 60 * 5)
-        },
-        {
-          type: 'customer_added',
-          message: 'New customer added: Sarah Johnson',
-          time: new Date(Date.now() - 1000 * 60 * 15)
-        },
-        {
-          type: 'message_delivered',
-          message: 'Message MSG005 delivered successfully',
-          time: new Date(Date.now() - 1000 * 60 * 30)
-        },
-        {
-          type: 'upload_completed',
-          message: 'Customer data upload completed: 5 records processed',
-          time: new Date(Date.now() - 1000 * 60 * 60)
-        },
-        {
-          type: 'offer_created',
-          message: 'New offer template created: Special Discount',
-          time: new Date(Date.now() - 1000 * 60 * 60 * 2)
-        }
-      ];
-      
-      recentActivities = sampleActivities;
-    }
-    
-    function setupEventListeners() {
-      // Filters
-      document.getElementById('dateFilter').addEventListener('change', applyFilters);
-      document.getElementById('statusFilter').addEventListener('change', applyFilters);
-      document.getElementById('platformFilter').addEventListener('change', applyFilters);
-      document.getElementById('searchInput').addEventListener('input', applyFilters);
-      
-      // WhatsApp Offer Form
-      document.getElementById('whatsappOfferForm').addEventListener('submit', sendWhatsappOffer);
-      
-      // Offer message textarea
-      document.getElementById('offerMessage').addEventListener('input', updateOfferPreview);
-      
-      // Add Customer Form
-      document.getElementById('addCustomerForm').addEventListener('submit', addCustomer);
-      
-      // File Upload
-      const fileUploadArea = document.getElementById('fileUploadArea');
-      const fileInput = document.getElementById('fileInput');
-      
-      fileUploadArea.addEventListener('click', () => fileInput.click());
-      fileUploadArea.addEventListener('dragover', handleDragOver);
-      fileUploadArea.addEventListener('dragleave', handleDragLeave);
-      fileUploadArea.addEventListener('drop', handleDrop);
-      fileInput.addEventListener('change', handleFileSelect);
-      
-      // Targeting options
-      document.getElementById('sendTo').addEventListener('change', updateTargetingOptions);
-      
-      // Scheduling options
-      document.getElementById('sendTime').addEventListener('change', updateSchedulingOptions);
-    }
-    
-    function updateStatistics() {
-      const sent = messages.filter(m => m.status === 'sent').length;
-      const pending = messages.filter(m => m.status === 'pending').length;
-      const delivered = messages.filter(m => m.status === 'delivered').length;
-      const failed = messages.filter(m => m.status === 'failed').length;
-      const crispy = messages.filter(m => m.status === 'crispy').length;
-      const activeCustomers = customers.filter(c => c.status === 'active').length;
-      
-      document.getElementById('totalSent').textContent = sent;
-      document.getElementById('totalPending').textContent = pending;
-      document.getElementById('totalDelivered').textContent = delivered;
-      document.getElementById('totalFailed').textContent = failed;
-      document.getElementById('totalCrispy').textContent = crispy;
-      document.getElementById('totalCustomers').textContent = activeCustomers;
-    }
-    
-    function updateWhatsappStats() {
-      const sent = whatsappOffers.filter(o => o.status === 'sent').length;
-      const delivered = whatsappOffers.filter(o => o.status === 'delivered').length;
-      const failed = whatsappOffers.filter(o => o.status === 'failed').length;
-      const opened = whatsappOffers.filter(o => o.status === 'opened').length;
-      
-      document.getElementById('totalSentOffers').textContent = sent;
-      document.getElementById('totalDeliveredOffers').textContent = delivered;
-      document.getElementById('totalFailedOffers').textContent = failed;
-      document.getElementById('totalOpenedOffers').textContent = opened;
-    }
-    
-    function updateCrispyStats() {
-      const sent = crispyOffers.filter(o => o.status === 'sent').length;
-      const delivered = crispyOffers.filter(o => o.status === 'delivered').length;
-      const failed = crispyOffers.filter(o => o.status === 'failed').length;
-      
-      // Update crispy stats in the main dashboard
-      const totalCrispy = sent + delivered + failed;
-      document.getElementById('totalCrispy').textContent = totalCrispy;
-    }
-    
-    function updateCustomerCount() {
-      const sendTo = document.getElementById('sendTo').value;
-      let activeCustomers = [];
-      
-      switch(sendTo) {
-        case 'all':
-          activeCustomers = customers.filter(c => c.status === 'active');
-          break;
-        case 'city':
-          const city = document.getElementById('cityFilter').value;
-          activeCustomers = customers.filter(c => c.status === 'active' && c.city === city);
-          break;
-        case 'recent':
-          const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-          activeCustomers = customers.filter(c => c.status === 'active' && new Date(c.createdAt) >= thirtyDaysAgo);
-          break;
-        case 'inactive':
-          activeCustomers = customers.filter(c => c.status === 'inactive');
-          break;
-      }
-      
-      document.getElementById('customerCount').value = activeCustomers.length;
-    }
-    
-    function updateOfferPreview() {
-      const message = document.getElementById('offerMessage').value;
-      document.getElementById('offerPreview').textContent = message;
-    }
-    
-    function updateRecentActivity() {
-      const activityList = document.getElementById('recentActivity');
-      activityList.innerHTML = '';
-      
-      // Sort activities by time (newest first)
-      const sortedActivities = [...recentActivities].sort((a, b) => new Date(b.time) - new Date(a.time));
-      
-      sortedActivities.slice(0, 5).forEach(activity => {
-        const activityItem = document.createElement('li');
-        activityItem.className = 'recent-activity-item';
-        
-        const time = new Date(activity.time).toLocaleString();
-        
-        activityItem.innerHTML = `
-          <div class="activity-time">${time}</div>
-          <div class="activity-message">${activity.message}</div>
-        `;
-        
-        activityList.appendChild(activityItem);
-      });
-    }
-    
-    function populateCityFilter() {
-      const cityFilter = document.getElementById('cityFilter');
-      const cities = [...new Set(customers.map(c => c.city).filter(city => city))];
-      
-      cityFilter.innerHTML = '<option value="">Select City</option>';
-      cities.forEach(city => {
-        const option = document.createElement('option');
-        option.value = city;
-        option.textContent = city;
-        cityFilter.appendChild(option);
-      });
-    }
-    
-    function updateTargetingOptions() {
-      const sendTo = document.getElementById('sendTo').value;
-      const cityFilterContainer = document.getElementById('cityFilterContainer');
-      
-      if (sendTo === 'city') {
-        cityFilterContainer.style.display = 'block';
-      } else {
-        cityFilterContainer.style.display = 'none';
-      }
-      
-      updateCustomerCount();
-    }
-    
-    function updateSchedulingOptions() {
-      const sendTime = document.getElementById('sendTime').value;
-      const scheduleDateTimeContainer = document.getElementById('scheduleDateTimeContainer');
-      
-      if (sendTime === 'schedule') {
-        scheduleDateTimeContainer.style.display = 'block';
-      } else {
-        scheduleDateTimeContainer.style.display = 'none';
-      }
-    }
-    
-    function updateCharts() {
-      // Delivery Chart
-      const deliveryCtx = document.getElementById('deliveryChart').getContext('2d');
-      
-      if (deliveryChart) {
-        deliveryChart.destroy();
-      }
-      
-      const hourlyData = getHourlyDeliveryData();
-      
-      deliveryChart = new Chart(deliveryCtx, {
-        type: 'line',
-        data: {
-          labels: hourlyData.labels,
-          datasets: [{
-            label: 'Messages Sent',
-            data: hourlyData.sent,
-            borderColor: '#2563eb',
-            backgroundColor: 'rgba(37, 99, 235, 0.1)',
-            tension: 0.4
-          }, {
-            label: 'Messages Delivered',
-            data: hourlyData.delivered,
-            borderColor: '#10b981',
-            backgroundColor: 'rgba(16, 185, 129, 0.1)',
-            tension: 0.4
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'bottom'
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          }
-        }
-      });
-      
-      // Status Chart
-      const statusCtx = document.getElementById('statusChart').getContext('2d');
-      
-      if (statusChart) {
-        statusChart.destroy();
-      }
-      
-      const statusCounts = {
-        sent: messages.filter(m => m.status === 'sent').length,
-        pending: messages.filter(m => m.status === 'pending').length,
-        delivered: messages.filter(m => m.status === 'delivered').length,
-        failed: messages.filter(m => m.status === 'failed').length,
-        crispy: messages.filter(m => m.status === 'crispy').length
-      };
-      
-      statusChart = new Chart(statusCtx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Sent', 'Pending', 'Delivered', 'Failed', 'CRISPY Offers'],
-          datasets: [{
-            data: [statusCounts.sent, statusCounts.pending, statusCounts.delivered, statusCounts.failed, statusCounts.crispy],
-            backgroundColor: ['#2563eb', '#f59e0b', '#10b981', '#ef4444', '#ff6b6b']
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'bottom'
-            }
-          }
-        }
-      });
-      
-      // Performance Chart
-      const performanceCtx = document.getElementById('performanceChart').getContext('2d');
-      
-      if (performanceChart) {
-        performanceChart.destroy();
-      }
-      
-      performanceChart = new Chart(performanceCtx, {
-        type: 'bar',
-        data: {
-          labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-          datasets: [{
-            label: 'Delivery Rate (%)',
-            data: [92, 95, 89, 94, 96, 88, 93],
-            backgroundColor: '#2563eb'
-          }]
-        },
-       
+            <div class="file-info" id
