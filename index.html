@@ -2641,33 +2641,28 @@
             }
         };
 
-        // Process sales data - FIXED VERSION
-        function processSalesData(data) {
-            // Split by new lines first
-            const lines = data.trim().split('\n');
+        // Process Excel data using SheetJS
+        function processExcelData(workbook) {
             const salesData = [];
             
-            // Process each line
-            for (let i = 0; i < lines.length; i++) {
-                const line = lines[i].trim();
-                if (!line) continue;
+            // Get the first sheet
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            
+            // Convert to JSON
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+            
+            // Skip header row
+            for (let i = 1; i < jsonData.length; i++) {
+                const row = jsonData[i];
                 
-                // Split by tabs or commas
-                const separator = line.includes('\t') ? '\t' : ',';
-                const parts = line.split(separator);
+                if (row.length < 5) continue;
                 
-                // Skip header
-                if (i === 0 && (parts[0].toLowerCase() === 'date' || parts[0].toLowerCase() === 'datee')) {
-                    continue;
-                }
-                
-                if (parts.length < 5) continue;
-                
-                let date = parts[0];
-                let branch = parts[1];
-                let channel = parts[2] || 'Delivery'; // Default to Delivery if not specified
-                let count = parseInt(parts[3]) || 0;
-                let sales = parseFloat(parts[4]) || 0;
+                let date = row[0];
+                let branch = row[1];
+                let channel = row[2] || 'Delivery';
+                let count = parseInt(row[3]) || 0;
+                let sales = parseFloat(row[4]) || 0;
                 
                 // Convert date if it's a number (Excel date format)
                 if (typeof date === 'number') {
@@ -2676,13 +2671,13 @@
                 
                 // Validate date format
                 if (!date || !date.includes('/')) {
-                    console.warn(`Invalid date format in line ${i + 1}: ${date}`);
+                    console.warn(`Invalid date format in row ${i + 1}: ${date}`);
                     continue;
                 }
                 
                 // Validate branch
                 if (!branch) {
-                    console.warn(`Missing branch in line ${i + 1}`);
+                    console.warn(`Missing branch in row ${i + 1}`);
                     continue;
                 }
                 
@@ -2693,13 +2688,13 @@
                 
                 // Validate count and sales
                 if (isNaN(count) || isNaN(sales)) {
-                    console.warn(`Invalid numeric data in line ${i + 1}: count=${count}, sales=${sales}`);
+                    console.warn(`Invalid numeric data in row ${i + 1}: count=${count}, sales=${sales}`);
                     continue;
                 }
                 
                 let avr = 0;
-                if (parts.length >= 6) {
-                    avr = parseFloat(parts[5]) || 0;
+                if (row.length >= 6) {
+                    avr = parseFloat(row[5]) || 0;
                 } else {
                     avr = count > 0 ? sales / count : 0;
                 }
@@ -2711,7 +2706,7 @@
                     count,
                     sales,
                     avr,
-                    id: Date.now() + i // Unique ID for tracking changes
+                    id: Date.now() + i
                 });
             }
             
@@ -2725,7 +2720,7 @@
             return days[date.getDay()];
         }
 
-        // Convert Excel date number to date string - FIXED VERSION
+        // Convert Excel date number to date string
         function convertExcelDate(dateNum) {
             if (typeof dateNum === 'number') {
                 // Excel dates are stored as days since 1900-01-01
@@ -4769,7 +4764,10 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
-                    const data = processSalesData(e.target.result);
+                    // Use SheetJS to parse the Excel file
+                    const workbook = XLSX.read(e.target.result, { type: 'binary' });
+                    const data = processExcelData(workbook);
+                    
                     if (data.length > 0) {
                         allData = [...allData, ...data];
                         saveData();
@@ -4782,7 +4780,9 @@
                     showSuccess('Error processing file. Please check the format.');
                 }
             };
-            reader.readAsText(file);
+            
+            // Read as binary data
+            reader.readAsArrayBuffer(file);
         }
 
         // Update dashboard
@@ -4943,7 +4943,10 @@
                         const reader = new FileReader();
                         reader.onload = function(e) {
                             try {
-                                const data = processSalesData(e.target.result);
+                                // Use SheetJS to parse the Excel file
+                                const workbook = XLSX.read(e.target.result, { type: 'binary' });
+                                const data = processExcelData(workbook);
+                                
                                 if (data.length > 0) {
                                     allData = [...allData, ...data];
                                     saveData();
@@ -4956,7 +4959,9 @@
                                 showSuccess('Error processing file. Please check the format.');
                             }
                         };
-                        reader.readAsText(file);
+                        
+                        // Read as binary data
+                        reader.readAsArrayBuffer(file);
                     } else {
                         showSuccess('Please upload an Excel file (.xlsx or .xls).');
                     }
