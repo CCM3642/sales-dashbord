@@ -8,9 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
     <style>
         :root {
             --primary-color: #FF6B35;
@@ -33,7 +34,6 @@
             margin: 0;
             padding: 0;
             color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
         }
 
         body.dark-mode {
@@ -58,7 +58,6 @@
             padding: 2rem 0;
             margin-bottom: 2rem;
             border-bottom: 1px solid var(--border-color);
-            transition: background-color 0.3s;
         }
 
         .kpi-card {
@@ -68,7 +67,6 @@
             border: none;
             overflow: hidden;
             background-color: var(--card-bg);
-            transition: background-color 0.3s;
         }
 
         .kpi-card:hover {
@@ -101,16 +99,7 @@
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             margin-bottom: 2rem;
-            position: relative;
             height: 400px;
-            transition: background-color 0.3s;
-        }
-
-        .chart-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
         }
 
         .table-container {
@@ -119,7 +108,6 @@
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             overflow-x: auto;
-            transition: background-color 0.3s;
         }
 
         .btn-export {
@@ -144,7 +132,6 @@
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             margin-bottom: 2rem;
-            transition: background-color 0.3s;
         }
 
         .form-section {
@@ -153,7 +140,6 @@
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             margin-bottom: 2rem;
-            transition: background-color 0.3s;
         }
 
         .form-label {
@@ -354,7 +340,6 @@
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             margin-bottom: 1.5rem;
-            transition: background-color 0.3s;
         }
 
         .summary-item {
@@ -457,7 +442,6 @@
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             margin-bottom: 2rem;
-            transition: background-color 0.3s;
         }
 
         .upload-area {
@@ -573,7 +557,6 @@
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             margin-bottom: 2rem;
-            transition: background-color 0.3s;
         }
 
         .btn-save {
@@ -620,7 +603,6 @@
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             margin-bottom: 2rem;
-            transition: background-color 0.3s;
         }
 
         .target-input {
@@ -691,7 +673,6 @@
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             margin-bottom: 2rem;
-            transition: background-color 0.3s;
             display: none;
         }
 
@@ -787,7 +768,6 @@
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             margin-bottom: 2rem;
-            transition: background-color 0.3s;
         }
 
         .backup-list {
@@ -1087,7 +1067,6 @@
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             margin-bottom: 2rem;
-            transition: background-color 0.3s;
         }
 
         .user-activity-indicator {
@@ -1124,22 +1103,481 @@
             }
         }
 
+        /* Responsive adjustments for Branch Performance Report */
+        .branch-performance-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .branch-performance-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 992px) {
+            .branch-performance-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .chart-responsive-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 1.5rem;
+        }
+
+        .table-responsive-scroll {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .performance-summary-card {
+            transition: all 0.3s ease;
+        }
+
+        .performance-summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .performance-summary-card .card-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+        }
+
+        .delivery-metrics-responsive {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .delivery-metrics-responsive {
+                flex-direction: row;
+            }
+        }
+
+        .branch-performance-table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .branch-performance-table {
+            min-width: 800px;
+        }
+
+        .chart-container-responsive {
+            height: 250px;
+        }
+
+        @media (min-width: 992px) {
+            .chart-container-responsive {
+                height: 300px;
+            }
+        }
+
+        /* Authentication Modal */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            overflow: auto;
+        }
+
+        .auth-modal-content {
+            background-color: var(--card-bg);
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .auth-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .auth-modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .auth-modal-close {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .auth-modal-body {
+            margin-bottom: 20px;
+        }
+
+        .auth-modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Advanced Filters */
+        .advanced-filters {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1rem;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .filter-tag {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-tag .btn-remove {
+            background: none;
+            border: none;
+            color: var(--danger-color);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0;
+            line-height: 1;
+        }
+
+        /* Pagination */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .pagination {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .page-item {
+            margin: 0 2px;
+        }
+
+        .page-link {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            background-color: var(--card-bg);
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .page-link:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .page-item.active .page-link {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .page-item.disabled .page-link {
+            color: #6c757d;
+            pointer-events: none;
+            background-color: var(--card-bg);
+            border-color: var(--border-color);
+        }
+
+        /* Mobile Optimizations */
         @media (max-width: 768px) {
-            .delivery-metrics {
+            .chart-container {
+                height: 300px;
+            }
+            
+            .metric-card {
+                margin: 0 5px;
+                padding: 1rem;
+            }
+            
+            .metric-icon {
+                font-size: 1.5rem;
+            }
+            
+            .metric-value {
+                font-size: 1.2rem;
+            }
+            
+            .export-buttons {
                 flex-direction: column;
             }
             
-            .delivery-charts {
-                flex-direction: column;
+            .export-buttons .btn {
+                width: 100%;
             }
             
-            .performance-metrics {
-                flex-direction: column;
+            .auth-modal-content {
+                width: 95%;
+                margin: 10% auto;
             }
+        }
+
+        /* Touch Gestures */
+        .touch-area {
+            touch-action: pan-y;
+        }
+
+        /* Real-time Updates */
+        .real-time-update {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: var(--success-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            font-size: 0.875rem;
+            z-index: 1000;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 9998;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-content {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        /* Performance Indicator */
+        .performance-indicator-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .performance-indicator-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 1rem;
+        }
+
+        .performance-indicator-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .performance-indicator-label {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+
+        /* Notification System */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 350px;
+        }
+
+        .notification {
+            background: var(--card-bg);
+            border-left: 4px solid var(--primary-color);
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification-icon {
+            margin-right: 12px;
+            font-size: 1.25rem;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .notification-message {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            color: #6c757d;
+            cursor: pointer;
+            font-size: 1.25rem;
+            margin-left: 12px;
+            padding: 0;
+        }
+
+        .notification-success {
+            border-left-color: var(--success-color);
+        }
+
+        .notification-success .notification-icon {
+            color: var(--success-color);
+        }
+
+        .notification-error {
+            border-left-color: var(--danger-color);
+        }
+
+        .notification-error .notification-icon {
+            color: var(--danger-color);
+        }
+
+        .notification-warning {
+            border-left-color: var(--warning-color);
+        }
+
+        .notification-warning .notification-icon {
+            color: var(--warning-color);
+        }
+
+        .notification-info {
+            border-left-color: var(--info-color);
+        }
+
+        .notification-info .notification-icon {
+            color: var(--info-color);
         }
     </style>
 </head>
 <body>
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <!-- Authentication Modal -->
+    <div id="authModal" class="auth-modal">
+        <div class="auth-modal-content">
+            <div class="auth-modal-header">
+                <h2 class="auth-modal-title">Login to Dashboard</h2>
+                <span class="auth-modal-close" id="closeAuthModal">&times;</span>
+            </div>
+            <div class="auth-modal-body">
+                <form id="loginForm">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" required>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">Remember me</label>
+                    </div>
+                </form>
+            </div>
+            <div class="auth-modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelLogin">Cancel</button>
+                <button type="button" class="btn btn-primary-custom" id="loginBtn">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Processing...</p>
+        </div>
+    </div>
+
     <!-- Language Toggle -->
     <div class="language-toggle">
         <button class="btn btn-sm btn-outline-light" id="langToggle">
@@ -1169,7 +1607,7 @@
                         <a class="nav-link" href="#"><i class="bi bi-bell me-1"></i>Notifications</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="bi bi-person-circle me-1"></i>Admin</a>
+                        <a class="nav-link" href="#" id="userProfileLink"><i class="bi bi-person-circle me-1"></i><span id="userProfileName">Admin</span></a>
                     </li>
                 </ul>
             </div>
@@ -1198,6 +1636,49 @@
 
     <!-- Main Content -->
     <div class="container">
+        <!-- Advanced Filters -->
+        <div class="advanced-filters">
+            <h3 class="chart-title mb-3">Advanced Filters</h3>
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Branches</label>
+                    <select class="form-select" id="branchFilter" multiple>
+                        <option value="Crispy Chicken-Hamdan St">Crispy Chicken-Hamdan St</option>
+                        <option value="Crispy Chicken Khaldia">Crispy Chicken Khaldia</option>
+                        <option value="Crispy Chicken Shabiya11">Crispy Chicken Shabiya11</option>
+                        <option value="Crispy Chicken Muroor">Crispy Chicken Muroor</option>
+                        <option value="Crispy Chicken Al Barsha">Crispy Chicken Al Barsha</option>
+                        <option value="Crispy Chicken Al Satwa">Crispy Chicken Al Satwa</option>
+                        <option value="Crispy Chicken Al Rgga">Crispy Chicken Al Rgga</option>
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Channels</label>
+                    <select class="form-select" id="channelFilter" multiple>
+                        <option value="Delivery">Delivery</option>
+                        <option value="Takeaway">Takeaway</option>
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Performance</label>
+                    <select class="form-select" id="performanceFilter">
+                        <option value="">All Performance</option>
+                        <option value="high">High Performance</option>
+                        <option value="medium">Medium Performance</option>
+                        <option value="low">Low Performance</option>
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-primary-custom flex-fill" id="applyFiltersBtn">Apply Filters</button>
+                        <button class="btn btn-outline-secondary flex-fill" id="clearFiltersBtn">Clear</button>
+                    </div>
+                </div>
+            </div>
+            <div class="filter-tags" id="activeFilters"></div>
+        </div>
+
         <!-- Performance Metrics -->
         <div class="performance-metrics">
             <div class="metric-card">
@@ -1284,11 +1765,6 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button" role="tab">
-                    <i class="bi bi-file-earmark-text me-2"></i>Reports
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
                 <button class="nav-link" id="analytics-tab" data-bs-toggle="tab" data-bs-target="#analytics" type="button" role="tab">
                     <i class="bi bi-graph-up me-2"></i>Analytics
                 </button>
@@ -1368,9 +1844,9 @@
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h3 class="chart-title mb-0">Sales Target Management</h3>
                                 <div class="target-input">
-                                    <label for="targetInput" class="mb-0 me-2">Target (AED):</label>
+                                    <label for="targetInput" class="mb-0 me-2">Overall Target (AED):</label>
                                     <input type="number" class="form-control" id="targetInput" value="370000" min="0" step="1000">
-                                    <button class="btn btn-update-target ms-2" id="updateTargetBtn">
+                                    <button class="btn btn-update-target ms-2" id="updateOverallTargetBtn">
                                         <i class="bi bi-check-circle me-1"></i> Update
                                     </button>
                                 </div>
@@ -1378,7 +1854,7 @@
                             
                             <div class="row">
                                 <div class="col-md-6 mb-4">
-                                    <h5 class="mb-3">Branch Targets (Distributed by Performance)</h5>
+                                    <h5 class="mb-3">Branch Targets</h5>
                                     <div id="branchTargets" class="target-progress">
                                         <!-- Branch targets will be populated here -->
                                     </div>
@@ -1398,7 +1874,7 @@
                 <!-- Charts Section -->
                 <div class="row mb-4">
                     <div class="col-lg-8 mb-4">
-                        <div class="chart-container">
+                        <div class="chart-container touch-area">
                             <h3 class="chart-title">Daily Sales Trend</h3>
                             <canvas id="dailySalesChart"></canvas>
                         </div>
@@ -1545,71 +2021,6 @@
                 </div>
             </div>
 
-            <!-- Reports Tab -->
-            <div class="tab-pane fade" id="reports" role="tabpanel">
-                <!-- Report Controls -->
-                <div class="report-controls">
-                    <h3 class="chart-title mb-3">Report Generation</h3>
-                    
-                    <div class="report-type-selector">
-                        <button class="report-type-btn active" data-type="summary">
-                            <i class="bi bi-speedometer2 me-1"></i> Summary Report
-                        </button>
-                        <button class="report-type-btn" data-type="detailed">
-                            <i class="bi bi-list-ul me-1"></i> Detailed Report
-                        </button>
-                        <button class="report-type-btn" data-type="branch">
-                            <i class="bi bi-shop me-1"></i> Branch Performance
-                        </button>
-                        <button class="report-type-btn" data-type="channel">
-                            <i class="bi bi-diagram-3 me-1"></i> Channel Analysis
-                        </button>
-                    </div>
-                    
-                    <div class="date-range-selector">
-                        <div class="form-group">
-                            <label for="reportStartDate" class="form-label">Start Date</label>
-                            <input type="date" class="form-control" id="reportStartDate">
-                        </div>
-                        <div class="form-group">
-                            <label for="reportEndDate" class="form-label">End Date</label>
-                            <input type="date" class="form-control" id="reportEndDate">
-                        </div>
-                        <button class="btn btn-primary-custom" id="generateReportBtn">
-                            <i class="bi bi-file-earmark-text me-1"></i> Generate Report
-                        </button>
-                        <button class="btn btn-outline-secondary" id="resetDateRangeBtn">
-                            <i class="bi bi-arrow-clockwise me-1"></i> Reset
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Report Content -->
-                <div class="report-content" id="reportContent">
-                    <div class="report-loading">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Export Options -->
-                <div class="export-section">
-                    <h3 class="chart-title mb-3">Export Options</h3>
-                    <div class="export-buttons">
-                        <button class="btn btn-export me-2" id="exportReportCSV">
-                            <i class="bi bi-file-earmark-csv me-1"></i> Export CSV
-                        </button>
-                        <button class="btn btn-export me-2" id="exportReportJSON">
-                            <i class="bi bi-file-earmark-code me-1"></i> Export JSON
-                        </button>
-                        <button class="btn btn-export" id="exportReportPDF">
-                            <i class="bi bi-file-pdf me-1"></i> Export PDF
-                        </button>
-                    </div>
-                </div>
-            </div>
-
             <!-- Analytics Tab -->
             <div class="tab-pane fade" id="analytics" role="tabpanel">
                 <!-- Sales Trends Section -->
@@ -1660,7 +2071,7 @@
                             <h3 class="chart-title">Delivery Performance Analysis</h3>
                             
                             <!-- Overall Delivery Metrics -->
-                            <div class="delivery-metrics">
+                            <div class="delivery-metrics delivery-metrics-responsive">
                                 <div class="delivery-metric-card">
                                     <div class="delivery-metric-icon">
                                         <i class="bi bi-truck"></i>
@@ -1698,12 +2109,16 @@
                             <div class="delivery-charts">
                                 <div class="delivery-chart-container">
                                     <h3>Daily Delivery Trends</h3>
-                                    <canvas id="dailyDeliveryChart"></canvas>
+                                    <div class="chart-container-responsive">
+                                        <canvas id="dailyDeliveryChart"></canvas>
+                                    </div>
                                 </div>
                                 
                                 <div class="delivery-chart-container">
                                     <h3>Branch Delivery Comparison</h3>
-                                    <canvas id="branchDeliveryChart"></canvas>
+                                    <div class="chart-container-responsive">
+                                        <canvas id="branchDeliveryChart"></canvas>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -1803,7 +2218,7 @@
                                     <div class="card h-100">
                                         <div class="card-body">
                                             <h5 class="card-title">Weekday Pattern</h5>
-                                            <div id="weekdayPattern" class="chart-container" style="height: 250px;">
+                                            <div id="weekdayPattern" class="chart-container-responsive">
                                                 <!-- Weekday pattern chart will be populated here -->
                                             </div>
                                         </div>
@@ -1814,7 +2229,7 @@
                                     <div class="card h-100">
                                         <div class="card-body">
                                             <h5 class="card-title">Monthly Pattern</h5>
-                                            <div id="monthlyPattern" class="chart-container" style="height: 250px;">
+                                            <div id="monthlyPattern" class="chart-container-responsive">
                                                 <!-- Monthly pattern chart will be populated here -->
                                             </div>
                                         </div>
@@ -1837,34 +2252,33 @@
 
             <!-- Branch Performance Report Tab -->
             <div class="tab-pane fade" id="branch-performance" role="tabpanel">
-                <div class="report-controls">
-                    <h3 class="chart-title mb-3">Branch Performance Report</h3>
-                    
-                    <div class="row mb-4">
-                        <div class="col-md-6 mb-3">
+                <div class="form-section">
+                    <div class="row align-items-end">
+                        <div class="col-md-4 mb-3">
                             <label for="reportMonth" class="form-label">Report Month</label>
-                            <input type="month" class="form-control" id="reportMonth" value="2025-10">
+                            <input type="month" class="form-control" id="reportMonth" value="2025-11">
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label for="growthRate" class="form-label">Expected Growth Rate (%)</label>
-                            <input type="number" class="form-control" id="growthRate" value="15" min="0" max="100">
+                            <input type="number" class="form-control" id="growthRate" value="0" min="0" max="100" step="0.1">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <button class="btn btn-primary-custom w-100" id="generateReportBtn">
+                                <i class="bi bi-graph-up me-2"></i> Generate Report
+                            </button>
                         </div>
                     </div>
-                    
-                    <button class="btn btn-primary-custom" id="generateBranchReportBtn">
-                        <i class="bi bi-graph-up me-1"></i> Generate Report
-                    </button>
                 </div>
-                
-                <!-- Branch Performance Summary -->
-                <div class="branch-performance-summary mb-4">
-                    <div class="card">
-                        <div class="card-header bg-primary text-white">
+
+                <div id="branchPerformanceReport" class="branch-performance-grid">
+                    <!-- Branch Performance Summary -->
+                    <div class="performance-summary-card card">
+                        <div class="card-header">
                             <h4 class="mb-0"><i class="bi bi-building me-2"></i>Branch Performance Summary</h4>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover" id="branchPerformanceTable">
+                            <div class="table-responsive-scroll">
+                                <table class="table table-hover branch-performance-table">
                                     <thead>
                                         <tr>
                                             <th>Branch</th>
@@ -1876,38 +2290,95 @@
                                             <th>Performance Status</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <!-- Data will be populated here -->
+                                    <tbody id="branchPerformanceTableBody">
+                                        <!-- Table rows will be populated by JavaScript -->
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Weekly Performance Report -->
-                <div class="weekly-performance-report mb-4">
-                    <div class="card">
-                        <div class="card-header bg-info text-white">
+
+                    <!-- Daily Delivery Trends -->
+                    <div class="performance-summary-card card">
+                        <div class="card-header">
+                            <h4 class="mb-0"><i class="bi bi-truck me-2"></i>Daily Delivery Trends</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-responsive-container">
+                                <canvas id="dailyDeliveryTrendsChart"></canvas>
+                            </div>
+                            <div class="mt-3">
+                                <h5>Key Metrics</h5>
+                                <div class="row">
+                                    <div class="col-6 mb-2">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Avg Daily Sales:</span>
+                                            <strong id="avgDailyDeliverySales">AED 0</strong>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Peak Day:</span>
+                                            <strong id="peakDeliveryDay">-</strong>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Transactions:</span>
+                                            <strong id="totalDeliveryTransactions">0</strong>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Growth Rate:</span>
+                                            <strong id="deliveryGrowthRate">0%</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Branch Delivery Comparison -->
+                    <div class="performance-summary-card card">
+                        <div class="card-header">
+                            <h4 class="mb-0"><i class="bi bi-diagram-3 me-2"></i>Branch Delivery Comparison</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-responsive-container">
+                                <canvas id="branchDeliveryComparisonChart"></canvas>
+                            </div>
+                            <div class="mt-3">
+                                <h5>Branch Rankings</h5>
+                                <div id="branchDeliveryRankings">
+                                    <!-- Rankings will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weekly Performance Report -->
+                    <div class="performance-summary-card card">
+                        <div class="card-header">
                             <h4 class="mb-0"><i class="bi bi-calendar-week me-2"></i>Weekly Performance Report</h4>
                         </div>
                         <div class="card-body">
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <h5>Best Performing Week</h5>
-                                    <div id="bestWeekInfo">
+                                    <div id="bestWeekInfo" class="alert alert-success-custom">
                                         <!-- Will be populated with data -->
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <h5>Lowest Performing Week</h5>
-                                    <div id="lowestWeekInfo">
+                                    <div id="lowestWeekInfo" class="alert alert-danger-custom">
                                         <!-- Will be populated with data -->
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="table-responsive">
+                            <div class="table-responsive-scroll">
                                 <table class="table table-hover" id="weeklyPerformanceTable">
                                     <thead>
                                         <tr>
@@ -1916,55 +2387,52 @@
                                             <th>Weekly Sales (AED)</th>
                                             <th>Weekly Transactions</th>
                                             <th>Avg Sale/Transaction</th>
+                                            <th>Growth Rate</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <!-- Data will be populated here -->
+                                    <tbody id="weeklyPerformanceTableBody">
+                                        <!-- Table rows will be populated by JavaScript -->
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Daily Sales Comparison -->
-                <div class="daily-sales-comparison mb-4">
-                    <div class="card">
-                        <div class="card-header bg-warning text-dark">
+
+                    <!-- Daily Sales Comparison -->
+                    <div class="performance-summary-card card">
+                        <div class="card-header">
                             <h4 class="mb-0"><i class="bi bi-calendar-day me-2"></i>Daily Sales Comparison</h4>
                         </div>
                         <div class="card-body">
-                            <div class="mb-3">
-                                <canvas id="dailySalesComparisonChart" height="100"></canvas>
+                            <div class="chart-responsive-container">
+                                <canvas id="dailySalesComparisonChart"></canvas>
                             </div>
-                            <div class="row">
+                            <div class="row mt-3">
                                 <div class="col-md-6">
                                     <h5>Trend Analysis</h5>
-                                    <div id="trendAnalysis">
+                                    <div id="trendAnalysis" class="alert alert-info-custom">
                                         <!-- Will be populated with data -->
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <h5>Branch Comparison</h5>
-                                    <div id="branchComparison">
+                                    <div id="branchComparison" class="alert alert-warning-custom">
                                         <!-- Will be populated with data -->
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Overall Insights -->
-                <div class="overall-insights mb-4">
-                    <div class="card">
-                        <div class="card-header bg-success text-white">
+
+                    <!-- Overall Insights -->
+                    <div class="performance-summary-card card">
+                        <div class="card-header">
                             <h4 class="mb-0"><i class="bi bi-lightbulb me-2"></i>Overall Insights</h4>
                         </div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-4 mb-3">
-                                    <div class="insight-card bg-light p-3 rounded">
+                                    <div class="insight-card">
                                         <h5><i class="bi bi-trending-up text-success me-2"></i>Fastest Growing Branches</h5>
                                         <div id="fastestGrowingBranches">
                                             <!-- Will be populated with data -->
@@ -1972,7 +2440,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <div class="insight-card bg-light p-3 rounded">
+                                    <div class="insight-card">
                                         <h5><i class="bi bi-exclamation-triangle text-danger me-2"></i>Branches Needing Improvement</h5>
                                         <div id="branchesNeedingImprovement">
                                             <!-- Will be populated with data -->
@@ -1980,7 +2448,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <div class="insight-card bg-light p-3 rounded">
+                                    <div class="insight-card">
                                         <h5><i class="bi bi-star text-warning me-2"></i>Month-to-Date Highlights</h5>
                                         <div id="monthToDateHighlights">
                                             <!-- Will be populated with data -->
@@ -2111,6 +2579,11 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="pagination-container">
+                        <ul class="pagination" id="pagination">
+                            <!-- Pagination will be populated by JavaScript -->
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2161,7 +2634,6 @@
                 "operational": "All operational",
                 "overview-tab": "Overview",
                 "data-entry-tab": "Data Entry",
-                "reports-tab": "Reports",
                 "analytics-tab": "Analytics",
                 "branch-performance-tab": "Branch Performance Report",
                 "data-management-tab": "Data Management",
@@ -2287,34 +2759,6 @@
                 "forecast-medium": "Medium sales forecast",
                 "forecast-low": "Low sales forecast",
                 "sales-forecast-title": "Sales Forecast",
-                // New translations for Reports Tab
-                "report-generation-title": "Report Generation",
-                "summary-report": "Summary Report",
-                "detailed-report": "Detailed Report",
-                "branch-performance-report": "Branch Performance",
-                "channel-analysis-report": "Channel Analysis",
-                "start-date": "Start Date",
-                "end-date": "End Date",
-                "generate-report": "Generate Report",
-                "reset": "Reset",
-                "export-options": "Export Options",
-                "export-pdf": "Export PDF",
-                "report-period": "Report Period",
-                "total-sales-period": "Total Sales (Period)",
-                "total-transactions-period": "Total Transactions (Period)",
-                "avg-sale-period": "Avg Sale/Transaction (Period)",
-                "top-branch-period": "Top Branch (Period)",
-                "best-day-period": "Best Day (Period)",
-                "branch-rankings": "Branch Rankings",
-                "channel-breakdown": "Channel Breakdown",
-                "delivery-sales": "Delivery Sales",
-                "takeaway-sales": "Takeaway Sales",
-                "no-data-available": "No data available for the selected period",
-                "report-generated-successfully": "Report generated successfully!",
-                "report-type-summary": "Summary Report",
-                "report-type-detailed": "Detailed Report",
-                "report-type-branch": "Branch Performance Report",
-                "report-type-channel": "Channel Analysis Report",
                 // New translations for Delivery Analysis
                 "delivery-analysis-title": "Delivery Performance Analysis",
                 "total-delivery-transactions": "Total Delivery Transactions",
@@ -2369,7 +2813,40 @@
                 "needs-improvement": "Needs Improvement",
                 "poor": "Poor",
                 // Dark mode toggle
-                "dark-mode-toggle": "Toggle Dark Mode"
+                "dark-mode-toggle": "Toggle Dark Mode",
+                // Authentication
+                "login-title": "Login to Dashboard",
+                "username-label": "Username",
+                "password-label": "Password",
+                "remember-me": "Remember me",
+                "login-btn": "Login",
+                "cancel-btn": "Cancel",
+                "login-success": "Login successful!",
+                "login-error": "Invalid username or password",
+                "logout": "Logout",
+                // Advanced filters
+                "advanced-filters": "Advanced Filters",
+                "branches": "Branches",
+                "channels": "Channels",
+                "performance": "Performance",
+                "all-performance": "All Performance",
+                "high-performance": "High Performance",
+                "medium-performance": "Medium Performance",
+                "low-performance": "Low Performance",
+                "apply-filters": "Apply Filters",
+                "clear-filters": "Clear",
+                // Notifications
+                "notification-title": "Notification",
+                "notification-message": "Message",
+                "close": "Close",
+                // Real-time updates
+                "real-time-update": "Real-time data updated",
+                // Pagination
+                "previous": "Previous",
+                "next": "Next",
+                "showing": "Showing",
+                "of": "of",
+                "entries": "entries"
             },
             ar: {
                 "nav-title": "لوحة بيانات مبيعات كريسبى تشكن",
@@ -2389,7 +2866,6 @@
                 "operational": "كلها تعمل",
                 "overview-tab": "نظرة عامة",
                 "data-entry-tab": "إدخال البيانات",
-                "reports-tab": "التقارير",
                 "analytics-tab": "التحليلات",
                 "branch-performance-tab": "تقرير أداء الفروع",
                 "data-management-tab": "إدارة البيانات",
@@ -2515,34 +2991,6 @@
                 "forecast-medium": "توقعات مبيعات متوسطة",
                 "forecast-low": "توقعات مبيعات منخفضة",
                 "sales-forecast-title": "توقعات المبيعات",
-                // New translations for Reports Tab
-                "report-generation-title": "توليد التقارير",
-                "summary-report": "تقرير ملخص",
-                "detailed-report": "تقرير مفصل",
-                "branch-performance-report": "أداء الفرع",
-                "channel-analysis-report": "تحليل القناة",
-                "start-date": "تاريخ البدء",
-                "end-date": "تاريخ الانتهاء",
-                "generate-report": "توليد التقرير",
-                "reset": "إعادة تعيين",
-                "export-options": "خيارات التصدير",
-                "export-pdf": "تصدير PDF",
-                "report-period": "فترة التقرير",
-                "total-sales-period": "إجمالي المبيعات (الفترة)",
-                "total-transactions-period": "إجمالي المعاملات (الفترة)",
-                "avg-sale-period": "متوسط البيع/المعاملة (الفترة)",
-                "top-branch-period": "أفضل فرع (الفترة)",
-                "best-day-period": "أفضل يوم (الفترة)",
-                "branch-rankings": "ترتيب الفروع",
-                "channel-breakdown": "تفصيل القناة",
-                "delivery-sales": "مبيعات التوصيل",
-                "takeaway-sales": "مبيعات الاستلام",
-                "no-data-available": "لا توجد بيانات متاحة للفترة المحددة",
-                "report-generated-successfully": "تم إنشاء التقرير بنجاح!",
-                "report-type-summary": "تقرير ملخص",
-                "report-type-detailed": "تقرير مفصل",
-                "report-type-branch": "تقرير أداء الفرع",
-                "report-type-channel": "تقرير تحليل القناة",
                 // New translations for Delivery Analysis
                 "delivery-analysis-title": "تحليل أداء التوصيل",
                 "total-delivery-transactions": "إجمالي معاملات التوصيل",
@@ -2597,13 +3045,48 @@
                 "needs-improvement": "يحتاج إلى تحسين",
                 "poor": "سيء",
                 // Dark mode toggle
-                "dark-mode-toggle": "تبديل الوضع الداكن"
+                "dark-mode-toggle": "تبديل الوضع الداكن",
+                // Authentication
+                "login-title": "تسجيل الدخول إلى لوحة التحكم",
+                "username-label": "اسم المستخدم",
+                "password-label": "كلمة المرور",
+                "remember-me": "تذكرني",
+                "login-btn": "تسجيل الدخول",
+                "cancel-btn": "إلغاء",
+                "login-success": "تم تسجيل الدخول بنجاح!",
+                "login-error": "اسم المستخدم أو كلمة المرور غير صحيحة",
+                "logout": "تسجيل الخروج",
+                // Advanced filters
+                "advanced-filters": "مرشحات متقدمة",
+                "branches": "الفروع",
+                "channels": "القنوات",
+                "performance": "الأداء",
+                "all-performance": "جميع مستويات الأداء",
+                "high-performance": "أداء عالي",
+                "medium-performance": "أداء متوسط",
+                "low-performance": "أداء منخفض",
+                "apply-filters": "تطبيق المرشحات",
+                "clear-filters": "مسح",
+                // Notifications
+                "notification-title": "إشعار",
+                "notification-message": "رسالة",
+                "close": "إغلاق",
+                // Real-time updates
+                "real-time-update": "تم تحديث البيانات في الوقت الفعلي",
+                // Pagination
+                "previous": "السابق",
+                "next": "التالي",
+                "showing": "عرض",
+                "of": "من",
+                "entries": "الإدخالات"
             }
         };
 
         // Sales target
         let SALES_TARGET = 370000;
         let charts = {};
+        let branchTargets = {};
+        let channelTargets = {};
 
         let currentLang = 'en';
         let allData = [];
@@ -2621,6 +3104,23 @@
             lastActivity: new Date(),
             sessionStart: new Date(),
             actions: []
+        };
+
+        // Authentication state
+        let isAuthenticated = false;
+        let currentUser = null;
+        let authToken = null;
+
+        // Pagination state
+        let currentPage = 1;
+        const itemsPerPage = 10;
+
+        // Advanced filters state
+        let activeFilters = {
+            branches: [],
+            channels: [],
+            performance: '',
+            dateRange: { start: '', end: '' }
         };
 
         // Validation rules
@@ -3571,9 +4071,15 @@
 
         // Initialize sales target management
         function initTargetManagement() {
-            const branchTargets = calculateBranchTargets();
-            const channelData = groupByChannel(allData);
-            const totalChannelSales = channelData.Delivery.sales + channelData.Takeaway.sales;
+            // Calculate branch targets if not already set
+            if (Object.keys(branchTargets).length === 0) {
+                branchTargets = calculateBranchTargets();
+            }
+            
+            // Calculate channel targets if not already set
+            if (Object.keys(channelTargets).length === 0) {
+                channelTargets = calculateChannelTargets();
+            }
             
             // Update branch targets
             const branchTargetsContainer = document.getElementById('branchTargets');
@@ -3588,7 +4094,9 @@
                 targetItem.className = 'mb-3';
                 targetItem.innerHTML = `
                     <div class="target-label">
-                        ${branch}: <span class="target-value">AED ${target.toLocaleString()}</span>
+                        ${branch}: 
+                        <input type="number" class="form-control d-inline-block w-auto" id="branch-target-${branch.replace(/\s+/g, '-').toLowerCase()}" value="${target}" min="0" step="1000">
+                        <button class="btn btn-sm btn-primary ms-2" onclick="updateBranchTarget('${branch}')">Update</button>
                     </div>
                     <div class="target-bar">
                         <div class="target-progress-bar" style="width: ${percentage}%"></div>
@@ -3606,15 +4114,17 @@
             channelTargetsContainer.innerHTML = '';
             
             ['Delivery', 'Takeaway'].forEach(channel => {
-                const sales = channelData[channel].sales;
-                const target = Math.round(SALES_TARGET * (sales / totalChannelSales));
+                const sales = groupByChannel(allData)[channel].sales;
+                const target = channelTargets[channel] || Math.round(SALES_TARGET * (sales / (groupByChannel(allData).Delivery.sales + groupByChannel(allData).Takeaway.sales)));
                 const percentage = Math.min(100, (sales / target * 100));
                 
                 const targetItem = document.createElement('div');
                 targetItem.className = 'mb-3';
                 targetItem.innerHTML = `
                     <div class="target-label">
-                        ${channel}: <span class="target-value">AED ${target.toLocaleString()}</span>
+                        ${channel}: 
+                        <input type="number" class="form-control d-inline-block w-auto" id="channel-target-${channel.toLowerCase()}" value="${target}" min="0" step="1000">
+                        <button class="btn btn-sm btn-primary ms-2" onclick="updateChannelTarget('${channel}')">Update</button>
                     </div>
                     <div class="target-bar">
                         <div class="target-progress-bar" style="width: ${percentage}%"></div>
@@ -3626,6 +4136,45 @@
                 
                 channelTargetsContainer.appendChild(targetItem);
             });
+        }
+
+        // Update branch target
+        function updateBranchTarget(branch) {
+            const inputId = `branch-target-${branch.replace(/\s+/g, '-').toLowerCase()}`;
+            const input = document.getElementById(inputId);
+            const newTarget = parseFloat(input.value);
+            
+            if (!isNaN(newTarget) && newTarget > 0) {
+                branchTargets[branch] = newTarget;
+                initTargetManagement();
+                showSuccess(`Target for ${branch} updated successfully!`);
+            }
+        }
+
+        // Update channel target
+        function updateChannelTarget(channel) {
+            const inputId = `channel-target-${channel.toLowerCase()}`;
+            const input = document.getElementById(inputId);
+            const newTarget = parseFloat(input.value);
+            
+            if (!isNaN(newTarget) && newTarget > 0) {
+                channelTargets[channel] = newTarget;
+                initTargetManagement();
+                showSuccess(`Target for ${channel} updated successfully!`);
+            }
+        }
+
+        // Update overall target
+        function updateOverallTarget() {
+            const newTarget = parseFloat(document.getElementById('targetInput').value);
+            
+            if (!isNaN(newTarget) && newTarget > 0) {
+                SALES_TARGET = newTarget;
+                branchTargets = calculateBranchTargets();
+                channelTargets = calculateChannelTargets();
+                initTargetManagement();
+                showSuccess('Overall target updated successfully!');
+            }
         }
 
         // Show daily summary
@@ -4124,36 +4673,28 @@
         // Initialize weekday pattern chart
         function initWeekdayPatternChart() {
             const container = document.getElementById('weekdayPattern');
-            const ctx = document.createElement('canvas');
-            container.appendChild(ctx);
+            const ctx = container.getContext('2d');
             
-            // Group data by day of week
-            const weekdayData = {
-                'Sunday': { sales: 0, transactions: 0 },
-                'Monday': { sales: 0, transactions: 0 },
-                'Tuesday': { sales: 0, transactions: 0 },
-                'Wednesday': { sales: 0, transactions: 0 },
-                'Thursday': { sales: 0, transactions: 0 },
-                'Friday': { sales: 0, transactions: 0 },
-                'Saturday': { sales: 0, transactions: 0 }
-            };
+            // Group data by weekday
+            const weekdayData = groupByWeekday(allData);
             
-            allData.forEach(item => {
-                const dayName = getDayName(item.date);
-                weekdayData[dayName].sales += item.sales;
-                weekdayData[dayName].transactions += item.count;
+            // Prepare labels (days of the week)
+            const labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            
+            // Prepare data: average sales for each weekday
+            const data = labels.map(day => {
+                const dayData = weekdayData[day] || { sales: 0, count: 0 };
+                return dayData.sales;
             });
             
-            const labels = Object.keys(weekdayData);
-            const salesData = labels.map(day => weekdayData[day].sales);
-            
+            // Create the chart
             new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Sales',
-                        data: salesData,
+                        label: 'Average Sales',
+                        data: data,
                         backgroundColor: '#FF6B35',
                         borderWidth: 0
                     }]
@@ -4187,38 +4728,29 @@
             });
         }
 
-        // Initialize monthly pattern chart
         function initMonthlyPatternChart() {
             const container = document.getElementById('monthlyPattern');
-            const ctx = document.createElement('canvas');
-            container.appendChild(ctx);
+            const ctx = container.getContext('2d');
             
-            // Group data by month (simplified for demo)
-            const monthlyData = {};
+            // Group data by month
+            const monthlyData = groupByMonth(allData);
             
-            allData.forEach(item => {
-                const month = item.date.substring(0, 2); // MM part of MM/DD/YYYY
-                if (!monthlyData[month]) {
-                    monthlyData[month] = { sales: 0, transactions: 0 };
-                }
-                monthlyData[month].sales += item.sales;
-                monthlyData[month].transactions += item.count;
-            });
+            // Prepare labels (months)
+            const labels = Object.keys(monthlyData);
             
-            const labels = Object.keys(monthlyData).sort();
-            const salesData = labels.map(month => monthlyData[month].sales);
+            // Prepare data: total sales for each month
+            const data = labels.map(month => monthlyData[month].sales);
             
+            // Create the chart
             new Chart(ctx, {
-                type: 'line',
+                type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Monthly Sales',
-                        data: salesData,
-                        borderColor: '#2196F3',
-                        backgroundColor: 'rgba(33, 150, 243, 0.1)',
-                        borderWidth: 2,
-                        tension: 0.4
+                        label: 'Total Sales',
+                        data: data,
+                        backgroundColor: '#2196F3',
+                        borderWidth: 0
                     }]
                 },
                 options: {
@@ -4250,30 +4782,80 @@
             });
         }
 
-        // Initialize branch performance report
-        function initBranchPerformanceReport() {
-            const branchData = groupByBranch(allData);
-            const totals = calculateTotals(allData);
+        function groupByWeekday(data) {
+            const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const result = {};
             
-            // Update branch performance table
-            const branchPerformanceTable = document.getElementById('branchPerformanceTable');
-            const tbody = branchPerformanceTable.querySelector('tbody');
-            tbody.innerHTML = '';
+            // Initialize with zeros
+            weekdays.forEach(day => {
+                result[day] = { sales: 0, count: 0 };
+            });
+            
+            data.forEach(item => {
+                const date = new Date(item.date);
+                const dayName = weekdays[date.getDay()];
+                if (result[dayName]) {
+                    result[dayName].sales += item.sales;
+                    result[dayName].count += item.count;
+                }
+            });
+            
+            return result;
+        }
+
+        function groupByMonth(data) {
+            const result = {};
+            
+            data.forEach(item => {
+                const date = new Date(item.date);
+                const monthYear = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                
+                if (!result[monthYear]) {
+                    result[monthYear] = { sales: 0, count: 0 };
+                }
+                
+                result[monthYear].sales += item.sales;
+                result[monthYear].count += item.count;
+            });
+            
+            return result;
+        }
+
+        function updateBranchPerformanceReport() {
+            const reportMonth = document.getElementById('reportMonth').value;
+            const growthRate = parseFloat(document.getElementById('growthRate').value) || 0;
+            
+            // Filter data for the selected month
+            const [year, month] = reportMonth.split('-');
+            const monthData = allData.filter(item => {
+                const itemDate = new Date(item.date);
+                return itemDate.getFullYear() == year && (itemDate.getMonth() + 1) == month;
+            });
+            
+            // Calculate branch performance
+            const branchData = groupByBranch(monthData);
+            
+            // Update the branch performance table
+            const tableBody = document.getElementById('branchPerformanceTableBody');
+            tableBody.innerHTML = '';
             
             Object.entries(branchData).forEach(([branch, data]) => {
-                const avgDailySales = data.sales / 31; // Assuming 31 days in month
-                const target = calculateBranchTargets()[branch];
-                const achievement = target > 0 ? Math.min(100, (data.sales / target * 100)) : 0;
+                const avgDailySales = data.sales / 30; // Assuming 30 days in the month
+                const monthlyTarget = branchTargets[branch] || 0;
+                const achievement = monthlyTarget > 0 ? (data.sales / monthlyTarget * 100).toFixed(1) : 0;
                 
-                let statusClass = 'below-target';
-                let statusText = translations[currentLang]['below-target'];
+                let performanceStatus = 'Poor';
+                let statusClass = 'poor';
                 
                 if (achievement >= 100) {
-                    statusClass = 'above-target';
-                    statusText = translations[currentLang]['above-target'];
+                    performanceStatus = 'Excellent';
+                    statusClass = 'excellent';
                 } else if (achievement >= 80) {
-                    statusClass = 'on-target';
-                    statusText = translations[currentLang]['on-target'];
+                    performanceStatus = 'Good';
+                    statusClass = 'good';
+                } else if (achievement >= 60) {
+                    performanceStatus = 'Needs Improvement';
+                    statusClass = 'needs-improvement';
                 }
                 
                 const row = document.createElement('tr');
@@ -4282,74 +4864,93 @@
                     <td>${data.transactions.toLocaleString()}</td>
                     <td>AED ${data.sales.toLocaleString()}</td>
                     <td>AED ${avgDailySales.toFixed(2)}</td>
-                    <td>AED ${target.toLocaleString()}</td>
-                    <td class="${statusClass}">${achievement.toFixed(1)}%</td>
-                    <td><span class="badge ${statusClass === 'above-target' ? 'bg-success' : statusClass === 'on-target' ? 'bg-warning' : 'bg-danger'}">${statusText}</span></td>
+                    <td>AED ${monthlyTarget.toLocaleString()}</td>
+                    <td>${achievement}%</td>
+                    <td><span class="badge ${statusClass}">${performanceStatus}</span></td>
                 `;
-                
-                tbody.appendChild(row);
+                tableBody.appendChild(row);
             });
             
-            // Update weekly performance report
-            const weeklyPerformanceTable = document.getElementById('weeklyPerformanceTable');
-            const weeklyTbody = weeklyPerformanceTable.querySelector('tbody');
-            weeklyTbody.innerHTML = '';
+            // Update other report sections
+            updateWeeklyPerformanceReport(monthData);
+            updateDailySalesComparison(monthData);
+            updateOverallInsights(monthData);
+        }
+
+        function updateWeeklyPerformanceReport(monthData) {
+            // Group data by week
+            const weeklyData = {};
+            const weeksInMonth = getWeeksInMonth(monthData);
             
-            // Generate weekly data (simplified for demo)
-            const weeks = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
-            
-            weeks.forEach((week, index) => {
-                // Random data for demo
-                const weekSales = Math.floor(Math.random() * 50000) + 30000;
-                const weekTransactions = Math.floor(Math.random() * 1000) + 500;
-                const avgSale = weekSales / weekTransactions;
-                
-                Object.keys(branchData).forEach(branch => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${week}</td>
-                        <td>${branch}</td>
-                        <td>AED ${weekSales.toLocaleString()}</td>
-                        <td>${weekTransactions.toLocaleString()}</td>
-                        <td>AED ${avgSale.toFixed(2)}</td>
-                    `;
-                    weeklyTbody.appendChild(row);
-                });
+            weeksInMonth.forEach((week, index) => {
+                const weekKey = `Week ${index + 1}`;
+                weeklyData[weekKey] = {
+                    sales: week.reduce((sum, item) => sum + item.sales, 0),
+                    transactions: week.reduce((sum, item) => sum + item.count, 0)
+                };
             });
             
-            // Update best and worst week
-            const bestWeekInfo = document.getElementById('bestWeekInfo');
-            const lowestWeekInfo = document.getElementById('lowestWeekInfo');
+            // Find best and worst performing weeks
+            const sortedWeeks = Object.entries(weeklyData)
+                .sort((a, b) => b[1].sales - a[1].sales);
             
-            // Simplified for demo
-            bestWeekInfo.innerHTML = `
-                <div class="alert alert-success">
-                    <strong>Week 3</strong><br>
-                    Sales: AED ${(Math.floor(Math.random() * 50000) + 40000).toLocaleString()}<br>
-                    Transactions: ${(Math.floor(Math.random() * 1000) + 800).toLocaleString()}
-                </div>
+            const bestWeek = sortedWeeks[0];
+            const worstWeek = sortedWeeks[sortedWeeks.length - 1];
+            
+            // Update best week info
+            document.getElementById('bestWeekInfo').innerHTML = `
+                <strong>${bestWeek[0]}</strong><br>
+                Sales: AED ${bestWeek[1].sales.toLocaleString()}<br>
+                Transactions: ${bestWeek[1].transactions.toLocaleString()}
             `;
             
-            lowestWeekInfo.innerHTML = `
-                <div class="alert alert-danger">
-                    <strong>Week 1</strong><br>
-                    Sales: AED ${(Math.floor(Math.random() * 30000) + 20000).toLocaleString()}<br>
-                    Transactions: ${(Math.floor(Math.random() * 500) + 300).toLocaleString()}
-                </div>
+            // Update worst week info
+            document.getElementById('lowestWeekInfo').innerHTML = `
+                <strong>${worstWeek[0]}</strong><br>
+                Sales: AED ${worstWeek[1].sales.toLocaleString()}<br>
+                Transactions: ${worstWeek[1].transactions.toLocaleString()}
             `;
             
-            // Update daily sales comparison chart
-            const dailySalesComparisonCtx = document.getElementById('dailySalesComparisonChart').getContext('2d');
+            // Update weekly performance table
+            const tableBody = document.getElementById('weeklyPerformanceTableBody');
+            tableBody.innerHTML = '';
+            
+            Object.entries(weeklyData).forEach(([week, data]) => {
+                const avgSale = data.transactions > 0 ? data.sales / data.transactions : 0;
+                const growthRate = Math.random() * 20 - 10; // Simplified for demo
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${week}</td>
+                    <td>All Branches</td>
+                    <td>AED ${data.sales.toLocaleString()}</td>
+                    <td>${data.transactions.toLocaleString()}</td>
+                    <td>AED ${avgSale.toFixed(2)}</td>
+                    <td class="${growthRate > 0 ? 'text-success' : 'text-danger'}">
+                        ${growthRate > 0 ? '+' : ''}${growthRate.toFixed(1)}%
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function updateDailySalesComparison(monthData) {
+            // Group data by date
+            const dailyData = groupByDate(monthData);
+            const sortedDates = Object.keys(dailyData).sort();
+            
+            // Prepare chart data
+            const labels = sortedDates;
+            const salesData = sortedDates.map(date => dailyData[date].sales);
+            
+            // Create or update chart
+            const ctx = document.getElementById('dailySalesComparisonChart').getContext('2d');
             
             if (charts.dailySalesComparisonChart) {
                 charts.dailySalesComparisonChart.destroy();
             }
             
-            const dailyData = prepareDailyChartData();
-            const labels = dailyData.map(d => d.date);
-            const salesData = dailyData.map(d => d.totalSales);
-            
-            charts.dailySalesComparisonChart = new Chart(dailySalesComparisonCtx, {
+            charts.dailySalesComparisonChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
@@ -4368,6 +4969,13 @@
                     plugins: {
                         legend: {
                             display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Sales: AED ${context.raw.toLocaleString()}`;
+                                }
+                            }
                         }
                     },
                     scales: {
@@ -4384,157 +4992,863 @@
             });
             
             // Update trend analysis
-            const trendAnalysis = document.getElementById('trendAnalysis');
-            trendAnalysis.innerHTML = `
-                <div class="alert alert-info">
-                    <strong>Sales Trend:</strong> <span class="trend-up">Upward</span><br>
-                    <strong>Pattern:</strong> Steady growth with weekend spikes<br>
-                    <strong>Forecast:</strong> Positive momentum continues
-                </div>
+            const firstHalf = salesData.slice(0, Math.floor(salesData.length / 2));
+            const secondHalf = salesData.slice(Math.floor(salesData.length / 2));
+            
+            const firstHalfAvg = firstHalf.reduce((sum, val) => sum + val, 0) / firstHalf.length;
+            const secondHalfAvg = secondHalf.reduce((sum, val) => sum + val, 0) / secondHalf.length;
+            
+            const trend = secondHalfAvg > firstHalfAvg ? 'increasing' : 'decreasing';
+            const changePercent = ((secondHalfAvg - firstHalfAvg) / firstHalfAvg * 100).toFixed(1);
+            
+            document.getElementById('trendAnalysis').innerHTML = `
+                Sales trend is <strong>${trend}</strong> with a ${changePercent}% change 
+                from the first half to the second half of the month.
             `;
             
             // Update branch comparison
-            const branchComparison = document.getElementById('branchComparison');
-            branchComparison.innerHTML = `
-                <div class="alert alert-warning">
-                    <strong>Top Performer:</strong> Crispy Chicken-Hamdan St<br>
-                    <strong>Improvement Needed:</strong> Crispy Chicken Al Rgga<br>
-                    <strong>Consistency:</strong> Most branches performing within expected range
+            const branchData = groupByBranch(monthData);
+            const topBranch = Object.entries(branchData)
+                .sort((a, b) => b[1].sales - a[1].sales)[0];
+            
+            document.getElementById('branchComparison').innerHTML = `
+                <strong>${topBranch[0]}</strong> is the top performing branch with 
+                AED ${topBranch[1].sales.toLocaleString()} in sales.
+            `;
+        }
+
+        function updateOverallInsights(monthData) {
+            const branchData = groupByBranch(monthData);
+            const sortedBranches = Object.entries(branchData)
+                .sort((a, b) => b[1].sales - a[1].sales);
+            
+            // Fastest growing branches (simplified for demo)
+            const fastestGrowing = sortedBranches.slice(0, 3);
+            const fastestGrowingContainer = document.getElementById('fastestGrowingBranches');
+            fastestGrowingContainer.innerHTML = '';
+            
+            fastestGrowing.forEach(([branch, data]) => {
+                const growth = (Math.random() * 30 + 10).toFixed(1); // Random growth between 10-40%
+                const item = document.createElement('div');
+                item.className = 'mb-1';
+                item.innerHTML = `<strong>${branch}:</strong> +${growth}%`;
+                fastestGrowingContainer.appendChild(item);
+            });
+            
+            // Branches needing improvement
+            const needingImprovement = sortedBranches.slice(-3);
+            const needingImprovementContainer = document.getElementById('branchesNeedingImprovement');
+            needingImprovementContainer.innerHTML = '';
+            
+            needingImprovement.forEach(([branch, data]) => {
+                const growth = (Math.random() * -10 - 5).toFixed(1); // Random decline between -5 to -15%
+                const item = document.createElement('div');
+                item.className = 'mb-1';
+                item.innerHTML = `<strong>${branch}:</strong> ${growth}%`;
+                needingImprovementContainer.appendChild(item);
+            });
+            
+            // Month-to-date highlights
+            const highlightsContainer = document.getElementById('monthToDateHighlights');
+            highlightsContainer.innerHTML = `
+                <div class="mb-1">
+                    <strong>Total Sales:</strong> AED ${monthData.reduce((sum, item) => sum + item.sales, 0).toLocaleString()}
+                </div>
+                <div class="mb-1">
+                    <strong>Total Transactions:</strong> ${monthData.reduce((sum, item) => sum + item.count, 0).toLocaleString()}
+                </div>
+                <div>
+                    <strong>Avg Sale/Transaction:</strong> AED ${(monthData.reduce((sum, item) => sum + item.sales, 0) / monthData.reduce((sum, item) => sum + item.count, 0)).toFixed(2)}
                 </div>
             `;
-            
-            // Update overall insights
-            const fastestGrowingBranches = document.getElementById('fastestGrowingBranches');
-            const branchesNeedingImprovement = document.getElementById('branchesNeedingImprovement');
-            const monthToDateHighlights = document.getElementById('monthToDateHighlights');
-            
-            fastestGrowingBranches.innerHTML = `
-                <ul>
-                    <li>Crispy Chicken-Hamdan St: +15%</li>
-                    <li>Crispy Chicken Khaldia: +12%</li>
-                    <li>Crispy Chicken Al Barsha: +10%</li>
-                </ul>
-            `;
-            
-            branchesNeedingImprovement.innerHTML = `
-                <ul>
-                    <li>Crispy Chicken Al Rgga: -5%</li>
-                    <li>Crispy Chicken Al Satwa: -2%</li>
-                </ul>
-            `;
-            
-            monthToDateHighlights.innerHTML = `
-                <ul>
-                    <li>Total sales exceeded target by 8%</li>
-                    <li>Delivery channel growth outperformed takeaway</li>
-                    <li>Weekend sales consistently higher than weekdays</li>
-                </ul>
-            `;
         }
 
-        // Initialize data management
-        function initDataManagement() {
-            // Update sales table
-            updateSalesTable();
+        function getWeeksInMonth(data) {
+            // Group data by week number in the month
+            const weeks = {};
             
-            // Initialize backup list
-            updateBackupList();
+            data.forEach(item => {
+                const date = new Date(item.date);
+                const weekNumber = Math.floor(date.getDate() / 7);
+                const weekKey = `Week ${weekNumber + 1}`;
+                
+                if (!weeks[weekKey]) {
+                    weeks[weekKey] = [];
+                }
+                
+                weeks[weekKey].push(item);
+            });
+            
+            return Object.values(weeks);
         }
 
-        // Update sales table
+        function calculateChannelTargets() {
+            const channelData = groupByChannel(allData);
+            const totalSales = Object.values(channelData).reduce((sum, channel) => sum + channel.sales, 0);
+            
+            const targets = {};
+            
+            // Distribute the total target based on each channel's sales performance
+            Object.entries(channelData).forEach(([name, data]) => {
+                const percentage = totalSales > 0 ? (data.sales / totalSales) : 0;
+                targets[name] = Math.round(SALES_TARGET * percentage);
+            });
+            
+            return targets;
+        }
+
+        // Enhanced functions for improvements
+
+        // Authentication Functions
+        function showAuthModal() {
+            document.getElementById('authModal').style.display = 'block';
+        }
+
+        function hideAuthModal() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Simulate authentication (in real app, this would be an API call)
+            if (username && password) {
+                // Create a mock JWT token
+                const tokenPayload = {
+                    sub: username,
+                    name: username,
+                    role: 'admin',
+                    exp: Math.floor(Date.now() / 1000) + (60 * 60) // 1 hour expiration
+                };
+                
+                const mockToken = btoa(JSON.stringify(tokenPayload));
+                
+                // Store authentication state
+                isAuthenticated = true;
+                currentUser = { username, name: username };
+                authToken = mockToken;
+                
+                // Update UI
+                document.getElementById('userProfileName').textContent = username;
+                hideAuthModal();
+                
+                // Show success notification
+                showNotification('success', 'Login Successful', 'You have been successfully logged in.');
+                
+                // Initialize real-time updates
+                startRealTimeUpdates();
+            } else {
+                showNotification('error', 'Login Failed', 'Please enter a valid username and password.');
+            }
+        }
+
+        function logout() {
+            isAuthenticated = false;
+            currentUser = null;
+            authToken = null;
+            
+            // Update UI
+            document.getElementById('userProfileName').textContent = 'Admin';
+            
+            // Stop real-time updates
+            stopRealTimeUpdates();
+            
+            // Show notification
+            showNotification('info', 'Logged Out', 'You have been successfully logged out.');
+        }
+
+        // Real-time Updates
+        function startRealTimeUpdates() {
+            // Simulate real-time updates every 30 seconds
+            updateInterval = setInterval(() => {
+                // Generate some random data updates
+                const randomUpdate = Math.random();
+                
+                if (randomUpdate > 0.7) {
+                    // Add a new random entry
+                    const branches = [
+                        'Crispy Chicken-Hamdan St',
+                        'Crispy Chicken Khaldia',
+                        'Crispy Chicken Shabiya11',
+                        'Crispy Chicken Muroor',
+                        'Crispy Chicken Al Barsha',
+                        'Crispy Chicken Al Satwa',
+                        'Crispy Chicken Al Rgga'
+                    ];
+                    
+                    const channels = ['Delivery', 'Takeaway'];
+                    
+                    const today = new Date();
+                    const dateStr = `${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')}/${today.getFullYear()}`;
+                    
+                    const randomBranch = branches[Math.floor(Math.random() * branches.length)];
+                    const randomChannel = channels[Math.floor(Math.random() * channels.length)];
+                    const randomTransactions = Math.floor(Math.random() * 50) + 10;
+                    const randomSales = randomTransactions * (Math.random() * 30 + 20);
+                    
+                    allData.push({
+                        date: dateStr,
+                        branch: randomBranch,
+                        channel: randomChannel,
+                        count: randomTransactions,
+                        sales: Math.round(randomSales),
+                        avr: Math.round(randomSales / randomTransactions * 100) / 100,
+                        id: Date.now() + Math.random()
+                    });
+                    
+                    // Update dashboard
+                    initializeApp();
+                    
+                    // Show real-time update notification
+                    showRealTimeUpdate();
+                }
+            }, 30000); // Every 30 seconds
+        }
+
+        function stopRealTimeUpdates() {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+                updateInterval = null;
+            }
+        }
+
+        function showRealTimeUpdate() {
+            const updateDiv = document.createElement('div');
+            updateDiv.className = 'real-time-update';
+            updateDiv.innerHTML = `
+                <i class="bi bi-arrow-clockwise me-2"></i>
+                ${translations[currentLang]['real-time-update']}
+            `;
+            document.body.appendChild(updateDiv);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                updateDiv.remove();
+            }, 3000);
+        }
+
+        // Advanced Filtering
+        function applyAdvancedFilters() {
+            // Get filter values
+            const branchFilter = Array.from(document.getElementById('branchFilter').selectedOptions).map(option => option.value);
+            const channelFilter = Array.from(document.getElementById('channelFilter').selectedOptions).map(option => option.value);
+            const performanceFilter = document.getElementById('performanceFilter').value;
+            
+            // Update active filters
+            activeFilters.branches = branchFilter;
+            activeFilters.channels = channelFilter;
+            activeFilters.performance = performanceFilter;
+            
+            // Update filter tags display
+            updateFilterTags();
+            
+            // Apply filters to data
+            const filteredData = filterData(allData, activeFilters);
+            
+            // Update dashboard with filtered data
+            updateDashboardWithFilteredData(filteredData);
+            
+            // Show notification
+            showNotification('info', 'Filters Applied', `Dashboard updated with applied filters.`);
+        }
+
+        function filterData(data, filters) {
+            return data.filter(item => {
+                // Branch filter
+                if (filters.branches.length > 0 && !filters.branches.includes(item.branch)) {
+                    return false;
+                }
+                
+                // Channel filter
+                if (filters.channels.length > 0 && !filters.channels.includes(item.channel)) {
+                    return false;
+                }
+                
+                // Performance filter
+                if (filters.performance) {
+                    const branchData = groupByBranch(data)[item.branch];
+                    if (!branchData) return false;
+                    
+                    const avgSale = branchData.avgSale;
+                    
+                    if (filters.performance === 'high' && avgSale < 50) {
+                        return false;
+                    } else if (filters.performance === 'medium' && (avgSale < 30 || avgSale >= 50)) {
+                        return false;
+                    } else if (filters.performance === 'low' && avgSale >= 30) {
+                        return false;
+                    }
+                }
+                
+                return true;
+            });
+        }
+
+        function updateFilterTags() {
+            const container = document.getElementById('activeFilters');
+            container.innerHTML = '';
+            
+            // Branch tags
+            activeFilters.branches.forEach(branch => {
+                const tag = createFilterTag('branch', branch);
+                container.appendChild(tag);
+            });
+            
+            // Channel tags
+            activeFilters.channels.forEach(channel => {
+                const tag = createFilterTag('channel', channel);
+                container.appendChild(tag);
+            });
+            
+            // Performance tag
+            if (activeFilters.performance) {
+                const tag = createFilterTag('performance', activeFilters.performance);
+                container.appendChild(tag);
+            }
+        }
+
+        function createFilterTag(type, value) {
+            const tag = document.createElement('div');
+            tag.className = 'filter-tag';
+            
+            const label = document.createElement('span');
+            label.textContent = `${type}: ${value}`;
+            
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'btn-remove';
+            removeBtn.innerHTML = '&times;';
+            removeBtn.onclick = () => removeFilter(type, value);
+            
+            tag.appendChild(label);
+            tag.appendChild(removeBtn);
+            
+            return tag;
+        }
+
+        function removeFilter(type, value) {
+            if (type === 'branch') {
+                activeFilters.branches = activeFilters.branches.filter(b => b !== value);
+            } else if (type === 'channel') {
+                activeFilters.channels = activeFilters.channels.filter(c => c !== value);
+            } else if (type === 'performance') {
+                activeFilters.performance = '';
+            }
+            
+            // Update UI
+            updateFilterTags();
+            
+            // Re-apply filters
+            const filteredData = filterData(allData, activeFilters);
+            updateDashboardWithFilteredData(filteredData);
+        }
+
+        function clearAdvancedFilters() {
+            activeFilters = {
+                branches: [],
+                channels: [],
+                performance: '',
+                dateRange: { start: '', end: '' }
+            };
+            
+            // Reset form controls
+            document.getElementById('branchFilter').selectedIndex = -1;
+            document.getElementById('channelFilter').selectedIndex = -1;
+            document.getElementById('performanceFilter').value = '';
+            
+            // Update UI
+            updateFilterTags();
+            
+            // Reset dashboard with all data
+            updateDashboardWithFilteredData(allData);
+            
+            // Show notification
+            showNotification('info', 'Filters Cleared', 'All filters have been cleared.');
+        }
+
+        function updateDashboardWithFilteredData(data) {
+            // Update all charts and metrics with filtered data
+            const originalData = allData;
+            allData = data;
+            
+            try {
+                initializeApp();
+            } finally {
+                // Restore original data
+                allData = originalData;
+            }
+        }
+
+        // Enhanced PDF Reporting
+        function generatePDFReport(type) {
+            showLoadingOverlay();
+            
+            setTimeout(() => {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                // Add title
+                doc.setFontSize(20);
+                doc.text('Crispy Chicken Sales Report', 105, 15, { align: 'center' });
+                
+                // Add report type and date
+                doc.setFontSize(12);
+                doc.text(`Report Type: ${type.charAt(0).toUpperCase() + type.slice(1)}`, 20, 30);
+                doc.text(`Generated: ${new Date().toLocaleDateString()}`, 20, 40);
+                
+                // Add summary section
+                const totals = calculateTotals(allData);
+                doc.setFontSize(14);
+                doc.text('Summary', 20, 55);
+                doc.setFontSize(10);
+                doc.text(`Total Sales: AED ${totals.totalSales.toLocaleString()}`, 20, 65);
+                doc.text(`Total Transactions: ${totals.totalTransactions.toLocaleString()}`, 20, 75);
+                doc.text(`Average Sale: AED ${totals.avgSale.toFixed(2)}`, 20, 85);
+                
+                // Add charts as images
+                const charts = [
+                    { id: 'dailySalesChart', title: 'Daily Sales Trend' },
+                    { id: 'branchSalesChart', title: 'Sales by Branch' }
+                ];
+                
+                let yPos = 100;
+                
+                charts.forEach((chartInfo, index) => {
+                    const chartCanvas = document.getElementById(chartInfo.id);
+                    if (chartCanvas) {
+                        // Add chart title
+                        doc.setFontSize(12);
+                        doc.text(chartInfo.title, 20, yPos);
+                        yPos += 10;
+                        
+                        // Convert chart to image and add to PDF
+                        const chartImage = chartCanvas.toDataURL('image/png');
+                        doc.addImage(chartImage, 'PNG', 20, yPos, 170, 100);
+                        yPos += 110;
+                        
+                        // Add new page if needed
+                        if (yPos > 250) {
+                            doc.addPage();
+                            yPos = 20;
+                        }
+                    }
+                });
+                
+                // Add data table
+                doc.setFontSize(14);
+                doc.text('Sales Data', 20, yPos);
+                yPos += 10;
+                
+                // Add table headers
+                doc.setFontSize(10);
+                doc.text('Date', 20, yPos);
+                doc.text('Branch', 60, yPos);
+                doc.text('Channel', 100, yPos);
+                doc.text('Sales', 140, yPos);
+                yPos += 10;
+                
+                // Add table rows (limit to first 20 for demo)
+                const tableData = [...allData].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 20);
+                
+                tableData.forEach(item => {
+                    if (yPos > 270) {
+                        doc.addPage();
+                        yPos = 20;
+                    }
+                    
+                    doc.text(item.date, 20, yPos);
+                    doc.text(item.branch, 60, yPos);
+                    doc.text(item.channel, 100, yPos);
+                    doc.text(`AED ${item.sales.toLocaleString()}`, 140, yPos);
+                    yPos += 10;
+                });
+                
+                // Save the PDF
+                doc.save(`crispy-chicken-${type}-report.pdf`);
+                
+                hideLoadingOverlay();
+                showNotification('success', 'PDF Generated', `${type.charAt(0).toUpperCase() + type.slice(1)} report has been generated successfully.`);
+            }, 1000);
+        }
+
+        // Pagination
         function updateSalesTable() {
-            const salesTableBody = document.getElementById('salesTableBody');
-            salesTableBody.innerHTML = '';
+            const tableBody = document.getElementById('salesTableBody');
+            const pagination = document.getElementById('pagination');
             
-            allData.forEach((item, index) => {
+            // Clear existing content
+            tableBody.innerHTML = '';
+            pagination.innerHTML = '';
+            
+            // Sort data by date (newest first)
+            const sortedData = [...allData].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Calculate pagination
+            const totalPages = Math.ceil(sortedData.length / itemsPerPage);
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageData = sortedData.slice(startIndex, endIndex);
+            
+            // Populate table
+            pageData.forEach((entry, index) => {
+                const originalIndex = allData.findIndex(item => item.id === entry.id);
                 const row = document.createElement('tr');
+                
                 row.innerHTML = `
-                    <td>${item.date}</td>
-                    <td>${item.branch}</td>
-                    <td><span class="channel-badge ${item.channel === 'Delivery' ? 'channel-delivery' : 'channel-takeaway'}">${item.channel}</span></td>
-                    <td>${item.count}</td>
-                    <td>AED ${item.sales.toLocaleString()}</td>
-                    <td>AED ${item.avr.toFixed(2)}</td>
+                    <td>${entry.date}</td>
+                    <td>${entry.branch}</td>
+                    <td>${entry.channel}</td>
+                    <td>${entry.count}</td>
+                    <td>AED ${entry.sales.toLocaleString()}</td>
+                    <td>AED ${entry.avr.toFixed(2)}</td>
                     <td>
-                        <button class="btn btn-edit-action" onclick="editEntry(${index})">
+                        <button class="btn btn-edit" onclick="editEntry(${originalIndex})">
                             <i class="bi bi-pencil"></i>
                         </button>
-                        <button class="btn btn-delete-action" onclick="deleteEntry(${index})">
+                        <button class="btn btn-delete" onclick="deleteEntry(${originalIndex})">
                             <i class="bi bi-trash"></i>
                         </button>
                     </td>
                 `;
-                salesTableBody.appendChild(row);
+                
+                tableBody.appendChild(row);
             });
-        }
-
-        // Update backup list
-        function updateBackupList() {
-            const backupList = document.getElementById('backupList');
-            backupList.innerHTML = '';
             
-            if (backups.length === 0) {
-                backupList.innerHTML = '<p class="text-muted">No backups available</p>';
-                return;
-            }
-            
-            backups.forEach((backup, index) => {
-                const backupItem = document.createElement('div');
-                backupItem.className = 'alert alert-info';
-                backupItem.innerHTML = `
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <strong>${backup.date}</strong><br>
-                            <small>Size: ${(backup.size / 1024).toFixed(2)} KB</small>
-                        </div>
-                        <div>
-                            <button class="btn btn-sm btn-primary" onclick="restoreBackup(${index})">
-                                <i class="bi bi-arrow-counterclockwise"></i> Restore
-                            </button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteBackup(${index})">
-                                <i class="bi bi-trash"></i> Delete
-                            </button>
-                        </div>
-                    </div>
+            // Populate pagination
+            if (totalPages > 1) {
+                // Previous button
+                const prevLi = document.createElement('li');
+                prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+                prevLi.innerHTML = `
+                    <a class="page-link" href="#" onclick="changePage(${currentPage - 1})">
+                        ${translations[currentLang]['previous']}
+                    </a>
                 `;
-                backupList.appendChild(backupItem);
-            });
-        }
-
-        // Edit entry
-        function editEntry(index) {
-            const item = allData[index];
-            editingIndex = index;
-            
-            // Populate form with existing data
-            document.getElementById('entryDate').value = item.date;
-            document.getElementById('entryBranch').value = item.branch;
-            document.getElementById('entryChannel').value = item.channel;
-            document.getElementById('entryTransactions').value = item.count;
-            document.getElementById('entrySales').value = item.sales;
-            
-            // Show cancel button and change add button text
-            document.getElementById('cancelBtn').style.display = 'inline-block';
-            document.getElementById('addDataBtn').innerHTML = '<i class="bi bi-check-circle me-2"></i> Update';
-            
-            // Scroll to form
-            document.getElementById('data-entry-tab').click();
-            document.getElementById('salesForm').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // Delete entry
-        function deleteEntry(index) {
-            if (confirm('Are you sure you want to delete this entry?')) {
-                allData.splice(index, 1);
-                saveData();
-                updateDashboard();
-                showSuccess('Entry deleted successfully!');
+                pagination.appendChild(prevLi);
+                
+                // Page numbers
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+                        const pageLi = document.createElement('li');
+                        pageLi.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                        pageLi.innerHTML = `
+                            <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
+                        `;
+                        pagination.appendChild(pageLi);
+                    } else if (i === currentPage - 3 || i === currentPage + 3) {
+                        const ellipsisLi = document.createElement('li');
+                        ellipsisLi.className = 'page-item disabled';
+                        ellipsisLi.innerHTML = '<span class="page-link">...</span>';
+                        pagination.appendChild(ellipsisLi);
+                    }
+                }
+                
+                // Next button
+                const nextLi = document.createElement('li');
+                nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+                nextLi.innerHTML = `
+                    <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">
+                        ${translations[currentLang]['next']}
+                    </a>
+                `;
+                pagination.appendChild(nextLi);
+                
+                // Show entries info
+                const entriesInfo = document.createElement('div');
+                entriesInfo.className = 'mt-2 text-center';
+                entriesInfo.innerHTML = `
+                    ${translations[currentLang]['showing']} ${startIndex + 1} to ${Math.min(endIndex, sortedData.length)} 
+                    ${translations[currentLang]['of']} ${sortedData.length} ${translations[currentLang]['entries']}
+                `;
+                pagination.appendChild(entriesInfo);
             }
         }
 
-        // Add/Update data
-        function addOrUpdateData() {
+        function changePage(page) {
+            const totalPages = Math.ceil(allData.length / itemsPerPage);
+            
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                updateSalesTable();
+            }
+        }
+
+        // Mobile Touch Gestures
+        function setupMobileGestures() {
+            if (window.innerWidth <= 768) {
+                const touchArea = document.querySelector('.touch-area');
+                
+                if (touchArea) {
+                    let touchStartX = 0;
+                    let touchStartY = 0;
+                    
+                    touchArea.addEventListener('touchstart', (e) => {
+                        touchStartX = e.touches[0].clientX;
+                        touchStartY = e.touches[0].clientY;
+                    });
+                    
+                    touchArea.addEventListener('touchend', (e) => {
+                        const touchEndX = e.changedTouches[0].clientX;
+                        const touchEndY = e.changedTouches[0].clientY;
+                        
+                        const deltaX = touchEndX - touchStartX;
+                        const deltaY = touchEndY - touchStartY;
+                        
+                        // Detect horizontal swipe
+                        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+                            if (deltaX > 0) {
+                                // Swipe right - previous period
+                                showPreviousPeriod();
+                            } else {
+                                // Swipe left - next period
+                                showNextPeriod();
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+        function showPreviousPeriod() {
+            // Implement navigation to previous time period
+            showNotification('info', 'Previous Period', 'Showing data for the previous period.');
+        }
+
+        function showNextPeriod() {
+            // Implement navigation to next time period
+            showNotification('info', 'Next Period', 'Showing data for the next period.');
+        }
+
+        // Notification System
+        function showNotification(type, title, message) {
+            const container = document.getElementById('notificationContainer');
+            
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            
+            const iconClass = type === 'success' ? 'check-circle' : 
+                              type === 'error' ? 'exclamation-circle' : 
+                              type === 'warning' ? 'exclamation-triangle' : 'info-circle';
+            
+            notification.innerHTML = `
+                <div class="notification-icon">
+                    <i class="bi bi-${iconClass}"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-message">${message}</div>
+                </div>
+                <button class="notification-close" onclick="this.parentElement.remove()">
+                    <i class="bi bi-x"></i>
+                </button>
+            `;
+            
+            container.appendChild(notification);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Loading Overlay
+        function showLoadingOverlay() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        function hideLoadingOverlay() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for authentication
+            const savedToken = localStorage.getItem('authToken');
+            if (savedToken) {
+                try {
+                    const decoded = JSON.parse(atob(savedToken));
+                    if (decoded.exp > Math.floor(Date.now() / 1000)) {
+                        isAuthenticated = true;
+                        currentUser = { username: decoded.sub, name: decoded.name };
+                        authToken = savedToken;
+                        document.getElementById('userProfileName').textContent = decoded.name;
+                        startRealTimeUpdates();
+                    }
+                } catch (e) {
+                    // Invalid token
+                    localStorage.removeItem('authToken');
+                }
+            }
+            
+            // Show auth modal if not authenticated
+            if (!isAuthenticated) {
+                setTimeout(() => showAuthModal(), 1000);
+            }
+            
+            // Load data from localStorage if available
+            loadData();
+            
+            // Initialize all charts and UI elements
+            initializeApp();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Start session timer
+            startSessionTimer();
+            
+            // Setup mobile gestures
+            setupMobileGestures();
+        });
+
+        function initializeApp() {
+            // Initialize all charts
+            initDailySalesChart();
+            initBranchSalesChart();
+            initWeekdayWeekendChart();
+            initTransactionDistributionChart();
+            initAvgSaleBranchChart();
+            initChannelComparison();
+            initTargetManagement();
+            initTrendChart();
+            initDeliveryCharts();
+            initForecastChart();
+            initPerformanceMetrics();
+            initWeekdayPatternChart();
+            initMonthlyPatternChart();
+            
+            // Update UI elements
+            updateKPICards();
+            updatePerformanceTracking();
+            updateBranchComparison();
+            updateSalesTable();
+            
+            // Initialize branch performance report if on that tab
+            if (document.getElementById('branch-performance-tab').classList.contains('active')) {
+                updateBranchPerformanceReport();
+            }
+        }
+
+        function setupEventListeners() {
+            // Language toggle
+            document.getElementById('langToggle').addEventListener('click', toggleLanguage);
+            
+            // Dark mode toggle
+            document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
+            
+            // Add data button
+            document.getElementById('addDataBtn').addEventListener('click', addData);
+            
+            // Cancel button
+            document.getElementById('cancelBtn').addEventListener('click', cancelEdit);
+            
+            // Form submission
+            document.getElementById('salesForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (e.target.checkValidity()) {
+                    addData();
+                } else {
+                    e.target.classList.add('was-validated');
+                }
+            });
+            
+            // Update overall target
+            document.getElementById('updateOverallTargetBtn').addEventListener('click', updateOverallTarget);
+            
+            // Generate report button
+            document.getElementById('generateReportBtn').addEventListener('click', updateBranchPerformanceReport);
+            
+            // Export buttons
+            document.getElementById('exportCSV').addEventListener('click', exportToCSV);
+            document.getElementById('exportJSON').addEventListener('click', exportToJSON);
+            document.getElementById('exportDaily').addEventListener('click', () => generatePDFReport('daily'));
+            document.getElementById('exportWeekly').addEventListener('click', () => generatePDFReport('weekly'));
+            document.getElementById('exportMonthly').addEventListener('click', () => generatePDFReport('monthly'));
+            
+            // Save and clear data buttons
+            document.getElementById('saveDataBtn').addEventListener('click', saveData);
+            document.getElementById('clearDataBtn').addEventListener('click', clearData);
+            
+            // Backup buttons
+            document.getElementById('createBackupBtn').addEventListener('click', createBackup);
+            document.getElementById('restoreBackupBtn').addEventListener('click', restoreBackup);
+            
+            // File upload
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            
+            uploadArea.addEventListener('click', () => fileInput.click());
+            uploadArea.addEventListener('dragover', handleDragOver);
+            uploadArea.addEventListener('drop', handleDrop);
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            // Refresh button
+            document.getElementById('refreshBtn').addEventListener('click', function() {
+                initializeApp();
+            });
+            
+            // Tab change event
+            document.querySelectorAll('#mainTabs button[data-bs-toggle="tab"]').forEach(tab => {
+                tab.addEventListener('shown.bs.tab', function (event) {
+                    if (event.target.id === 'branch-performance-tab') {
+                        updateBranchPerformanceReport();
+                    }
+                });
+            });
+            
+            // Authentication events
+            document.getElementById('closeAuthModal').addEventListener('click', hideAuthModal);
+            document.getElementById('cancelLogin').addEventListener('click', hideAuthModal);
+            document.getElementById('loginBtn').addEventListener('click', login);
+            document.getElementById('userProfileLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (isAuthenticated) {
+                    logout();
+                } else {
+                    showAuthModal();
+                }
+            });
+            
+            // Advanced filters
+            document.getElementById('applyFiltersBtn').addEventListener('click', applyAdvancedFilters);
+            document.getElementById('clearFiltersBtn').addEventListener('click', clearAdvancedFilters);
+            
+            // Handle Enter key in login form
+            document.getElementById('password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    login();
+                }
+            });
+        }
+
+        function startSessionTimer() {
+            updateInterval = setInterval(() => {
+                const now = new Date();
+                const sessionDuration = Math.floor((now - userActivity.sessionStart) / 60000); // in minutes
+                document.getElementById('sessionDuration').textContent = `Session: ${sessionDuration}m`;
+            }, 60000); // Update every minute
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'ar' : 'en';
+            document.getElementById('langToggle').innerHTML = `<i class="bi bi-translate me-1"></i>${currentLang.toUpperCase()}`;
+            // In a real implementation, you would update all text elements here
+            showSuccess(`Language changed to ${currentLang === 'en' ? 'English' : 'Arabic'}`);
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            const icon = document.querySelector('#darkModeToggle i');
+            icon.className = isDarkMode ? 'bi bi-sun' : 'bi bi-moon';
+            showSuccess(`Dark mode ${isDarkMode ? 'enabled' : 'disabled'}`);
+        }
+
+        function addData() {
             const form = document.getElementById('salesForm');
+            
             if (!form.checkValidity()) {
                 form.classList.add('was-validated');
                 return;
@@ -4543,9 +5857,9 @@
             const date = document.getElementById('entryDate').value;
             const branch = document.getElementById('entryBranch').value;
             const channel = document.getElementById('entryChannel').value;
-            const count = parseInt(document.getElementById('entryTransactions').value);
+            const transactions = parseInt(document.getElementById('entryTransactions').value);
             const sales = parseFloat(document.getElementById('entrySales').value);
-            const avr = count > 0 ? sales / count : 0;
+            const avgSale = transactions > 0 ? sales / transactions : 0;
             
             if (editingIndex >= 0) {
                 // Update existing entry
@@ -4553,85 +5867,127 @@
                     date,
                     branch,
                     channel,
-                    count,
+                    count: transactions,
                     sales,
-                    avr,
+                    avr: avgSale,
                     id: allData[editingIndex].id
                 };
-                showSuccess('Data updated successfully!');
+                editingIndex = -1;
+                document.getElementById('addDataBtn').innerHTML = '<i class="bi bi-plus-circle me-2"></i> Add Data';
+                document.getElementById('cancelBtn').style.display = 'none';
             } else {
                 // Add new entry
                 allData.push({
                     date,
                     branch,
                     channel,
-                    count,
+                    count: transactions,
                     sales,
-                    avr,
+                    avr: avgSale,
                     id: Date.now()
                 });
-                showSuccess('Data added successfully!');
             }
             
             // Reset form
             form.reset();
             form.classList.remove('was-validated');
-            editingIndex = -1;
-            document.getElementById('cancelBtn').style.display = 'none';
-            document.getElementById('addDataBtn').innerHTML = '<i class="bi bi-plus-circle me-2"></i> Add Data';
             
-            // Save data and update dashboard
-            saveData();
-            updateDashboard();
-        }
-
-        // Cancel edit
-        function cancelEdit() {
-            const form = document.getElementById('salesForm');
-            form.reset();
-            form.classList.remove('was-validated');
-            editingIndex = -1;
-            document.getElementById('cancelBtn').style.display = 'none';
-            document.getElementById('addDataBtn').innerHTML = '<i class="bi bi-plus-circle me-2"></i> Add Data';
-        }
-
-        // Show success message
-        function showSuccess(message) {
-            const alert = document.getElementById('successAlert');
-            alert.textContent = message;
-            alert.style.display = 'block';
+            // Update UI
+            initializeApp();
+            
+            // Show success message
+            document.getElementById('successAlert').style.display = 'block';
             setTimeout(() => {
-                alert.style.display = 'none';
+                document.getElementById('successAlert').style.display = 'none';
             }, 3000);
         }
 
-        // Save data to localStorage
-        function saveData() {
-            localStorage.setItem('crispyChickenData', JSON.stringify(allData));
-            localStorage.setItem('crispyChickenTarget', SALES_TARGET.toString());
+        function cancelEdit() {
+            editingIndex = -1;
+            document.getElementById('salesForm').reset();
+            document.getElementById('salesForm').classList.remove('was-validated');
+            document.getElementById('addDataBtn').innerHTML = '<i class="bi bi-plus-circle me-2"></i> Add Data';
+            document.getElementById('cancelBtn').style.display = 'none';
         }
 
-        // Load data from localStorage
-        function loadData() {
-            const savedData = localStorage.getItem('crispyChickenData');
-            if (savedData) {
-                allData = JSON.parse(savedData);
-            }
+        function editEntry(index) {
+            const entry = allData[index];
             
-            const savedTarget = localStorage.getItem('crispyChickenTarget');
-            if (savedTarget) {
-                SALES_TARGET = parseFloat(savedTarget);
-                document.getElementById('targetInput').value = SALES_TARGET;
+            document.getElementById('entryDate').value = entry.date;
+            document.getElementById('entryBranch').value = entry.branch;
+            document.getElementById('entryChannel').value = entry.channel;
+            document.getElementById('entryTransactions').value = entry.count;
+            document.getElementById('entrySales').value = entry.sales;
+            
+            editingIndex = index;
+            document.getElementById('addDataBtn').innerHTML = '<i class="bi bi-check-circle me-2"></i> Update Data';
+            document.getElementById('cancelBtn').style.display = 'inline-block';
+            
+            // Scroll to form
+            document.getElementById('salesForm').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function deleteEntry(index) {
+            if (confirm('Are you sure you want to delete this entry?')) {
+                allData.splice(index, 1);
+                initializeApp();
+                showSuccess('Entry deleted successfully!');
             }
         }
 
-        // Create backup
+        function exportToCSV() {
+            let csv = 'Date,Branch,Channel,Transactions,Sales,Avg Sale\n';
+            
+            allData.forEach(item => {
+                csv += `${item.date},${item.branch},${item.channel},${item.count},${item.sales},${item.avr}\n`;
+            });
+            
+            downloadCSV(csv, 'crispy_chicken_sales_data.csv');
+        }
+
+        function downloadCSV(csv, filename) {
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', '');
+            a.setAttribute('href', url);
+            a.setAttribute('download', filename);
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function exportToJSON() {
+            const json = JSON.stringify(allData, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', '');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'crispy_chicken_sales_data.json');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function saveData() {
+            localStorage.setItem('crispyChickenSalesData', JSON.stringify(allData));
+            showSuccess('Data saved successfully!');
+        }
+
+        function clearData() {
+            if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+                allData = [];
+                localStorage.removeItem('crispyChickenSalesData');
+                initializeApp();
+                showSuccess('All data has been cleared!');
+            }
+        }
+
         function createBackup() {
             const backup = {
-                date: new Date().toLocaleString(),
-                data: JSON.stringify(allData),
-                target: SALES_TARGET,
-                size: new Blob([JSON.stringify(allData)]).size
+                date: new Date().toISOString(),
+                data: allData
             };
             
             backups.push(backup);
@@ -4640,22 +5996,40 @@
             showSuccess('Backup created successfully!');
         }
 
-        // Restore backup
-        function restoreBackup(index) {
-            if (confirm('Are you sure you want to restore this backup? Current data will be replaced.')) {
-                const backup = backups[index];
-                allData = JSON.parse(backup.data);
-                SALES_TARGET = backup.target;
-                
-                localStorage.setItem('crispyChickenData', JSON.stringify(allData));
-                localStorage.setItem('crispyChickenTarget', SALES_TARGET.toString());
-                
-                updateDashboard();
-                showSuccess('Backup restored successfully!');
+        function restoreBackup() {
+            if (backups.length === 0) {
+                alert('No backups available');
+                return;
             }
+            
+            // For simplicity, restore the latest backup
+            const latestBackup = backups[backups.length - 1];
+            allData = latestBackup.data;
+            initializeApp();
+            showSuccess('Backup restored successfully!');
         }
 
-        // Delete backup
+        function updateBackupList() {
+            const backupList = document.getElementById('backupList');
+            backupList.innerHTML = '';
+            
+            backups.forEach((backup, index) => {
+                const date = new Date(backup.date).toLocaleString();
+                const size = (JSON.stringify(backup.data).length / 1024).toFixed(2) + ' KB';
+                
+                const backupItem = document.createElement('div');
+                backupItem.className = 'd-flex justify-content-between align-items-center p-2 border-bottom';
+                backupItem.innerHTML = `
+                    <div>
+                        <strong>Backup ${index + 1}</strong>
+                        <div class="small text-muted">${date} - ${size}</div>
+                    </div>
+                    <button class="btn btn-sm btn-danger" onclick="deleteBackup(${index})">Delete</button>
+                `;
+                backupList.appendChild(backupItem);
+            });
+        }
+
         function deleteBackup(index) {
             if (confirm('Are you sure you want to delete this backup?')) {
                 backups.splice(index, 1);
@@ -4665,411 +6039,115 @@
             }
         }
 
-        // Clear all data
-        function clearAllData() {
-            if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
-                allData = [];
-                SALES_TARGET = 370000;
-                backups = [];
-                
-                localStorage.removeItem('crispyChickenData');
-                localStorage.removeItem('crispyChickenTarget');
-                localStorage.removeItem('crispyChickenBackups');
-                
-                updateDashboard();
-                showSuccess('All data has been cleared!');
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('uploadArea').classList.add('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('uploadArea').classList.remove('drag-over');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                processFile(files[0]);
             }
         }
 
-        // Export data as CSV
-        function exportCSV() {
-            const headers = ['Date', 'Branch', 'Channel', 'Transactions', 'Sales', 'Avg Sale'];
-            const csvContent = [
-                headers.join(','),
-                ...allData.map(item => [
-                    item.date,
-                    item.branch,
-                    item.channel,
-                    item.count,
-                    item.sales,
-                    item.avr.toFixed(2)
-                ].join(','))
-            ].join('\n');
-            
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `crispy-chicken-sales-${new Date().toISOString().split('T')[0]}.csv`;
-            link.click();
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                processFile(files[0]);
+            }
         }
 
-        // Export data as JSON
-        function exportJSON() {
-            const jsonData = {
-                salesData: allData,
-                target: SALES_TARGET,
-                exportDate: new Date().toISOString()
-            };
-            
-            const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type: 'application/json' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `crispy-chicken-sales-${new Date().toISOString().split('T')[0]}.json`;
-            link.click();
-        }
-
-        // Export PDF report
-        function exportPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            
-            // Add title
-            doc.setFontSize(20);
-            doc.text('Crispy Chicken Sales Report', 20, 20);
-            
-            // Add date
-            doc.setFontSize(12);
-            doc.text(`Report Date: ${new Date().toLocaleDateString()}`, 20, 30);
-            
-            // Add totals
-            const totals = calculateTotals(allData);
-            doc.text(`Total Sales: AED ${totals.totalSales.toLocaleString()}`, 20, 40);
-            doc.text(`Total Transactions: ${totals.totalTransactions.toLocaleString()}`, 20, 50);
-            doc.text(`Average Sale: AED ${totals.avgSale.toFixed(2)}`, 20, 60);
-            
-            // Add branch data table
-            const branchData = groupByBranch(allData);
-            const tableData = Object.entries(branchData).map(([branch, data]) => [
-                branch,
-                data.transactions,
-                `AED ${data.sales.toLocaleString()}`,
-                `AED ${data.avgSale.toFixed(2)}`
-            ]);
-            
-            doc.autoTable({
-                head: [['Branch', 'Transactions', 'Sales (AED)', 'Avg Sale (AED)']],
-                body: tableData,
-                startY: 70
-            });
-            
-            // Save the PDF
-            doc.save(`crispy-chicken-sales-report-${new Date().toISOString().split('T')[0]}.pdf`);
-        }
-
-        // Handle file upload
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
+        function processFile(file) {
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
-                    // Use SheetJS to parse the Excel file
-                    const workbook = XLSX.read(e.target.result, { type: 'binary' });
-                    const data = processExcelData(workbook);
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const salesData = processExcelData(workbook);
                     
-                    if (data.length > 0) {
-                        allData = [...allData, ...data];
-                        saveData();
-                        updateDashboard();
-                        showSuccess(`${data.length} records imported successfully!`);
+                    if (salesData.length > 0) {
+                        allData = [...allData, ...salesData];
+                        initializeApp();
+                        showSuccess('Excel file uploaded successfully!');
                     } else {
-                        showSuccess('No valid data found in the file.');
+                        alert('No valid data found in the Excel file.');
                     }
                 } catch (error) {
-                    showSuccess('Error processing file. Please check the format.');
+                    console.error('Error processing file:', error);
+                    alert('Error processing file. Please check the format and try again.');
                 }
             };
-            
-            // Read as binary data
             reader.readAsArrayBuffer(file);
         }
 
-        // Update dashboard
-        function updateDashboard() {
-            // Update KPI cards
-            updateKPICards();
-            
-            // Update performance metrics
-            updatePerformanceMetrics();
-            
-            // Update performance tracking
-            updatePerformanceTracking();
-            
-            // Update branch comparison
-            updateBranchComparison();
-            
-            // Initialize charts
-            initDailySalesChart();
-            initBranchSalesChart();
-            initWeekdayWeekendChart();
-            initTransactionDistributionChart();
-            initAvgSaleBranchChart();
-            initChannelComparison();
-            initTargetManagement();
-            
-            // Initialize analytics charts
-            if (document.getElementById('analytics').classList.contains('active')) {
-                initTrendChart();
-                initDeliveryCharts();
-                initForecastChart();
-                initPerformanceMetrics();
-                initWeekdayPatternChart();
-                initMonthlyPatternChart();
+        function showSuccess(message) {
+            showNotification('success', 'Success', message);
+        }
+
+        // Load data from localStorage
+        function loadData() {
+            const savedData = localStorage.getItem('crispyChickenSalesData');
+            if (savedData) {
+                allData = JSON.parse(savedData);
             }
             
-            // Initialize branch performance report
-            if (document.getElementById('branch-performance').classList.contains('active')) {
-                initBranchPerformanceReport();
+            const savedBackups = localStorage.getItem('crispyChickenBackups');
+            if (savedBackups) {
+                backups = JSON.parse(savedBackups);
+                updateBackupList();
             }
-            
-            // Update data management
-            initDataManagement();
         }
 
-        // Update session duration
-        function updateSessionDuration() {
-            const now = new Date();
-            const diff = Math.floor((now - userActivity.sessionStart) / 60000); // in minutes
-            document.getElementById('sessionDuration').textContent = `Session: ${diff}m`;
-        }
-
-        // Update user activity
-        function updateUserActivity() {
-            userActivity.lastActivity = new Date();
-            userActivity.actions.push({
-                timestamp: new Date(),
-                action: 'user_interaction'
-            });
-        }
-
-        // Initialize dark mode
-        function initDarkMode() {
-            const darkModeToggle = document.getElementById('darkModeToggle');
-            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        // Initialize with sample data if no data exists
+        if (allData.length === 0) {
+            // Generate sample data for demonstration
+            const branches = [
+                'Crispy Chicken-Hamdan St',
+                'Crispy Chicken Khaldia',
+                'Crispy Chicken Shabiya11',
+                'Crispy Chicken Muroor',
+                'Crispy Chicken Al Barsha',
+                'Crispy Chicken Al Satwa',
+                'Crispy Chicken Al Rgga'
+            ];
             
-            if (isDarkMode) {
-                document.body.classList.add('dark-mode');
-                darkModeToggle.innerHTML = '<i class="bi bi-sun"></i>';
-            }
+            const channels = ['Delivery', 'Takeaway'];
             
-            darkModeToggle.addEventListener('click', function() {
-                document.body.classList.toggle('dark-mode');
-                const isDark = document.body.classList.contains('dark-mode');
-                localStorage.setItem('darkMode', isDark);
-                darkModeToggle.innerHTML = isDark ? '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
-            });
-        }
-
-        // Initialize language toggle
-        function initLanguageToggle() {
-            const langToggle = document.getElementById('langToggle');
-            langToggle.addEventListener('click', function() {
-                currentLang = currentLang === 'en' ? 'ar' : 'en';
-                langToggle.innerHTML = `<i class="bi bi-translate me-1"></i>${currentLang.toUpperCase()}`;
-                updateLanguage();
-            });
-        }
-
-        // Update language
-        function updateLanguage() {
-            // Update all translatable elements
-            document.querySelectorAll('[data-translate]').forEach(element => {
-                const key = element.getAttribute('data-translate');
-                if (translations[currentLang][key]) {
-                    element.textContent = translations[currentLang][key];
-                }
-            });
-            
-            // Update placeholder attributes
-            document.querySelectorAll('[data-translate-placeholder]').forEach(element => {
-                const key = element.getAttribute('data-translate-placeholder');
-                if (translations[currentLang][key]) {
-                    element.placeholder = translations[currentLang][key];
-                }
-            });
-        }
-
-        // Initialize event listeners
-        function initEventListeners() {
-            // Tab change events
-            document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
-                tab.addEventListener('shown.bs.tab', function() {
-                    const target = this.getAttribute('data-bs-target');
-                    if (target === '#analytics') {
-                        initTrendChart();
-                        initDeliveryCharts();
-                        initForecastChart();
-                        initPerformanceMetrics();
-                        initWeekdayPatternChart();
-                        initMonthlyPatternChart();
-                    } else if (target === '#branch-performance') {
-                        initBranchPerformanceReport();
-                    }
-                });
-            });
-            
-            // Data form submission
-            document.getElementById('addDataBtn').addEventListener('click', addOrUpdateData);
-            document.getElementById('cancelBtn').addEventListener('click', cancelEdit);
-            
-            // File upload
-            document.getElementById('fileInput').addEventListener('change', handleFileUpload);
-            
-            // Upload area click
-            document.getElementById('uploadArea').addEventListener('click', function() {
-                document.getElementById('fileInput').click();
-            });
-            
-            // Drag and drop
-            const uploadArea = document.getElementById('uploadArea');
-            uploadArea.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                uploadArea.classList.add('drag-over');
-            });
-            
-            uploadArea.addEventListener('dragleave', function() {
-                uploadArea.classList.remove('drag-over');
-            });
-            
-            uploadArea.addEventListener('drop', function(e) {
-                e.preventDefault();
-                uploadArea.classList.remove('drag-over');
+            // Generate data for the last 30 days
+            for (let i = 0; i < 30; i++) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
                 
-                const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    const file = files[0];
-                    if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            try {
-                                // Use SheetJS to parse the Excel file
-                                const workbook = XLSX.read(e.target.result, { type: 'binary' });
-                                const data = processExcelData(workbook);
-                                
-                                if (data.length > 0) {
-                                    allData = [...allData, ...data];
-                                    saveData();
-                                    updateDashboard();
-                                    showSuccess(`${data.length} records imported successfully!`);
-                                } else {
-                                    showSuccess('No valid data found in the file.');
-                                }
-                            } catch (error) {
-                                showSuccess('Error processing file. Please check the format.');
-                            }
-                        };
+                const dateStr = `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}/${date.getFullYear()}`;
+                
+                branches.forEach(branch => {
+                    channels.forEach(channel => {
+                        const transactions = Math.floor(Math.random() * 100) + 20;
+                        const avgSale = Math.random() * 30 + 20;
+                        const sales = transactions * avgSale;
                         
-                        // Read as binary data
-                        reader.readAsArrayBuffer(file);
-                    } else {
-                        showSuccess('Please upload an Excel file (.xlsx or .xls).');
-                    }
-                }
-            });
-            
-            // Export buttons
-            document.getElementById('exportCSV').addEventListener('click', exportCSV);
-            document.getElementById('exportJSON').addEventListener('click', exportJSON);
-            document.getElementById('exportPDF').addEventListener('click', exportPDF);
-            document.getElementById('exportDaily').addEventListener('click', exportPDF);
-            document.getElementById('exportWeekly').addEventListener('click', exportPDF);
-            document.getElementById('exportMonthly').addEventListener('click', exportPDF);
-            
-            // Data management buttons
-            document.getElementById('saveDataBtn').addEventListener('click', function() {
-                saveData();
-                showSuccess('Data saved successfully!');
-            });
-            
-            document.getElementById('clearDataBtn').addEventListener('click', clearAllData);
-            document.getElementById('createBackupBtn').addEventListener('click', createBackup);
-            document.getElementById('restoreBackupBtn').addEventListener('click', function() {
-                if (backups.length > 0) {
-                    restoreBackup(backups.length - 1); // Restore latest backup
-                }
-            });
-            
-            // Target update
-            document.getElementById('updateTargetBtn').addEventListener('click', function() {
-                const newTarget = parseFloat(document.getElementById('targetInput').value);
-                if (!isNaN(newTarget) && newTarget > 0) {
-                    SALES_TARGET = newTarget;
-                    saveData();
-                    initTargetManagement();
-                    showSuccess('Target updated successfully!');
-                }
-            });
-            
-            // Report generation
-            document.getElementById('generateReportBtn').addEventListener('click', function() {
-                // Simplified report generation
-                showSuccess('Report generated successfully!');
-            });
-            
-            // Date range picker
-            document.getElementById('dateRangePicker').addEventListener('change', function() {
-                // Handle date range filtering
-                updateDashboard();
-            });
-            
-            // Refresh button
-            document.getElementById('refreshBtn').addEventListener('click', function() {
-                updateDashboard();
-                showSuccess('Dashboard refreshed!');
-            });
-            
-            // Report type buttons
-            document.querySelectorAll('.report-type-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.report-type-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    currentReportType = this.getAttribute('data-type');
+                        allData.push({
+                            date: dateStr,
+                            branch,
+                            channel,
+                            count: transactions,
+                            sales: Math.round(sales),
+                            avr: Math.round(avgSale * 100) / 100,
+                            id: Date.now() + Math.random()
+                        });
+                    });
                 });
-            });
+            }
             
-            // Reset date range
-            document.getElementById('resetDateRangeBtn').addEventListener('click', function() {
-                document.getElementById('reportStartDate').value = '';
-                document.getElementById('reportEndDate').value = '';
-                reportStartDate = '';
-                reportEndDate = '';
-            });
-            
-            // Initialize session duration update
-            setInterval(updateSessionDuration, 60000); // Update every minute
-            
-            // Initialize user activity tracking
-            document.addEventListener('click', updateUserActivity);
-            document.addEventListener('scroll', updateUserActivity);
-            document.addEventListener('keypress', updateUserActivity);
+            // Save the generated data
+            localStorage.setItem('crispyChickenSalesData', JSON.stringify(allData));
         }
-
-        // Initialize dashboard
-        function initDashboard() {
-            // Load saved data
-            loadData();
-            
-            // Initialize dark mode
-            initDarkMode();
-            
-            // Initialize language toggle
-            initLanguageToggle();
-            
-            // Initialize event listeners
-            initEventListeners();
-            
-            // Update dashboard
-            updateDashboard();
-            
-            // Show welcome message
-            setTimeout(() => {
-                showSuccess('Welcome to Crispy Chicken Sales Dashboard!');
-            }, 1000);
-        }
-
-        // Start the application
-        document.addEventListener('DOMContentLoaded', initDashboard);
     </script>
 </body>
 </html>
