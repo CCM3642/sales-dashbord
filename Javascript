@@ -1,0 +1,518 @@
+// Fixed addData function
+function addData() {
+    console.log('addData function called');
+    
+    const form = document.getElementById('salesForm');
+    if (!form) {
+        console.error('Form not found');
+        return;
+    }
+    
+    // Get form values
+    const date = document.getElementById('entryDate').value;
+    const branch = document.getElementById('entryBranch').value;
+    const channel = document.getElementById('entryChannel').value;
+    const transactions = document.getElementById('entryTransactions').value;
+    const sales = document.getElementById('entrySales').value;
+    
+    console.log('Form values:', { date, branch, channel, transactions, sales });
+    
+    // Validation
+    if (!date) {
+        showNotification('error', 'Validation Error', 'Please select a date');
+        return;
+    }
+    
+    if (!branch) {
+        showNotification('error', 'Validation Error', 'Please select a branch');
+        return;
+    }
+    
+    if (!channel) {
+        showNotification('error', 'Validation Error', 'Please select a channel');
+        return;
+    }
+    
+    if (!transactions || transactions <= 0) {
+        showNotification('error', 'Validation Error', 'Please enter a valid transaction count');
+        return;
+    }
+    
+    if (!sales || sales <= 0) {
+        showNotification('error', 'Validation Error', 'Please enter a valid sales amount');
+        return;
+    }
+    
+    // Convert to numbers
+    const transactionsNum = parseInt(transactions);
+    const salesNum = parseFloat(sales);
+    const avgSale = transactionsNum > 0 ? salesNum / transactionsNum : 0;
+    
+    // Create data object
+    const newData = {
+        date,
+        branch,
+        channel,
+        count: transactionsNum,
+        sales: salesNum,
+        avr: parseFloat(avgSale.toFixed(2)),
+        id: Date.now()
+    };
+    
+    console.log('New data to add:', newData);
+    
+    // Add to array
+    if (editingIndex >= 0) {
+        // Update existing entry
+        allData[editingIndex] = newData;
+        editingIndex = -1;
+        document.getElementById('addDataBtn').innerHTML = '<i class="bi bi-plus-circle me-2"></i> Add Data';
+        document.getElementById('cancelBtn').style.display = 'none';
+        showNotification('success', 'Success', 'Data updated successfully!');
+    } else {
+        // Add new entry
+        allData.push(newData);
+        showNotification('success', 'Success', 'Data added successfully!');
+    }
+    
+    // Reset form
+    form.reset();
+    form.classList.remove('was-validated');
+    
+    // Update UI
+    initializeApp();
+}
+
+// Fixed processFile function
+function processFile(file) {
+    console.log('Processing file:', file.name, file.type, file.size);
+    
+    // Validate file type
+    if (!file.name.match(/\.(xlsx|xls)$/i)) {
+        showNotification('error', 'Invalid File', 'Please upload an Excel file (.xlsx or .xls)');
+        return;
+    }
+    
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        try {
+            console.log('File read successfully, size:', e.target.result.byteLength);
+            
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { 
+                type: 'array',
+                raw: false,
+                codepage: 65001 // UTF-8
+            });
+            
+            console.log('Workbook sheets:', workbook.SheetNames);
+            
+            if (workbook.SheetNames.length === 0) {
+                showNotification('error', 'Error', 'No sheets found in the Excel file');
+                return;
+            }
+            
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            
+            // Convert to JSON with header
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, { 
+                header: 1,
+                raw: false,
+                defval: ''
+            });
+            
+            console.log('JSON data from sheet:', jsonData);
+            
+            if (jsonData.length < 2) {
+                showNotification('error', 'Error', 'Excel file must have at least one data row');
+                return;
+            }
+            
+            const salesData = processExcelData(jsonData);
+            
+            if (salesData.length === 0) {
+                showNotification('error', 'Error', 'No valid data found in the Excel file');
+                return;
+            }
+            
+            // Add to existing data
+            allData = [...allData, ...salesData];
+            
+            // Update UI
+            initializeApp();
+            
+            showNotification('success', 'Success', `Successfully imported ${salesData.length} records from Excel file`);
+            
+        } catch (error) {
+            console.error('Error processing file:', error);
+            showNotification('error', 'Error', `Error processing file: ${error.message}`);
+        }
+    };
+    
+    reader.onerror = function(error) {
+        console.error('File reading error:', error);
+        showNotification('error', 'Error', 'Error reading file');
+    };
+    
+    reader.readAsArrayBuffer(file);
+}
+
+// Fixed processExcelData function
+function processExcelData(jsonData) {
+    console.log('Processing Excel data, rows:', jsonData.length);
+    
+    const salesData = [];
+    const headers = jsonData[0]; // First row is headers
+    
+    console.log('Headers:', headers);
+    
+    // Expected headers (case insensitive)
+    const expectedHeaders = ['date', 'branch', 'channel', 'transactions', 'sales'];
+    const headerMap = {};
+    
+    // Create header mapping
+    headers.forEach((header, index) => {
+        const normalizedHeader = header.toLowerCase().trim();
+        if (expectedHeaders.includes(normalizedHeader)) {
+            headerMap[normalizedHeader] = index;
+        }
+    });
+    
+    console.log('Header mapping:', headerMap);
+    
+    // Validate required headers
+    const missingHeaders = expectedHeaders.filter(h => !(h in headerMap));
+    if (missingHeaders.length > 0) {
+        console.error('Missing required headers:', missingHeaders);
+        throw new Error(`Missing required columns: ${missingHeaders.join(', ')}`);
+    }
+    
+    // Process data rows (skip header row)
+    for (let i = 1; i < jsonData.length; i++) {
+        const row = jsonData[i];
+        
+        try {
+            // Get values using header mapping
+            const dateValue = row[headerMap.date];
+            const branchValue = row[headerMap.branch];
+            const channelValue = row[headerMap.channel] || 'Delivery';
+            const transactionsValue = row[headerMap.transactions];
+            const salesValue = row[headerMap.sales];
+            
+            console.log(`Processing row ${i}:`, {
+                date: dateValue,
+                branch: branchValue,
+                channel: channelValue,
+                transactions: transactionsValue,
+                sales: salesValue
+            });
+            
+            // Skip empty rows
+            if (!dateValue || !branchValue) {
+                console.warn(`Skipping row ${i}: Missing date or branch`);
+                continue;
+            }
+            
+            // Convert and validate data
+            let date = dateValue;
+            
+            // Convert Excel date if needed
+            if (typeof date === 'number') {
+                date = convertExcelDate(date);
+                console.log(`Converted Excel date: ${dateValue} -> ${date}`);
+            }
+            
+            // Validate date format (should be MM/DD/YYYY)
+            if (!isValidDate(date)) {
+                console.warn(`Invalid date format in row ${i}: ${dateValue}`);
+                continue;
+            }
+            
+            // Convert transactions and sales to numbers
+            const transactions = parseInt(transactionsValue) || 0;
+            const sales = parseFloat(salesValue) || 0;
+            
+            if (transactions <= 0 || sales <= 0) {
+                console.warn(`Invalid transactions or sales in row ${i}: ${transactionsValue}, ${salesValue}`);
+                continue;
+            }
+            
+            // Calculate average sale
+            const avgSale = transactions > 0 ? sales / transactions : 0;
+            
+            // Create data object
+            const dataEntry = {
+                date,
+                branch: branchValue.trim(),
+                channel: channelValue.trim(),
+                count: transactions,
+                sales: sales,
+                avr: parseFloat(avgSale.toFixed(2)),
+                id: Date.now() + i
+            };
+            
+            console.log(`Adding entry:`, dataEntry);
+            salesData.push(dataEntry);
+            
+        } catch (error) {
+            console.error(`Error processing row ${i}:`, error);
+        }
+    }
+    
+    console.log(`Processed ${salesData.length} valid entries`);
+    return salesData;
+}
+
+// Helper function to validate date format
+function isValidDate(dateString) {
+    if (!dateString) return false;
+    
+    // Check if it's in MM/DD/YYYY format
+    const dateRegex = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
+    if (!dateRegex.test(dateString)) return false;
+    
+    // Try to parse the date
+    const parts = dateString.split('/');
+    const month = parseInt(parts[0], 10);
+    const day = parseInt(parts[1], 10);
+    const year = parseInt(parts[2], 10);
+    
+    // Check if it's a valid date
+    const date = new Date(year, month - 1, day);
+    return (
+        date.getFullYear() === year &&
+        date.getMonth() === month - 1 &&
+        date.getDate() === day
+    );
+}
+
+// Fixed convertExcelDate function
+function convertExcelDate(dateNum) {
+    if (typeof dateNum !== 'number') {
+        return dateNum;
+    }
+    
+    // Excel date is days since 1900-01-01, with 1900 incorrectly treated as leap year
+    const excelEpoch = new Date(1900, 0, 1);
+    const isLeapYearBug = dateNum > 59;
+    const adjustedDateNum = isLeapYearBug ? dateNum + 1 : dateNum;
+    
+    const date = new Date(excelEpoch.getTime() + (adjustedDateNum - 1) * 24 * 60 * 60 * 1000);
+    
+    // Format as MM/DD/YYYY
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+    
+    return `${month}/${day}/${year}`;
+}
+
+// Fixed event listeners setup
+function setupEventListeners() {
+    console.log('Setting up event listeners');
+    
+    // Language toggle
+    const langToggle = document.getElementById('langToggle');
+    if (langToggle) {
+        langToggle.addEventListener('click', toggleLanguage);
+    }
+    
+    // Dark mode toggle
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('click', toggleDarkMode);
+    }
+    
+    // Add data button
+    const addDataBtn = document.getElementById('addDataBtn');
+    if (addDataBtn) {
+        addDataBtn.addEventListener('click', addData);
+    }
+    
+    // Cancel button
+    const cancelBtn = document.getElementById('cancelBtn');
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', cancelEdit);
+    }
+    
+    // Form submission
+    const salesForm = document.getElementById('salesForm');
+    if (salesForm) {
+        salesForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            addData();
+        });
+    }
+    
+    // Update overall target
+    const updateOverallTargetBtn = document.getElementById('updateOverallTargetBtn');
+    if (updateOverallTargetBtn) {
+        updateOverallTargetBtn.addEventListener('click', updateOverallTarget);
+    }
+    
+    // Generate report button
+    const generateReportBtn = document.getElementById('generateReportBtn');
+    if (generateReportBtn) {
+        generateReportBtn.addEventListener('click', updateBranchPerformanceReport);
+    }
+    
+    // Export buttons
+    const exportCSV = document.getElementById('exportCSV');
+    if (exportCSV) {
+        exportCSV.addEventListener('click', exportToCSV);
+    }
+    
+    const exportJSON = document.getElementById('exportJSON');
+    if (exportJSON) {
+        exportJSON.addEventListener('click', exportToJSON);
+    }
+    
+    const exportDaily = document.getElementById('exportDaily');
+    if (exportDaily) {
+        exportDaily.addEventListener('click', () => generatePDFReport('daily'));
+    }
+    
+    const exportWeekly = document.getElementById('exportWeekly');
+    if (exportWeekly) {
+        exportWeekly.addEventListener('click', () => generatePDFReport('weekly'));
+    }
+    
+    const exportMonthly = document.getElementById('exportMonthly');
+    if (exportMonthly) {
+        exportMonthly.addEventListener('click', () => generatePDFReport('monthly'));
+    }
+    
+    // Save and clear data buttons
+    const saveDataBtn = document.getElementById('saveDataBtn');
+    if (saveDataBtn) {
+        saveDataBtn.addEventListener('click', saveData);
+    }
+    
+    const clearDataBtn = document.getElementById('clearDataBtn');
+    if (clearDataBtn) {
+        clearDataBtn.addEventListener('click', clearData);
+    }
+    
+    // Backup buttons
+    const createBackupBtn = document.getElementById('createBackupBtn');
+    if (createBackupBtn) {
+        createBackupBtn.addEventListener('click', createBackup);
+    }
+    
+    const restoreBackupBtn = document.getElementById('restoreBackupBtn');
+    if (restoreBackupBtn) {
+        restoreBackupBtn.addEventListener('click', restoreBackup);
+    }
+    
+    // File upload
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    
+    if (uploadArea && fileInput) {
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', handleDragOver);
+        uploadArea.addEventListener('drop', handleDrop);
+        fileInput.addEventListener('change', handleFileSelect);
+    }
+    
+    // Refresh button
+    const refreshBtn = document.getElementById('refreshBtn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function() {
+            initializeApp();
+        });
+    }
+    
+    // Tab change event
+    const tabButtons = document.querySelectorAll('#mainTabs button[data-bs-toggle="tab"]');
+    tabButtons.forEach(tab => {
+        tab.addEventListener('shown.bs.tab', function (event) {
+            if (event.target.id === 'branch-performance-tab') {
+                updateBranchPerformanceReport();
+            } else if (event.target.id === 'report-arrangement-tab') {
+                updateReportArrangement();
+            }
+        });
+    });
+    
+    // Authentication events
+    const closeAuthModal = document.getElementById('closeAuthModal');
+    const cancelLogin = document.getElementById('cancelLogin');
+    const loginBtn = document.getElementById('loginBtn');
+    const userProfileLink = document.getElementById('userProfileLink');
+    
+    if (closeAuthModal) closeAuthModal.addEventListener('click', hideAuthModal);
+    if (cancelLogin) cancelLogin.addEventListener('click', hideAuthModal);
+    if (loginBtn) loginBtn.addEventListener('click', login);
+    if (userProfileLink) {
+        userProfileLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (isAuthenticated) {
+                logout();
+            } else {
+                showAuthModal();
+            }
+        });
+    }
+    
+    // Advanced filters
+    const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+    const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+    
+    if (applyFiltersBtn) applyFiltersBtn.addEventListener('click', applyAdvancedFilters);
+    if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', clearAdvancedFilters);
+    
+    // Report arrangement events
+    const arrangeReportsBtn = document.getElementById('arrangeReportsBtn');
+    const resetArrangementBtn = document.getElementById('resetArrangementBtn');
+    
+    if (arrangeReportsBtn) arrangeReportsBtn.addEventListener('click', arrangeReports);
+    if (resetArrangementBtn) resetArrangementBtn.addEventListener('click', resetReportArrangement);
+    
+    // Handle Enter key in login form
+    const password = document.getElementById('password');
+    if (password) {
+        password.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
+    }
+    
+    console.log('Event listeners setup complete');
+}
+
+// Fixed handleFileSelect and handleDrop functions
+function handleFileSelect(e) {
+    console.log('File selected');
+    const files = e.target.files;
+    if (files && files.length > 0) {
+        processFile(files[0]);
+    }
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const uploadArea = document.getElementById('uploadArea');
+    if (uploadArea) {
+        uploadArea.classList.add('drag-over');
+    }
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const uploadArea = document.getElementById('uploadArea');
+    if (uploadArea) {
+        uploadArea.classList.remove('drag-over');
+    }
+    
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+        processFile(files[0]);
+    }
+}
