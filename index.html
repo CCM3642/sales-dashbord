@@ -879,7 +879,6 @@
         .delivery-insight-card {
             padding: 15px;
             margin-bottom: 15px;
-            border-radius: 8px;
             border-left: 4px solid var(--primary-color);
         }
         
@@ -1471,6 +1470,215 @@
         .notification-info .notification-icon {
             color: var(--info-color);
         }
+
+        /* Report Arrangement Styles */
+        .report-arrangement {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .report-arrangement-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        .report-arrangement-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .report-arrangement-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .report-arrangement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .report-card {
+            background: var(--bg-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .report-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        .report-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .report-card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .report-card-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .report-card-content {
+            margin-bottom: 1rem;
+        }
+
+        .report-card-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .report-card-label {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+
+        .report-card-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .report-card-action {
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: none;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .report-card-action:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .report-arrangement-summary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .report-arrangement-summary-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .report-arrangement-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .report-arrangement-summary-item {
+            text-align: center;
+        }
+
+        .report-arrangement-summary-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .report-arrangement-summary-label {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .report-arrangement-charts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .report-arrangement-chart {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .report-arrangement-chart-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .report-arrangement-table {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            overflow-x: auto;
+        }
+
+        .report-arrangement-table-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .report-arrangement-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 2rem;
+        }
+
+        .report-arrangement-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .report-arrangement-btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+
+        .report-arrangement-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .report-arrangement-btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .report-arrangement-btn-secondary:hover {
+            background-color: #5a6268;
+        }
     </style>
 </head>
 <body>
@@ -1681,6 +1889,11 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="branch-performance-tab" data-bs-toggle="tab" data-bs-target="#branch-performance" type="button" role="tab">
                     <i class="bi bi-building me-2"></i>Branch Performance Report
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="report-arrangement-tab" data-bs-toggle="tab" data-bs-target="#report-arrangement" type="button" role="tab">
+                    <i class="bi bi-file-earmark-text me-2"></i>Report Arrangement
                 </button>
             </li>
             <li class="nav-item" role="presentation">
@@ -2370,6 +2583,191 @@
                 </div>
             </div>
 
+            <!-- Report Arrangement Tab -->
+            <div class="tab-pane fade" id="report-arrangement" role="tabpanel">
+                <div class="report-arrangement">
+                    <div class="report-arrangement-header">
+                        <h2 class="report-arrangement-title">Report Arrangement Center</h2>
+                        <div class="report-arrangement-controls">
+                            <button class="btn btn-primary-custom" id="arrangeReportsBtn">
+                                <i class="bi bi-grid-3x3-gap me-2"></i> Arrange Reports
+                            </button>
+                            <button class="btn btn-outline-secondary" id="resetArrangementBtn">
+                                <i class="bi bi-arrow-counterclockwise me-2"></i> Reset Layout
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Report Summary Section -->
+                    <div class="report-arrangement-summary">
+                        <h3 class="report-arrangement-summary-title">Sales Performance Summary</h3>
+                        <div class="report-arrangement-summary-grid">
+                            <div class="report-arrangement-summary-item">
+                                <div class="report-arrangement-summary-value" id="summaryTotalSales">AED 0</div>
+                                <div class="report-arrangement-summary-label">Total Sales</div>
+                            </div>
+                            <div class="report-arrangement-summary-item">
+                                <div class="report-arrangement-summary-value" id="summaryTotalTransactions">0</div>
+                                <div class="report-arrangement-summary-label">Total Transactions</div>
+                            </div>
+                            <div class="report-arrangement-summary-item">
+                                <div class="report-arrangement-summary-value" id="summaryAvgSale">AED 0</div>
+                                <div class="report-arrangement-summary-label">Average Sale</div>
+                            </div>
+                            <div class="report-arrangement-summary-item">
+                                <div class="report-arrangement-summary-value" id="summaryActiveBranches">0</div>
+                                <div class="report-arrangement-summary-label">Active Branches</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Report Cards Grid -->
+                    <div class="report-arrangement-grid" id="reportCardsGrid">
+                        <!-- Daily Sales Report Card -->
+                        <div class="report-card" data-report-type="daily">
+                            <div class="report-card-header">
+                                <h5 class="report-card-title">Daily Sales Report</h5>
+                                <i class="bi bi-calendar-day report-card-icon"></i>
+                            </div>
+                            <div class="report-card-content">
+                                <div class="report-card-value" id="dailyReportValue">AED 0</div>
+                                <div class="report-card-label">Today's Sales</div>
+                            </div>
+                            <div class="report-card-actions">
+                                <button class="report-card-action" onclick="generateDailyReport()">
+                                    <i class="bi bi-download"></i> Generate
+                                </button>
+                                <button class="report-card-action" onclick="viewDailyReport()">
+                                    <i class="bi bi-eye"></i> View
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Weekly Sales Report Card -->
+                        <div class="report-card" data-report-type="weekly">
+                            <div class="report-card-header">
+                                <h5 class="report-card-title">Weekly Sales Report</h5>
+                                <i class="bi bi-calendar-week report-card-icon"></i>
+                            </div>
+                            <div class="report-card-content">
+                                <div class="report-card-value" id="weeklyReportValue">AED 0</div>
+                                <div class="report-card-label">This Week's Sales</div>
+                            </div>
+                            <div class="report-card-actions">
+                                <button class="report-card-action" onclick="generateWeeklyReport()">
+                                    <i class="bi bi-download"></i> Generate
+                                </button>
+                                <button class="report-card-action" onclick="viewWeeklyReport()">
+                                    <i class="bi bi-eye"></i> View
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Monthly Sales Report Card -->
+                        <div class="report-card" data-report-type="monthly">
+                            <div class="report-card-header">
+                                <h5 class="report-card-title">Monthly Sales Report</h5>
+                                <i class="bi bi-calendar-month report-card-icon"></i>
+                            </div>
+                            <div class="report-card-content">
+                                <div class="report-card-value" id="monthlyReportValue">AED 0</div>
+                                <div class="report-card-label">This Month's Sales</div>
+                            </div>
+                            <div class="report-card-actions">
+                                <button class="report-card-action" onclick="generateMonthlyReport()">
+                                    <i class="bi bi-download"></i> Generate
+                                </button>
+                                <button class="report-card-action" onclick="viewMonthlyReport()">
+                                    <i class="bi bi-eye"></i> View
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Branch Performance Report Card -->
+                        <div class="report-card" data-report-type="branch">
+                            <div class="report-card-header">
+                                <h5 class="report-card-title">Branch Performance</h5>
+                                <i class="bi bi-building report-card-icon"></i>
+                            </div>
+                            <div class="report-card-content">
+                                <div class="report-card-value" id="branchReportValue">0</div>
+                                <div class="report-card-label">Active Branches</div>
+                            </div>
+                            <div class="report-card-actions">
+                                <button class="report-card-action" onclick="generateBranchReport()">
+                                    <i class="bi bi-download"></i> Generate
+                                </button>
+                                <button class="report-card-action" onclick="viewBranchReport()">
+                                    <i class="bi bi-eye"></i> View
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Channel Performance Report Card -->
+                        <div class="report-card" data-report-type="channel">
+                            <div class="report-card-header">
+                                <h5 class="report-card-title">Channel Performance</h5>
+                                <i class="bi bi-diagram-3 report-card-icon"></i>
+                            </div>
+                            <div class="report-card-content">
+                                <div class="report-card-value" id="channelReportValue">2</div>
+                                <div class="report-card-label">Active Channels</div>
+                            </div>
+                            <div class="report-card-actions">
+                                <button class="report-card-action" onclick="generateChannelReport()">
+                                    <i class="bi bi-download"></i> Generate
+                                </button>
+                                <button class="report-card-action" onclick="viewChannelReport()">
+                                    <i class="bi bi-eye"></i> View
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Delivery Analysis Report Card -->
+                        <div class="report-card" data-report-type="delivery">
+                            <div class="report-card-header">
+                                <h5 class="report-card-title">Delivery Analysis</h5>
+                                <i class="bi bi-truck report-card-icon"></i>
+                            </div>
+                            <div class="report-card-content">
+                                <div class="report-card-value" id="deliveryReportValue">0%</div>
+                                <div class="report-card-label">Delivery Growth</div>
+                            </div>
+                            <div class="report-card-actions">
+                                <button class="report-card-action" onclick="generateDeliveryReport()">
+                                    <i class="bi bi-download"></i> Generate
+                                </button>
+                                <button class="report-card-action" onclick="viewDeliveryReport()">
+                                    <i class="bi bi-eye"></i> View
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Report Charts Section -->
+                    <div class="report-arrangement-charts">
+                        <div class="report-arrangement-chart">
+                            <h4 class="report-arrangement-chart-title">Report Generation Trends</h4>
+                            <canvas id="reportTrendsChart"></canvas>
+                        </div>
+                        <div class="report-arrangement-chart">
+                            <h4 class="report-arrangement-chart-title">Report Type Distribution</h4>
+                            <canvas id="reportDistributionChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Report Actions -->
+                    <div class="report-arrangement-actions">
+                        <button class="report-arrangement-btn report-arrangement-btn-primary" onclick="generateAllReports()">
+                            <i class="bi bi-file-earmark-pdf me-2"></i> Generate All Reports
+                        </button>
+                        <button class="report-arrangement-btn report-arrangement-btn-secondary" onclick="exportReportSummary()">
+                            <i class="bi bi-download me-2"></i> Export Summary
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Data Management Tab -->
             <div class="tab-pane fade" id="data-management" role="tabpanel">
                 <!-- Save Data Section -->
@@ -2545,6 +2943,7 @@
                 "data-entry-tab": "Data Entry",
                 "analytics-tab": "Analytics",
                 "branch-performance-tab": "Branch Performance Report",
+                "report-arrangement-tab": "Report Arrangement",
                 "data-management-tab": "Data Management",
                 "enter-data-title": "Enter New Sales Data",
                 "date-label": "Date",
@@ -2745,7 +3144,30 @@
                 "next": "Next",
                 "showing": "Showing",
                 "of": "of",
-                "entries": "entries"
+                "entries": "entries",
+                // Report Arrangement
+                "report-arrangement-title": "Report Arrangement Center",
+                "arrange-reports": "Arrange Reports",
+                "reset-layout": "Reset Layout",
+                "sales-performance-summary": "Sales Performance Summary",
+                "daily-sales-report": "Daily Sales Report",
+                "weekly-sales-report": "Weekly Sales Report",
+                "monthly-sales-report": "Monthly Sales Report",
+                "branch-performance-report-card": "Branch Performance",
+                "channel-performance-report-card": "Channel Performance",
+                "delivery-analysis-report-card": "Delivery Analysis",
+                "today-sales": "Today's Sales",
+                "this-week-sales": "This Week's Sales",
+                "this-month-sales": "This Month's Sales",
+                "active-branches-card": "Active Branches",
+                "active-channels-card": "Active Channels",
+                "delivery-growth-card": "Delivery Growth",
+                "generate": "Generate",
+                "view": "View",
+                "report-generation-trends": "Report Generation Trends",
+                "report-type-distribution": "Report Type Distribution",
+                "generate-all-reports": "Generate All Reports",
+                "export-summary": "Export Summary"
             },
             ar: {
                 "nav-title": "لوحة بيانات مبيعات كريسبى تشكن",
@@ -2767,6 +3189,7 @@
                 "data-entry-tab": "إدخال البيانات",
                 "analytics-tab": "التحليلات",
                 "branch-performance-tab": "تقرير أداء الفروع",
+                "report-arrangement-tab": "ترتيب التقارير",
                 "data-management-tab": "إدارة البيانات",
                 "enter-data-title": "إدخال بيانات مبيعات جديدة",
                 "date-label": "التاريخ",
@@ -2967,7 +3390,30 @@
                 "next": "التالي",
                 "showing": "عرض",
                 "of": "من",
-                "entries": "الإدخالات"
+                "entries": "الإدخالات",
+                // Report Arrangement
+                "report-arrangement-title": "مركز ترتيب التقارير",
+                "arrange-reports": "ترتيب التقارير",
+                "reset-layout": "إعادة تعيين التخطيط",
+                "sales-performance-summary": "ملخص أداء المبيعات",
+                "daily-sales-report": "تقرير المبيعات اليومي",
+                "weekly-sales-report": "تقرير المبيعات الأسبوعي",
+                "monthly-sales-report": "تقرير المبيعات الشهري",
+                "branch-performance-report-card": "أداء الفروع",
+                "channel-performance-report-card": "أداء القنوات",
+                "delivery-analysis-report-card": "تحليل التوصيل",
+                "today-sales": "مبيعات اليوم",
+                "this-week-sales": "مبيعات هذا الأسبوع",
+                "this-month-sales": "مبيعات هذا الشهر",
+                "active-branches-card": "الفروع النشطة",
+                "active-channels-card": "القنوات النشطة",
+                "delivery-growth-card": "نمو التوصيل",
+                "generate": "إنشاء",
+                "view": "عرض",
+                "report-generation-trends": "اتجاهات إنشاء التقارير",
+                "report-type-distribution": "توزيع أنواع التقارير",
+                "generate-all-reports": "إنشاء جميع التقارير",
+                "export-summary": "تصدير الملخص"
             }
         };
 
@@ -3024,6 +3470,19 @@
                 step: 1
             }
         };
+
+        // Report arrangement state
+        let reportArrangement = {
+            daily: { position: 0, visible: true },
+            weekly: { position: 1, visible: true },
+            monthly: { position: 2, visible: true },
+            branch: { position: 3, visible: true },
+            channel: { position: 4, visible: true },
+            delivery: { position: 5, visible: true }
+        };
+
+        // Report generation history
+        let reportGenerationHistory = [];
 
         // Process Excel data using SheetJS
         function processExcelData(workbook) {
@@ -3425,7 +3884,7 @@
             
             // Channel dominance insight
             const topChannel = Object.entries(channelData)
-                .sort((a, b) => b[1].sales - a[1][0]);
+                .sort((a, b) => b[1].sales - a[1].sales);
             
             if (topChannel[1].sales > channelData.Delivery.sales * 0.7) {
                 insights.push({
@@ -3483,6 +3942,341 @@
             return insights;
         }
 
+        // Initialize daily sales chart
+        function initDailySalesChart() {
+            const ctx = document.getElementById('dailySalesChart').getContext('2d');
+            
+            if (charts.dailySalesChart) {
+                charts.dailySalesChart.destroy();
+            }
+            
+            const dailyData = prepareDailyChartData();
+            const labels = dailyData.map(d => d.date);
+            const salesData = dailyData.map(d => d.totalSales);
+            
+            charts.dailySalesChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Daily Sales',
+                        data: salesData,
+                        borderColor: '#FF6B35',
+                        backgroundColor: 'rgba(255, 107, 53, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Sales: AED ${context.raw.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'AED ' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const date = labels[index];
+                            showDailySummary(date);
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize branch sales chart
+        function initBranchSalesChart() {
+            const ctx = document.getElementById('branchSalesChart').getContext('2d');
+            
+            if (charts.branchSalesChart) {
+                charts.branchSalesChart.destroy();
+            }
+            
+            const branchData = groupByBranch(allData);
+            const branches = Object.keys(branchData);
+            const salesData = branches.map(branch => branchData[branch].sales);
+            
+            charts.branchSalesChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: branches,
+                    datasets: [{
+                        label: 'Sales',
+                        data: salesData,
+                        backgroundColor: '#FF6B35',
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Sales: AED ${context.raw.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'AED ' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize weekday vs weekend chart
+        function initWeekdayWeekendChart() {
+            const ctx = document.getElementById('weekdayWeekendChart').getContext('2d');
+            
+            if (charts.weekdayWeekendChart) {
+                charts.weekdayWeekendChart.destroy();
+            }
+            
+            const weekdayType = groupByWeekdayType(allData);
+            
+            charts.weekdayWeekendChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Weekday', 'Weekend'],
+                    datasets: [{
+                        data: [weekdayType.weekday.sales, weekdayType.weekend.sales],
+                        backgroundColor: ['#FF6B35', '#F7931E'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: AED ${context.raw.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize transaction distribution chart
+        function initTransactionDistributionChart() {
+            const ctx = document.getElementById('transactionDistributionChart').getContext('2d');
+            
+            if (charts.transactionDistributionChart) {
+                charts.transactionDistributionChart.destroy();
+            }
+            
+            const branchData = groupByBranch(allData);
+            const branches = Object.keys(branchData);
+            const transactionData = branches.map(branch => branchData[branch].transactions);
+            
+            charts.transactionDistributionChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: branches,
+                    datasets: [{
+                        data: transactionData,
+                        backgroundColor: [
+                            '#FF6B35',
+                            '#F7931E',
+                            '#4CAF50',
+                            '#2196F3',
+                            '#FFC107',
+                            '#9C27B0',
+                            '#F44336'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.raw.toLocaleString()} transactions`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize average sale by branch chart
+        function initAvgSaleBranchChart() {
+            const ctx = document.getElementById('avgSaleBranchChart').getContext('2d');
+            
+            if (charts.avgSaleBranchChart) {
+                charts.avgSaleBranchChart.destroy();
+            }
+            
+            const branchData = groupByBranch(allData);
+            const branches = Object.keys(branchData);
+            const avgSaleData = branches.map(branch => branchData[branch].avgSale);
+            
+            charts.avgSaleBranchChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: branches,
+                    datasets: [{
+                        label: 'Average Sale',
+                        data: avgSaleData,
+                        backgroundColor: '#2196F3',
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Avg Sale: AED ${context.raw.toFixed(2)}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'AED ' + value.toFixed(0);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize channel comparison
+        function initChannelComparison() {
+            const channelData = groupByChannel(allData);
+            const container = document.getElementById('channelComparison');
+            
+            container.innerHTML = '';
+            
+            Object.entries(channelData).forEach(([channel, data]) => {
+                const channelItem = document.createElement('div');
+                channelItem.className = 'channel-item';
+                
+                const percentage = (data.sales / Object.values(channelData).reduce((sum, c) => sum + c.sales, 0) * 100).toFixed(1);
+                
+                channelItem.innerHTML = `
+                    <div class="channel-badge channel-${channel.toLowerCase()}">${channel}</div>
+                    <div class="channel-value">AED ${data.sales.toLocaleString()}</div>
+                    <div class="channel-label">${percentage}% of total</div>
+                `;
+                
+                container.appendChild(channelItem);
+            });
+        }
+
+        // Initialize target management
+        function initTargetManagement() {
+            // Calculate branch targets
+            branchTargets = calculateBranchTargets();
+            channelTargets = calculateChannelTargets();
+            
+            // Update branch targets display
+            const branchTargetsContainer = document.getElementById('branchTargets');
+            branchTargetsContainer.innerHTML = '';
+            
+            Object.entries(branchTargets).forEach(([branch, target]) => {
+                const branchData = groupByBranch(allData)[branch] || { sales: 0 };
+                const achievement = target > 0 ? (branchData.sales / target * 100).toFixed(1) : 0;
+                
+                const targetItem = document.createElement('div');
+                targetItem.className = 'mb-3';
+                
+                targetItem.innerHTML = `
+                    <div class="target-label">${branch}</div>
+                    <div class="target-bar">
+                        <div class="target-progress-bar" style="width: ${Math.min(achievement, 100)}%"></div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="target-value">AED ${branchData.sales.toLocaleString()} / AED ${target.toLocaleString()}</span>
+                        <span class="target-value">${achievement}%</span>
+                    </div>
+                `;
+                
+                branchTargetsContainer.appendChild(targetItem);
+            });
+            
+            // Update channel targets display
+            const channelTargetsContainer = document.getElementById('channelTargets');
+            channelTargetsContainer.innerHTML = '';
+            
+            Object.entries(channelTargets).forEach(([channel, target]) => {
+                const channelData = groupByChannel(allData)[channel] || { sales: 0 };
+                const achievement = target > 0 ? (channelData.sales / target * 100).toFixed(1) : 0;
+                
+                const targetItem = document.createElement('div');
+                targetItem.className = 'mb-3';
+                
+                targetItem.innerHTML = `
+                    <div class="target-label">${channel}</div>
+                    <div class="target-bar">
+                        <div class="target-progress-bar" style="width: ${Math.min(achievement, 100)}%"></div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="target-value">AED ${channelData.sales.toLocaleString()} / AED ${target.toLocaleString()}</span>
+                        <span class="target-value">${achievement}%</span>
+                    </div>
+                `;
+                
+                channelTargetsContainer.appendChild(targetItem);
+            });
+        }
+
         // Prepare daily chart data with enhanced metrics
         function prepareDailyChartData() {
             const dailyData = groupByDate(allData);
@@ -3525,34 +4319,66 @@
                     }
                 }
                 
-                // Update daily summary stats
+                return {
+                    date,
+                    totalSales,
+                    totalTransactions,
+                    avgPerTransaction,
+                    topBranch: topBranch ? topBranch[0] : '-',
+                    lowestBranch: lowestBranch ? lowestBranch[0] : '-',
+                    performanceVsPrev,
+                    dayName: getDayName(date)
+                };
+            });
+            
+            return chartData;
+        }
+
+        // Show daily summary
+        function showDailySummary(date) {
+            const dailyData = prepareDailyChartData();
+            const selectedDate = dailyData.find(d => d.date === date);
+            
+            if (!selectedDate) return;
+            
+            const container = document.getElementById('dailySummaryContainer');
+            container.style.display = 'block';
+            
+            // Update selected date
+            document.getElementById('selectedDate').textContent = `${selectedDate.dayName}, ${selectedDate.date}`;
+            
+            // Update summary stats
+            const dailySummaryStats = document.getElementById('dailySummaryStats');
             dailySummaryStats.innerHTML = `
-                <p><strong>Total Branches:</strong> <span>${totalBranches}</span></p>
-                <p><strong>Total Transactions (TC):</strong> <span>${totalTransactions.toLocaleString()}</span></p>
-                <p><strong>Total Sales:</strong> <span>AED ${totalSales.toLocaleString()}</span></p>
-                <p><strong>Average per Transaction:</strong> <span>AED ${avgPerTransaction.toFixed(2)}</span></p>
+                <p><strong>Total Branches:</strong> <span>${Object.keys(groupByBranch(allData.filter(item => item.date === date))).length}</span></p>
+                <p><strong>Total Transactions (TC):</strong> <span>${selectedDate.totalTransactions.toLocaleString()}</span></p>
+                <p><strong>Total Sales:</strong> <span>AED ${selectedDate.totalSales.toLocaleString()}</span></p>
+                <p><strong>Average per Transaction:</strong> <span>AED ${selectedDate.avgPerTransaction.toFixed(2)}</span></p>
                 <p><strong>Performance vs. Previous Day:</strong> 
-                    <span class="performance-indicator ${performanceVsPrev.trend}">
-                        <i class="bi bi-arrow-${performanceVsPrev.trend === 'up' ? 'up' : performanceVsPrev.trend === 'down' ? 'down' : 'right'}"></i>
-                        ${performanceVsPrev.value > 0 ? '+' : ''}${performanceVsPrev.value.toFixed(1)}%
+                    <span class="performance-indicator ${selectedDate.performanceVsPrev.trend}">
+                        <i class="bi bi-arrow-${selectedDate.performanceVsPrev.trend === 'up' ? 'up' : selectedDate.performanceVsPrev.trend === 'down' ? 'down' : 'right'}"></i>
+                        ${selectedDate.performanceVsPrev.value > 0 ? '+' : ''}${selectedDate.performanceVsPrev.value.toFixed(1)}%
                     </span>
                 </p>
-                <p><strong>Top Performing Branch:</strong> <span>${topBranch}</span></p>
-                <p><strong>Lowest Performing Branch:</strong> <span>${lowestBranch}</span></p>
+                <p><strong>Top Performing Branch:</strong> <span>${selectedDate.topBranch}</span></p>
+                <p><strong>Lowest Performing Branch:</strong> <span>${selectedDate.lowestBranch}</span></p>
             `;
             
             // Generate summary text
-            let summary = `On ${selectedDate.date}, all branches collectively generated AED ${totalSales.toLocaleString()} from ${totalTransactions.toLocaleString()} transactions, averaging AED ${avgPerTransaction.toFixed(2)} per transaction. `;
+            let summary = `On ${selectedDate.date}, all branches collectively generated AED ${selectedDate.totalSales.toLocaleString()} from ${selectedDate.totalTransactions.toLocaleString()} transactions, averaging AED ${selectedDate.avgPerTransaction.toFixed(2)} per transaction. `;
             
-            if (performanceVsPrev.trend === 'up') {
-                summary += `This represents a ${performanceVsPrev.value.toFixed(1)}% increase from the previous day, indicating positive momentum.`;
-            } else if (performanceVsPrev.trend === 'down') {
-                summary += `This represents a ${Math.abs(performanceVsPrev.value).toFixed(1)}% decrease from the previous day, requiring attention.`;
+            if (selectedDate.performanceVsPrev.trend === 'up') {
+                summary += `This represents a ${selectedDate.performanceVsPrev.value.toFixed(1)}% increase from the previous day, indicating positive momentum.`;
+            } else if (selectedDate.performanceVsPrev.trend === 'down') {
+                summary += `This represents a ${Math.abs(selectedDate.performanceVsPrev.value).toFixed(1)}% decrease from the previous day, requiring attention.`;
             } else {
                 summary += `Performance remained stable compared to the previous day.`;
             }
             
-            summaryText.textContent = summary;
+            document.getElementById('summaryText').textContent = summary;
+            
+            // Scroll to summary
+            container.scrollIntoView({ behavior: 'smooth' });
         }
 
         // Get previous date
@@ -5000,6 +5826,9 @@
             
             // Setup mobile gestures
             setupMobileGestures();
+            
+            // Initialize report arrangement
+            initReportArrangement();
         });
 
         function initializeApp() {
@@ -5027,6 +5856,11 @@
             // Initialize branch performance report if on that tab
             if (document.getElementById('branch-performance-tab').classList.contains('active')) {
                 updateBranchPerformanceReport();
+            }
+            
+            // Update report arrangement if on that tab
+            if (document.getElementById('report-arrangement-tab').classList.contains('active')) {
+                updateReportArrangement();
             }
         }
 
@@ -5093,6 +5927,8 @@
                 tab.addEventListener('shown.bs.tab', function (event) {
                     if (event.target.id === 'branch-performance-tab') {
                         updateBranchPerformanceReport();
+                    } else if (event.target.id === 'report-arrangement-tab') {
+                        updateReportArrangement();
                     }
                 });
             });
@@ -5113,6 +5949,10 @@
             // Advanced filters
             document.getElementById('applyFiltersBtn').addEventListener('click', applyAdvancedFilters);
             document.getElementById('clearFiltersBtn').addEventListener('click', clearAdvancedFilters);
+            
+            // Report arrangement events
+            document.getElementById('arrangeReportsBtn').addEventListener('click', arrangeReports);
+            document.getElementById('resetArrangementBtn').addEventListener('click', resetReportArrangement);
             
             // Handle Enter key in login form
             document.getElementById('password').addEventListener('keypress', function(e) {
@@ -5446,6 +6286,374 @@
             
             // Save the generated data
             localStorage.setItem('crispyChickenSalesData', JSON.stringify(allData));
+        }
+
+        // Report Arrangement Functions
+        function initReportArrangement() {
+            updateReportSummary();
+            initReportCharts();
+            updateReportCards();
+        }
+
+        function updateReportArrangement() {
+            updateReportSummary();
+            updateReportCards();
+        }
+
+        function updateReportSummary() {
+            const totals = calculateTotals(allData);
+            
+            document.getElementById('summaryTotalSales').textContent = `AED ${totals.totalSales.toLocaleString()}`;
+            document.getElementById('summaryTotalTransactions').textContent = totals.totalTransactions.toLocaleString();
+            document.getElementById('summaryAvgSale').textContent = `AED ${totals.avgSale.toFixed(2)}`;
+            document.getElementById('summaryActiveBranches').textContent = Object.keys(groupByBranch(allData)).length;
+        }
+
+        function updateReportCards() {
+            // Calculate today's sales
+            const today = new Date();
+            const todayStr = `${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')}/${today.getFullYear()}`;
+            const todayData = allData.filter(item => item.date === todayStr);
+            const todaySales = todayData.reduce((sum, item) => sum + item.sales, 0);
+            
+            document.getElementById('dailyReportValue').textContent = `AED ${todaySales.toLocaleString()}`;
+            
+            // Calculate this week's sales
+            const oneWeekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+            const weekData = allData.filter(item => new Date(item.date) >= oneWeekAgo);
+            const weekSales = weekData.reduce((sum, item) => sum + item.sales, 0);
+            
+            document.getElementById('weeklyReportValue').textContent = `AED ${weekSales.toLocaleString()}`;
+            
+            // Calculate this month's sales
+            const monthData = allData.filter(item => {
+                const itemDate = new Date(item.date);
+                return itemDate.getMonth() === today.getMonth() && itemDate.getFullYear() === today.getFullYear();
+            });
+            const monthSales = monthData.reduce((sum, item) => sum + item.sales, 0);
+            
+            document.getElementById('monthlyReportValue').textContent = `AED ${monthSales.toLocaleString()}`;
+            
+            // Update branch count
+            document.getElementById('branchReportValue').textContent = Object.keys(groupByBranch(allData)).length;
+            
+            // Update channel count
+            document.getElementById('channelReportValue').textContent = Object.keys(groupByChannel(allData)).length;
+            
+            // Calculate delivery growth
+            const deliveryData = allData.filter(item => item.channel === 'Delivery');
+            const sortedDelivery = [...deliveryData].sort((a, b) => new Date(a.date) - new Date(b.date));
+            const midPoint = Math.floor(sortedDelivery.length / 2);
+            const firstHalfSales = sortedDelivery.slice(0, midPoint).reduce((sum, item) => sum + item.sales, 0);
+            const secondHalfSales = sortedDelivery.slice(midPoint).reduce((sum, item) => sum + item.sales, 0);
+            const deliveryGrowth = firstHalfSales > 0 ? ((secondHalfSales - firstHalfSales) / firstHalfSales * 100).toFixed(1) : 0;
+            
+            document.getElementById('deliveryReportValue').textContent = `${deliveryGrowth}%`;
+        }
+
+        function initReportCharts() {
+            // Report trends chart
+            const trendsCtx = document.getElementById('reportTrendsChart').getContext('2d');
+            
+            if (charts.reportTrendsChart) {
+                charts.reportTrendsChart.destroy();
+            }
+            
+            // Generate mock report generation data
+            const reportTypes = ['Daily', 'Weekly', 'Monthly', 'Branch', 'Channel', 'Delivery'];
+            const reportCounts = reportTypes.map(() => Math.floor(Math.random() * 20) + 5);
+            
+            charts.reportTrendsChart = new Chart(trendsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: reportTypes.map((type, index) => ({
+                        label: `${type} Reports`,
+                        data: Array(7).fill(0).map(() => Math.floor(Math.random() * 10) + reportCounts[index]),
+                        borderColor: [
+                            '#FF6B35',
+                            '#F7931E',
+                            '#4CAF50',
+                            '#2196F3',
+                            '#FFC107',
+                            '#9C27B0'
+                        ][index],
+                        backgroundColor: [
+                            'rgba(255, 107, 53, 0.1)',
+                            'rgba(247, 147, 30, 0.1)',
+                            'rgba(76, 175, 80, 0.1)',
+                            'rgba(33, 150, 243, 0.1)',
+                            'rgba(255, 193, 7, 0.1)',
+                            'rgba(156, 39, 176, 0.1)'
+                        ][index],
+                        tension: 0.4
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+            
+            // Report distribution chart
+            const distributionCtx = document.getElementById('reportDistributionChart').getContext('2d');
+            
+            if (charts.reportDistributionChart) {
+                charts.reportDistributionChart.destroy();
+            }
+            
+            charts.reportDistributionChart = new Chart(distributionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: reportTypes,
+                    datasets: [{
+                        data: reportCounts,
+                        backgroundColor: [
+                            '#FF6B35',
+                            '#F7931E',
+                            '#4CAF50',
+                            '#2196F3',
+                            '#FFC107',
+                            '#9C27B0'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        function arrangeReports() {
+            showNotification('info', 'Arrange Reports', 'Drag and drop reports to rearrange them.');
+            // In a real implementation, this would enable drag-and-drop functionality
+        }
+
+        function resetReportArrangement() {
+            // Reset report arrangement to default
+            reportArrangement = {
+                daily: { position: 0, visible: true },
+                weekly: { position: 1, visible: true },
+                monthly: { position: 2, visible: true },
+                branch: { position: 3, visible: true },
+                channel: { position: 4, visible: true },
+                delivery: { position: 5, visible: true }
+            };
+            
+            updateReportArrangement();
+            showNotification('success', 'Layout Reset', 'Report arrangement has been reset to default.');
+        }
+
+        function generateDailyReport() {
+            generatePDFReport('daily');
+            addToReportHistory('daily');
+        }
+
+        function generateWeeklyReport() {
+            generatePDFReport('weekly');
+            addToReportHistory('weekly');
+        }
+
+        function generateMonthlyReport() {
+            generatePDFReport('monthly');
+            addToReportHistory('monthly');
+        }
+
+        function generateBranchReport() {
+            generatePDFReport('branch');
+            addToReportHistory('branch');
+        }
+
+        function generateChannelReport() {
+            generatePDFReport('channel');
+            addToReportHistory('channel');
+        }
+
+        function generateDeliveryReport() {
+            generatePDFReport('delivery');
+            addToReportHistory('delivery');
+        }
+
+        function generateAllReports() {
+            showLoadingOverlay();
+            
+            const reports = ['daily', 'weekly', 'monthly', 'branch', 'channel', 'delivery'];
+            let completed = 0;
+            
+            reports.forEach(reportType => {
+                setTimeout(() => {
+                    generatePDFReport(reportType);
+                    addToReportHistory(reportType);
+                    completed++;
+                    
+                    if (completed === reports.length) {
+                        hideLoadingOverlay();
+                        showNotification('success', 'All Reports Generated', 'All reports have been generated successfully.');
+                    }
+                }, 500 * reports.indexOf(reportType));
+            });
+        }
+
+        function viewDailyReport() {
+            showNotification('info', 'Daily Report', 'Viewing daily sales report...');
+        }
+
+        function viewWeeklyReport() {
+            showNotification('info', 'Weekly Report', 'Viewing weekly sales report...');
+        }
+
+        function viewMonthlyReport() {
+            showNotification('info', 'Monthly Report', 'Viewing monthly sales report...');
+        }
+
+        function viewBranchReport() {
+            showNotification('info', 'Branch Report', 'Viewing branch performance report...');
+        }
+
+        function viewChannelReport() {
+            showNotification('info', 'Channel Report', 'Viewing channel performance report...');
+        }
+
+        function viewDeliveryReport() {
+            showNotification('info', 'Delivery Report', 'Viewing delivery analysis report...');
+        }
+
+        function addToReportHistory(reportType) {
+            reportGenerationHistory.push({
+                type: reportType,
+                timestamp: new Date().toISOString()
+            });
+            
+            // Keep only last 50 entries
+            if (reportGenerationHistory.length > 50) {
+                reportGenerationHistory = reportGenerationHistory.slice(-50);
+            }
+        }
+
+        function exportReportSummary() {
+            const summary = {
+                generatedAt: new Date().toISOString(),
+                totalReports: reportGenerationHistory.length,
+                reportTypes: reportGenerationHistory.reduce((acc, item) => {
+                    acc[item.type] = (acc[item.type] || 0) + 1;
+                    return acc;
+                }, {}),
+                summary: calculateTotals(allData)
+            };
+            
+            const blob = new Blob([JSON.stringify(summary, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', '');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'report-summary.json');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            showNotification('success', 'Summary Exported', 'Report summary has been exported successfully.');
+        }
+
+        // Update KPI Cards
+        function updateKPICards() {
+            const totals = calculateTotals(allData);
+            
+            document.getElementById('totalSales').textContent = `AED ${totals.totalSales.toLocaleString()}`;
+            document.getElementById('totalTransactions').textContent = totals.totalTransactions.toLocaleString();
+            document.getElementById('avgSale').textContent = `AED ${totals.avgSale.toFixed(2)}`;
+            document.getElementById('activeBranches').textContent = Object.keys(groupByBranch(allData)).length;
+        }
+
+        // Update Performance Tracking
+        function updatePerformanceTracking() {
+            const metrics = calculatePerformanceMetrics(allData);
+            
+            document.getElementById('topBranch').textContent = metrics.topBranch.name;
+            document.getElementById('bestDay').textContent = `${metrics.bestDay.dayName}, ${metrics.bestDay.date}`;
+            document.getElementById('avgSaleAll').textContent = `AED ${metrics.avgSaleAll.toFixed(2)}`;
+            
+            // Update branch performance badges
+            const branchPerformanceContainer = document.getElementById('branchPerformance');
+            branchPerformanceContainer.innerHTML = '';
+            
+            metrics.branchPerformance.forEach(branch => {
+                const badge = document.createElement('div');
+                badge.className = 'col-md-4 mb-2';
+                badge.innerHTML = `
+                    <div class="branch-badge ${branch.performanceClass}">
+                        ${branch.name}
+                        <span class="percentage-badge">${branch.percentage}%</span>
+                    </div>
+                    <div class="small text-muted">${branch.performanceText} - AED ${branch.avgSale.toFixed(2)}</div>
+                `;
+                branchPerformanceContainer.appendChild(badge);
+            });
+        }
+
+        // Update Branch Comparison
+        function updateBranchComparison() {
+            const branchData = groupByBranch(allData);
+            const container = document.getElementById('branchComparison');
+            
+            container.innerHTML = `
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Branch</th>
+                            <th>Transactions</th>
+                            <th>Sales (AED)</th>
+                            <th>Avg Sale</th>
+                            <th>Performance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${Object.entries(branchData).map(([name, data]) => {
+                            let performanceClass = 'performance-low';
+                            let performanceText = 'Low';
+                            
+                            if (data.avgSale >= 50) {
+                                performanceClass = 'performance-high';
+                                performanceText = 'High';
+                            } else if (data.avgSale >= 30) {
+                                performanceClass = 'performance-medium';
+                                performanceText = 'Medium';
+                            }
+                            
+                            return `
+                                <tr>
+                                    <td>${name}</td>
+                                    <td>${data.transactions.toLocaleString()}</td>
+                                    <td>${data.sales.toLocaleString()}</td>
+                                    <td>AED ${data.avgSale.toFixed(2)}</td>
+                                    <td><span class="performance-badge ${performanceClass}">${performanceText}</span></td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // Update overall target
+        function updateOverallTarget() {
+            const newTarget = parseInt(document.getElementById('targetInput').value);
+            if (newTarget > 0) {
+                SALES_TARGET = newTarget;
+                initTargetManagement();
+                showSuccess(`Sales target updated to AED ${newTarget.toLocaleString()}`);
+            }
         }
     </script>
 </body>
