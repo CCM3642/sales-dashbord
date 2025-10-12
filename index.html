@@ -103,6 +103,14 @@
             height: 400px;
         }
         
+        .weekly-chart-container {
+            height: 400px;
+        }
+        
+        .monthly-chart-container {
+            height: 400px;
+        }
+        
         .target-chart-container {
             height: 400px;
         }
@@ -231,215 +239,29 @@
             border-radius: 5px;
             margin-bottom: 15px;
             font-weight: 500;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s ease;
         }
         
         .data-status.saved {
             background-color: #d1e7dd;
             color: #0f5132;
-            border-left: 4px solid var(--success-color);
         }
         
         .data-status.unsaved {
             background-color: #f8d7da;
             color: #842029;
-            border-left: 4px solid var(--danger-color);
-            animation: pulse 2s infinite;
         }
         
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+        .tab-content {
+            padding: 20px 0;
         }
         
-        .data-status i {
-            margin-right: 10px;
-            font-size: 1.2rem;
-        }
-        
-        .data-management-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .data-form-section {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-        }
-        
-        .data-table-section {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-        }
-        
-        .table-row-hover:hover {
-            background-color: rgba(220, 53, 69, 0.1);
-            cursor: pointer;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 5px;
-        }
-        
-        .action-buttons .btn {
-            font-size: 0.875rem;
-            padding: 0.25rem 0.5rem;
-        }
-        
-        .clear-all-btn {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .clear-all-btn::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 5px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.5);
-            opacity: 0;
-            border-radius: 100%;
-            transform: scale(1, 1) translate(-50%);
-            transform-origin: 50% 50%;
-        }
-        
-        .clear-all-btn:active::after {
-            animation: ripple 0.6s ease-out;
-        }
-        
-        @keyframes ripple {
-            0% {
-                transform: scale(0, 0);
-                opacity: 0.5;
-            }
-            100% {
-                transform: scale(20, 20);
-                opacity: 0;
-            }
-        }
-        
-        .confirmation-dialog {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-        
-        .confirmation-content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15);
-        }
-        
-        .confirmation-content h4 {
-            margin-bottom: 20px;
-            color: var(--crispy-red);
-        }
-        
-        .confirmation-details {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 20px 0;
-            text-align: left;
-        }
-        
-        .confirmation-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-        
-        .data-management-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .data-management-actions .btn {
-            flex: 1;
-            min-width: 150px;
-        }
-        
-        .save-indicator {
-            display: inline-block;
-            margin-left: 10px;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        
-        .save-indicator.saved {
-            background-color: var(--success-color);
-            color: white;
-        }
-        
-        .save-indicator.saving {
-            background-color: var(--warning-color);
-            color: var(--dark-color);
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .file-upload-area {
-            border: 2px dashed var(--secondary-color);
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-        
-        .file-upload-area:hover {
-            border-color: var(--crispy-red);
-            background-color: rgba(220, 53, 69, 0.05);
-        }
-        
-        .file-upload-area.dragover {
-            border-color: var(--crispy-red);
-            background-color: rgba(220, 53, 69, 0.1);
-        }
-        
-        .file-upload-area i {
-            font-size: 2rem;
-            color: var(--secondary-color);
-            margin-bottom: 10px;
-        }
-        
-        .file-upload-area p {
-            margin: 0;
-            color: var(--secondary-color);
-        }
-        
-        .file-upload-area p strong {
+        .nav-tabs .nav-link {
             color: var(--crispy-dark);
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--crispy-red);
+            font-weight: 600;
         }
         
         @media (max-width: 768px) {
@@ -465,14 +287,6 @@
             .metric-card {
                 margin-bottom: 15px;
             }
-            
-            .data-management-container {
-                padding: 0 10px;
-            }
-            
-            .data-management-actions {
-                flex-direction: column;
-            }
         }
     </style>
 </head>
@@ -494,8 +308,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" id="dataManagementLink">
-                            <i class="fas fa-edit me-1"></i> Data Management
+                        <a class="nav-link" href="#" id="dataEntryLink">
+                            <i class="fas fa-edit me-1"></i> Data Entry
                         </a>
                     </li>
                     <li class="nav-item">
@@ -515,17 +329,17 @@
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#" data-page="dashboard" id="sidebarDashboardLink">
+                            <a class="nav-link active" href="#" data-page="dashboard">
                                 <i class="fas fa-chart-line me-2"></i> Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" data-page="data-management" id="sidebarDataManagementLink">
-                                <i class="fas fa-edit me-2"></i> Data Management
+                            <a class="nav-link" href="#" data-page="data-entry">
+                                <i class="fas fa-edit me-2"></i> Data Entry
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" data-page="report" id="sidebarReportLink">
+                            <a class="nav-link" href="#" data-page="report">
                                 <i class="fas fa-file-alt me-2"></i> Management Report
                             </a>
                         </li>
@@ -644,6 +458,12 @@
                             <button class="nav-link" id="daily-tab" data-bs-toggle="tab" data-bs-target="#daily" type="button" role="tab">Daily Trends</button>
                         </li>
                         <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="weekly-tab" data-bs-toggle="tab" data-bs-target="#weekly" type="button" role="tab">Weekly Trends</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="monthly-tab" data-bs-toggle="tab" data-bs-target="#monthly" type="button" role="tab">Monthly Trends</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
                             <button class="nav-link" id="target-tab" data-bs-toggle="tab" data-bs-target="#target" type="button" role="tab">Target Plan</button>
                         </li>
                     </ul>
@@ -725,6 +545,83 @@
                             </div>
                         </div>
                         
+                        <!-- Weekly Trends Tab -->
+                        <div class="tab-pane fade" id="weekly" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-calendar-week me-2"></i> Weekly Delivery Trends
+                                </div>
+                                <div class="card-body">
+                                    <div class="weekly-chart-container">
+                                        <canvas id="weeklyChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card mt-4">
+                                <div class="card-header">
+                                    <i class="fas fa-table me-2"></i> Weekly Performance Details
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-container">
+                                        <table class="table table-striped table-hover" id="weeklyTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Week</th>
+                                                    <th>Start Date</th>
+                                                    <th>End Date</th>
+                                                    <th>Total Transactions</th>
+                                                    <th>Total Sales (AED)</th>
+                                                    <th>Avg. Transaction Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data will be inserted here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Monthly Trends Tab -->
+                        <div class="tab-pane fade" id="monthly" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-calendar-alt me-2"></i> Monthly Delivery Trends
+                                </div>
+                                <div class="card-body">
+                                    <div class="monthly-chart-container">
+                                        <canvas id="monthlyChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card mt-4">
+                                <div class="card-header">
+                                    <i class="fas fa-table me-2"></i> Monthly Performance Details
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-container">
+                                        <table class="table table-striped table-hover" id="monthlyTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Month</th>
+                                                    <th>Year</th>
+                                                    <th>Total Transactions</th>
+                                                    <th>Total Sales (AED)</th>
+                                                    <th>Avg. Transaction Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data will be inserted here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <!-- Target Plan Tab -->
                         <div class="tab-pane fade" id="target" role="tabpanel">
                             <div class="card">
@@ -766,104 +663,96 @@
                     </div>
                 </div>
 
-                <!-- Data Management Page -->
-                <div id="dataManagementPage" class="page" style="display: none;">
+                <!-- Data Entry Page -->
+                <div id="dataEntryPage" class="page" style="display: none;">
                     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                        <h1 class="h2">Data Management</h1>
+                        <h1 class="h2">Sales Data Entry</h1>
                     </div>
 
-                    <div class="data-management-container">
-                        <!-- Data Status -->
-                        <div class="data-status saved" id="dataStatus">
-                            <i class="fas fa-check-circle me-2"></i> All changes are saved
-                            <span class="save-indicator saved" id="saveIndicator">SAVED</span>
-                        </div>
+                    <!-- Data Entry Form -->
+                    <div class="data-entry-form">
+                        <h4 class="mb-4">Add New Sales Data</h4>
+                        <form id="dataEntryForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="entryDate" class="form-label">Date</label>
+                                    <input type="date" class="form-control" id="entryDate" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="entryBranch" class="form-label">Branch</label>
+                                    <select class="form-select" id="entryBranch" required>
+                                        <option value="">Select Branch</option>
+                                        <option value="Crispy Chicken-Hamdan St">Crispy Chicken-Hamdan St</option>
+                                        <option value="Crispy Chicken Khaldia">Crispy Chicken Khaldia</option>
+                                        <option value="Crispy Chicken Shabiya 11">Crispy Chicken Shabiya 11</option>
+                                        <option value="Crispy Chicken Muroor">Crispy Chicken Muroor</option>
+                                        <option value="Crispy Chicken Al Barsha">Crispy Chicken Al Barsha</option>
+                                        <option value="Crispy Chicken Al Satwa">Crispy Chicken Al Satwa</option>
+                                        <option value="Crispy Chicken Al Rgga">Crispy Chicken Al Rgga</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="entryChannel" class="form-label">Channel</label>
+                                    <select class="form-select" id="entryChannel" required>
+                                        <option value="Delivery">Delivery</option>
+                                        <option value="Dine-in">Dine-in</option>
+                                        <option value="Takeaway">Takeaway</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="entryTransactions" class="form-label">Transactions</label>
+                                    <input type="number" class="form-control" id="entryTransactions" min="0" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="entrySales" class="form-label">Sales (AED)</label>
+                                    <input type="number" class="form-control" id="entrySales" min="0" step="0.01" required>
+                                </div>
+                                <div class="col-md-6 mb-3 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-plus-circle me-2"></i> Add Data
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
 
-                        <!-- Data Management Actions -->
-                        <div class="data-management-actions">
-                            <button class="btn btn-primary" id="saveDataBtn2">
-                                <i class="fas fa-save me-2"></i> Save Data
-                            </button>
-                            <button class="btn btn-info" id="loadDataBtn2">
-                                <i class="fas fa-upload me-2"></i> Load Data
-                            </button>
-                            <button class="btn btn-success" id="exportDataBtn2">
-                                <i class="fas fa-file-export me-2"></i> Export to CSV
-                            </button>
-                            <button class="btn btn-danger" id="resetDataBtn2">
-                                <i class="fas fa-redo me-2"></i> Reset All Data
-                            </button>
-                        </div>
+                    <!-- Data Status -->
+                    <div class="data-status saved" id="dataStatus">
+                        <i class="fas fa-check-circle me-2"></i> All changes are saved
+                    </div>
 
-                        <!-- Add New Entry Section -->
-                        <div class="data-form-section">
-                            <div class="d-flex justify-content-between align-items-center mb-4">
-                                <h4>
-                                    <span id="formTitle">Add New Sales Data</span>
-                                </h4>
-                                <button class="btn btn-primary" id="addNewEntryBtn">
-                                    <i class="fas fa-plus-circle me-2"></i> Add New Entry
+                    <!-- Save Options -->
+                    <div class="save-options">
+                        <h5>Data Management</h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <button class="btn btn-primary w-100" id="saveDataBtn2">
+                                    <i class="fas fa-save me-2"></i> Save Data Locally
                                 </button>
                             </div>
-                            
-                            <form id="dataEntryForm">
-                                <input type="hidden" id="editIndex" value="-1">
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="entryDate" class="form-label">Date</label>
-                                        <input type="date" class="form-control" id="entryDate" required>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="entryBranch" class="form-label">Branch</label>
-                                        <select class="form-select" id="entryBranch" required>
-                                            <option value="">Select Branch</option>
-                                            <option value="Crispy Chicken-Hamdan St">Crispy Chicken-Hamdan St</option>
-                                            <option value="Crispy Chicken Khaldia">Crispy Chicken Khaldia</option>
-                                            <option value="Crispy Chicken Shabiya 11">Crispy Chicken Shabiya 11</option>
-                                            <option value="Crispy Chicken Muroor">Crispy Chicken Muroor</option>
-                                            <option value="Crispy Chicken Al Barsha">Crispy Chicken Al Barsha</option>
-                                            <option value="Crispy Chicken Al Satwa">Crispy Chicken Al Satwa</option>
-                                            <option value="Crispy Chicken Al Rgga">Crispy Chicken Al Rgga</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="entryChannel" class="form-label">Channel</label>
-                                        <select class="form-select" id="entryChannel" required>
-                                            <option value="Delivery">Delivery</option>
-                                            <option value="Dine-in">Dine-in</option>
-                                            <option value="Takeaway">Takeaway</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="entryTransactions" class="form-label">Transactions</label>
-                                        <input type="number" class="form-control" id="entryTransactions" min="0" required>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="entrySales" class="form-label">Sales (AED)</label>
-                                        <input type="number" class="form-control" id="entrySales" min="0" step="0.01" required>
-                                    </div>
-                                    <div class="col-md-6 mb-3 d-flex align-items-end">
-                                        <button type="submit" class="btn btn-primary w-100">
-                                            <i class="fas fa-save me-2"></i> <span id="submitButtonText">Add Entry</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-
-                        <!-- Data Table Section -->
-                        <div class="data-table-section">
-                            <div class="d-flex justify-content-between align-items-center mb-4">
-                                <h4><i class="fas fa-table me-2"></i> Sales Data Table</h4>
-                                <button class="btn btn-danger clear-all-btn" id="clearAllDataBtn">
-                                    <i class="fas fa-trash-alt me-2"></i> Clear All Data
+                            <div class="col-md-4 mb-3">
+                                <button class="btn btn-info w-100" id="loadDataBtn2">
+                                    <i class="fas fa-upload me-2"></i> Load Data
                                 </button>
                             </div>
-                            
+                            <div class="col-md-4 mb-3">
+                                <button class="btn btn-success w-100" id="exportDataBtn2">
+                                    <i class="fas fa-file-export me-2"></i> Export to CSV
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Current Data Table -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <i class="fas fa-table me-2"></i> Current Sales Data
+                        </div>
+                        <div class="card-body">
                             <div class="table-container">
                                 <table class="table table-striped table-hover" id="currentDataTable">
                                     <thead>
@@ -993,6 +882,69 @@
                             </div>
                         </div>
 
+                        <!-- Weekly Trend Analysis -->
+                        <div class="report-section">
+                            <h3>Weekly Delivery Trend Analysis</h3>
+                            <div class="chart-container mb-4">
+                                <canvas id="reportWeeklyChart"></canvas>
+                            </div>
+                            
+                            <table class="report-table">
+                                <thead>
+                                    <tr>
+                                        <th>Week</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Total Transactions</th>
+                                        <th>Total Sales (AED)</th>
+                                        <th>Avg. Transaction Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reportWeeklyTableBody">
+                                    <!-- Data will be inserted here -->
+                                </tbody>
+                            </table>
+                            
+                            <div class="mt-3">
+                                <p><strong>Weekly Performance Trends:</strong></p>
+                                <ul>
+                                    <li>Peak week: <span id="reportPeakWeek"></span> - AED <span id="reportPeakWeekSales"></span></li>
+                                    <li>Lowest week: <span id="reportLowWeek"></span> - AED <span id="reportLowWeekSales"></span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Monthly Trend Analysis -->
+                        <div class="report-section">
+                            <h3>Monthly Delivery Trend Analysis</h3>
+                            <div class="chart-container mb-4">
+                                <canvas id="reportMonthlyChart"></canvas>
+                            </div>
+                            
+                            <table class="report-table">
+                                <thead>
+                                    <tr>
+                                        <th>Month</th>
+                                        <th>Year</th>
+                                        <th>Total Transactions</th>
+                                        <th>Total Sales (AED)</th>
+                                        <th>Avg. Transaction Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reportMonthlyTableBody">
+                                    <!-- Data will be inserted here -->
+                                </tbody>
+                            </table>
+                            
+                            <div class="mt-3">
+                                <p><strong>Monthly Performance Trends:</strong></p>
+                                <ul>
+                                    <li>Peak month: <span id="reportPeakMonth"></span> - AED <span id="reportPeakMonthSales"></span></li>
+                                    <li>Lowest month: <span id="reportLowMonth"></span> - AED <span id="reportLowMonthSales"></span></li>
+                                </ul>
+                            </div>
+                        </div>
+
                         <!-- Target Plan -->
                         <div class="report-section">
                             <h3>Variable Target Distribution Plan</h3>
@@ -1080,19 +1032,6 @@
         </div>
     </div>
 
-    <!-- Confirmation Dialog -->
-    <div class="confirmation-dialog" id="confirmationDialog" style="display: none;">
-        <div class="confirmation-content">
-            <h4 id="confirmationTitle">Confirm Action</h4>
-            <p id="confirmationMessage">Are you sure you want to proceed?</p>
-            <div class="confirmation-details" id="confirmationDetails"></div>
-            <div class="confirmation-buttons">
-                <button class="btn btn-secondary" id="cancelConfirmation">Cancel</button>
-                <button class="btn btn-primary" id="confirmAction">Confirm</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Notification -->
     <div class="notification" id="notification"></div>
 
@@ -1104,8 +1043,8 @@
     
     <!-- Custom JavaScript -->
     <script>
-        // Initialize data
-        let salesData = [
+        // Define initial sales data
+        const initialSalesData = [
             {Date: '10/01/2025', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 73, Sales: 3216},
             {Date: '10/01/2025', Branch: 'Crispy Chicken Khaldia', Channel: 'Delivery', Transactions: 38, Sales: 1859.8},
             {Date: '10/01/2025', Branch: 'Crispy Chicken Shabiya 11', Channel: 'Delivery', Transactions: 39, Sales: 1965},
@@ -1178,110 +1117,237 @@
             {Date: '10/10/2025', Branch: 'Crispy Chicken Al Rgga', Channel: 'Delivery', Transactions: 10, Sales: 573}
         ];
 
+        // Initialize sales data with the initial data
+        let salesData = [...initialSalesData];
+
+        // Chart instances
+        let chartInstances = {
+            branch: null,
+            daily: null,
+            weekly: null,
+            monthly: null,
+            target: null,
+            reportBranch: null,
+            reportDaily: null,
+            reportWeekly: null,
+            reportMonthly: null,
+            reportTarget: null
+        };
+
+        // Initialize dashboard when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing dashboard...');
+            
+            // Load data from localStorage if available
+            loadDataFromStorage();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Show dashboard page by default
+            showPage('dashboard');
+            
+            // Initialize dashboard after DOM is ready
+            setTimeout(() => {
+                console.log('Sales data length after loading:', salesData.length);
+                updateDashboard();
+                updateCurrentDataTable();
+                console.log('Dashboard initialization complete');
+            }, 500);
+        });
+
+        // Set up event listeners
+        function setupEventListeners() {
+            console.log('Setting up event listeners...');
+            
+            // Navigation links
+            document.getElementById('dashboardLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                showPage('dashboard');
+            });
+            
+            document.getElementById('dataEntryLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                showPage('data-entry');
+            });
+            
+            document.getElementById('reportLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                showPage('report');
+                setTimeout(() => {
+                    updateManagementReport();
+                }, 100);
+            });
+            
+            // Sidebar navigation
+            document.querySelectorAll('.sidebar .nav-link[data-page]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.getAttribute('data-page');
+                    showPage(page);
+                });
+            });
+            
+            // Data management buttons
+            document.getElementById('saveDataBtn').addEventListener('click', saveDataToStorage);
+            document.getElementById('loadDataBtn').addEventListener('click', triggerFileLoad);
+            document.getElementById('exportDataBtn').addEventListener('click', exportDataToCSV);
+            document.getElementById('resetDataBtn').addEventListener('click', resetData);
+            
+            // Data entry form
+            document.getElementById('dataEntryForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                addDataEntry();
+            });
+            
+            // Data entry page buttons
+            document.getElementById('saveDataBtn2').addEventListener('click', saveDataToStorage);
+            document.getElementById('loadDataBtn2').addEventListener('click', triggerFileLoad);
+            document.getElementById('exportDataBtn2').addEventListener('click', exportDataToCSV);
+            
+            // Dashboard refresh button
+            document.getElementById('refreshDashboardBtn').addEventListener('click', updateDashboard);
+            
+            // Report buttons
+            document.getElementById('generateReportBtn').addEventListener('click', updateManagementReport);
+            document.getElementById('downloadReportBtn').addEventListener('click', downloadReport);
+            
+            // File input change
+            document.getElementById('fileInput').addEventListener('change', handleFileLoad);
+            
+            console.log('Event listeners setup complete');
+        }
+
+        // Show page
+        function showPage(pageId) {
+            console.log('Showing page:', pageId);
+            
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.style.display = 'none';
+            });
+            
+            // Show selected page
+            if (pageId === 'dashboard') {
+                document.getElementById('dashboardPage').style.display = 'block';
+                // Update dashboard when switching to it
+                setTimeout(() => {
+                    updateDashboard();
+                }, 100);
+            } else if (pageId === 'data-entry') {
+                document.getElementById('dataEntryPage').style.display = 'block';
+            } else if (pageId === 'report') {
+                document.getElementById('reportPage').style.display = 'block';
+                setTimeout(() => {
+                    updateManagementReport();
+                }, 100);
+            }
+            
+            // Update navbar active state
+            document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            if (pageId === 'dashboard') {
+                document.getElementById('dashboardLink').classList.add('active');
+            } else if (pageId === 'data-entry') {
+                document.getElementById('dataEntryLink').classList.add('active');
+            } else if (pageId === 'report') {
+                document.getElementById('reportLink').classList.add('active');
+            }
+            
+            // Update sidebar active state
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            const sidebarLink = document.querySelector(`.sidebar .nav-link[data-page="${pageId}"]`);
+            if (sidebarLink) {
+                sidebarLink.classList.add('active');
+            }
+        }
+
         // Load data from localStorage if available
         function loadDataFromStorage() {
-            try {
-                const savedData = localStorage.getItem('crispyChickenSalesData');
-                if (savedData) {
-                    salesData = JSON.parse(savedData);
-                    updateDataStatus(true);
+            const savedData = localStorage.getItem('crispyChickenSalesData');
+            if (savedData) {
+                try {
+                    const parsedData = JSON.parse(savedData);
+                    if (Array.isArray(parsedData) && parsedData.length > 0) {
+                        salesData = parsedData;
+                        console.log('Loaded data from localStorage:', salesData.length, 'records');
+                        return;
+                    } else {
+                        console.warn('Saved data is empty or invalid, resetting to initial data');
+                    }
+                } catch (e) {
+                    console.error('Error parsing saved data:', e);
+                    console.warn('Resetting to initial data');
                 }
-            } catch (e) {
-                console.error("Error loading data from storage:", e);
+            } else {
+                console.log('No saved data found, using initial data');
             }
+            
+            // If we reach here, reset to initial data
+            salesData = [...initialSalesData];
         }
 
         // Save data to localStorage
         function saveDataToStorage() {
             try {
-                // Show saving indicator
-                updateSaveIndicator('saving');
-                
-                // Simulate saving delay for better UX
-                setTimeout(() => {
-                    localStorage.setItem('crispyChickenSalesData', JSON.stringify(salesData));
-                    updateDataStatus(true);
-                    updateSaveIndicator('saved');
-                    showNotification('Data saved successfully!', 'success');
-                }, 500);
+                localStorage.setItem('crispyChickenSalesData', JSON.stringify(salesData));
+                updateDataStatus(true);
+                showNotification('Data saved successfully!', 'success');
             } catch (e) {
-                console.error("Error saving data to storage:", e);
-                updateSaveIndicator('saved');
-                showNotification('Error saving data!', 'error');
-            }
-        }
-
-        // Update save indicator
-        function updateSaveIndicator(status) {
-            const indicator = document.getElementById('saveIndicator');
-            if (indicator) {
-                indicator.className = `save-indicator ${status}`;
-                
-                if (status === 'saving') {
-                    indicator.textContent = 'SAVING...';
-                } else if (status === 'saved') {
-                    indicator.textContent = 'SAVED';
-                }
+                console.error('Error saving data:', e);
+                showNotification('Error saving data', 'error');
             }
         }
 
         // Update data status indicator
         function updateDataStatus(saved) {
             const statusElement = document.getElementById('dataStatus');
-            if (statusElement) {
-                if (saved) {
-                    statusElement.className = 'data-status saved';
-                    statusElement.innerHTML = '<i class="fas fa-check-circle me-2"></i> All changes are saved';
-                } else {
-                    statusElement.className = 'data-status unsaved';
-                    statusElement.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i> You have unsaved changes';
-                }
+            if (saved) {
+                statusElement.className = 'data-status saved';
+                statusElement.innerHTML = '<i class="fas fa-check-circle me-2"></i> All changes are saved';
+            } else {
+                statusElement.className = 'data-status unsaved';
+                statusElement.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i> You have unsaved changes';
             }
         }
 
         // Show notification
         function showNotification(message, type) {
             const notification = document.getElementById('notification');
-            if (notification) {
-                notification.textContent = message;
-                notification.className = `notification ${type} show`;
-                
-                setTimeout(() => {
-                    notification.className = `notification ${type}`;
-                }, 3000);
-            }
-        }
-
-        // Show confirmation dialog
-        function showConfirmationDialog(title, message, details, onConfirm) {
-            const dialog = document.getElementById('confirmationDialog');
-            const titleElement = document.getElementById('confirmationTitle');
-            const messageElement = document.getElementById('confirmationMessage');
-            const detailsElement = document.getElementById('confirmationDetails');
-            const confirmButton = document.getElementById('confirmAction');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
             
-            titleElement.textContent = title;
-            messageElement.textContent = message;
-            detailsElement.innerHTML = details;
-            
-            confirmButton.onclick = () => {
-                onConfirm();
-                hideConfirmationDialog();
-            };
-            
-            dialog.style.display = 'flex';
-        }
-
-        // Hide confirmation dialog
-        function hideConfirmationDialog() {
-            const dialog = document.getElementById('confirmationDialog');
-            dialog.style.display = 'none';
+            setTimeout(() => {
+                notification.className = `notification ${type}`;
+            }, 3000);
         }
 
         // Process sales data
         function processSalesData() {
+            console.log('Processing sales data...');
+            console.log('Sales data length:', salesData.length);
+            
+            if (salesData.length === 0) {
+                console.warn('No sales data available');
+                showNotification('No sales data available', 'warning');
+                return { 
+                    branchSummary: {}, 
+                    dailySummary: {},
+                    weeklySummary: {},
+                    monthlySummary: {}
+                };
+            }
+            
+            // Calculate branch summary
             const branchSummary = {};
             const dailySummary = {};
+            const weeklySummary = {};
+            const monthlySummary = {};
             
             salesData.forEach(entry => {
                 // Branch summary
@@ -1310,6 +1376,42 @@
                 
                 dailySummary[entry.Date].Total_Transactions += entry.Transactions;
                 dailySummary[entry.Date].Total_Sales += entry.Sales;
+                
+                // Weekly summary - FIXED
+                const date = new Date(entry.Date);
+                const weekStart = new Date(date);
+                weekStart.setDate(date.getDate() - date.getDay()); // Set to Sunday of the week
+                const weekKey = weekStart.toISOString().split('T')[0];
+                
+                const weekEnd = new Date(weekStart);
+                weekEnd.setDate(weekStart.getDate() + 6); // End of the week (Saturday)
+                
+                if (!weeklySummary[weekKey]) {
+                    weeklySummary[weekKey] = {
+                        Week_Start: weekStart.toISOString().split('T')[0],
+                        Week_End: weekEnd.toISOString().split('T')[0],
+                        Total_Transactions: 0,
+                        Total_Sales: 0
+                    };
+                }
+                
+                weeklySummary[weekKey].Total_Transactions += entry.Transactions;
+                weeklySummary[weekKey].Total_Sales += entry.Sales;
+                
+                // Monthly summary
+                const monthKey = `${date.getFullYear()}-${date.getMonth() + 1}`;
+                
+                if (!monthlySummary[monthKey]) {
+                    monthlySummary[monthKey] = {
+                        Month: date.getMonth() + 1,
+                        Year: date.getFullYear(),
+                        Total_Transactions: 0,
+                        Total_Sales: 0
+                    };
+                }
+                
+                monthlySummary[monthKey].Total_Transactions += entry.Transactions;
+                monthlySummary[monthKey].Total_Sales += entry.Sales;
             });
             
             // Calculate averages for branch summary
@@ -1327,7 +1429,24 @@
                 summary.Avg_Transaction_Value = summary.Total_Sales / summary.Total_Transactions;
             });
             
-            return { branchSummary, dailySummary };
+            // Calculate averages for weekly summary
+            Object.keys(weeklySummary).forEach(week => {
+                const summary = weeklySummary[week];
+                summary.Avg_Transaction_Value = summary.Total_Sales / summary.Total_Transactions;
+            });
+            
+            // Calculate averages for monthly summary
+            Object.keys(monthlySummary).forEach(month => {
+                const summary = monthlySummary[month];
+                summary.Avg_Transaction_Value = summary.Total_Sales / summary.Total_Transactions;
+            });
+            
+            console.log('Processed data for', Object.keys(branchSummary).length, 'branches,', 
+                        Object.keys(dailySummary).length, 'days,', 
+                        Object.keys(weeklySummary).length, 'weeks, and', 
+                        Object.keys(monthlySummary).length, 'months');
+            
+            return { branchSummary, dailySummary, weeklySummary, monthlySummary };
         }
 
         // Calculate target plan
@@ -1379,8 +1498,11 @@
 
         // Update dashboard metrics
         function updateDashboardMetrics() {
+            console.log('Updating dashboard metrics...');
+            console.log('Sales data length:', salesData.length);
+            
             try {
-                const { branchSummary, dailySummary } = processSalesData();
+                const { branchSummary } = processSalesData();
                 const { targetData, overallTarget } = calculateTargetPlan(branchSummary);
                 
                 // Calculate total metrics
@@ -1395,42 +1517,42 @@
                 const avgTransaction = totalSales / totalTransactions;
                 
                 // Update DOM
-                const totalSalesElement = document.getElementById('totalSales');
-                if (totalSalesElement) totalSalesElement.textContent = `AED ${totalSales.toFixed(2)}`;
+                document.getElementById('totalSales').textContent = `AED ${totalSales.toFixed(2)}`;
+                document.getElementById('totalTransactions').textContent = totalTransactions.toLocaleString();
+                document.getElementById('avgTransaction').textContent = `AED ${avgTransaction.toFixed(2)}`;
+                document.getElementById('overallTarget').textContent = `AED ${overallTarget.toFixed(2)}`;
                 
-                const totalTransactionsElement = document.getElementById('totalTransactions');
-                if (totalTransactionsElement) totalTransactionsElement.textContent = totalTransactions.toLocaleString();
-                
-                const avgTransactionElement = document.getElementById('avgTransaction');
-                if (avgTransactionElement) avgTransactionElement.textContent = `AED ${avgTransaction.toFixed(2)}`;
-                
-                const overallTargetElement = document.getElementById('overallTarget');
-                if (overallTargetElement) overallTargetElement.textContent = `AED ${overallTarget.toFixed(2)}`;
-            } catch (e) {
-                console.error("Error updating dashboard metrics:", e);
+                console.log('Metrics updated:', { totalSales, totalTransactions, avgTransaction, overallTarget });
+            } catch (error) {
+                console.error('Error updating dashboard metrics:', error);
+                showNotification('Error updating dashboard metrics', 'error');
             }
         }
 
         // Update branch chart
         function updateBranchChart() {
+            console.log('Updating branch chart...');
+            
             try {
                 const { branchSummary } = processSalesData();
                 
                 const branches = Object.keys(branchSummary);
                 const sales = branches.map(branch => branchSummary[branch].Total_Sales);
                 
-                const ctx = document.getElementById('branchChart');
-                if (!ctx) return;
-                
-                const chartCtx = ctx.getContext('2d');
-                if (!chartCtx) return;
-                
-                // Destroy existing chart if it exists
-                if (window.branchChartInstance) {
-                    window.branchChartInstance.destroy();
+                const canvas = document.getElementById('branchChart');
+                if (!canvas) {
+                    console.error('Canvas element with ID "branchChart" not found');
+                    return;
                 }
                 
-                window.branchChartInstance = new Chart(chartCtx, {
+                const ctx = canvas.getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (chartInstances.branch) {
+                    chartInstances.branch.destroy();
+                }
+                
+                chartInstances.branch = new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: branches,
@@ -1487,13 +1609,18 @@
                         }
                     }
                 });
-            } catch (e) {
-                console.error("Error updating branch chart:", e);
+                
+                console.log('Branch chart updated successfully');
+            } catch (error) {
+                console.error('Error updating branch chart:', error);
+                showNotification('Error updating branch chart', 'error');
             }
         }
 
         // Update daily chart
         function updateDailyChart() {
+            console.log('Updating daily chart...');
+            
             try {
                 const { dailySummary } = processSalesData();
                 
@@ -1501,18 +1628,20 @@
                 const sales = dates.map(date => dailySummary[date].Total_Sales);
                 const transactions = dates.map(date => dailySummary[date].Total_Transactions);
                 
-                const ctx = document.getElementById('dailyChart');
-                if (!ctx) return;
-                
-                const chartCtx = ctx.getContext('2d');
-                if (!chartCtx) return;
-                
-                // Destroy existing chart if it exists
-                if (window.dailyChartInstance) {
-                    window.dailyChartInstance.destroy();
+                const canvas = document.getElementById('dailyChart');
+                if (!canvas) {
+                    console.error('Canvas element with ID "dailyChart" not found');
+                    return;
                 }
                 
-                window.dailyChartInstance = new Chart(chartCtx, {
+                const ctx = canvas.getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (chartInstances.daily) {
+                    chartInstances.daily.destroy();
+                }
+                
+                chartInstances.daily = new Chart(ctx, {
                     type: 'line',
                     data: {
                         labels: dates,
@@ -1577,13 +1706,215 @@
                         }
                     }
                 });
-            } catch (e) {
-                console.error("Error updating daily chart:", e);
+                
+                console.log('Daily chart updated successfully');
+            } catch (error) {
+                console.error('Error updating daily chart:', error);
+                showNotification('Error updating daily chart', 'error');
+            }
+        }
+
+        // Update weekly chart
+        function updateWeeklyChart() {
+            console.log('Updating weekly chart...');
+            
+            try {
+                const { weeklySummary } = processSalesData();
+                
+                const weeks = Object.keys(weeklySummary).sort();
+                const sales = weeks.map(week => weeklySummary[week].Total_Sales);
+                const transactions = weeks.map(week => weeklySummary[week].Total_Transactions);
+                
+                const canvas = document.getElementById('weeklyChart');
+                if (!canvas) {
+                    console.error('Canvas element with ID "weeklyChart" not found');
+                    return;
+                }
+                
+                const ctx = canvas.getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (chartInstances.weekly) {
+                    chartInstances.weekly.destroy();
+                }
+                
+                chartInstances.weekly = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: weeks.map(week => `Week ${weeks.indexOf(week) + 1}`),
+                        datasets: [
+                            {
+                                label: 'Sales (AED)',
+                                data: sales,
+                                borderColor: 'rgba(220, 53, 69, 1)',
+                                backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: 'Transactions',
+                                data: transactions,
+                                borderColor: 'rgba(32, 201, 151, 1)',
+                                backgroundColor: 'rgba(32, 201, 151, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y1'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Sales (AED)'
+                                }
+                            },
+                            y1: {
+                                beginAtZero: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Transactions'
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Week'
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Weekly Delivery Performance Trends'
+                            }
+                        }
+                    }
+                });
+                
+                console.log('Weekly chart updated successfully');
+            } catch (error) {
+                console.error('Error updating weekly chart:', error);
+                showNotification('Error updating weekly chart', 'error');
+            }
+        }
+
+        // Update monthly chart
+        function updateMonthlyChart() {
+            console.log('Updating monthly chart...');
+            
+            try {
+                const { monthlySummary } = processSalesData();
+                
+                const months = Object.keys(monthlySummary).sort();
+                const sales = months.map(month => monthlySummary[month].Total_Sales);
+                const transactions = months.map(month => monthlySummary[month].Total_Transactions);
+                
+                const canvas = document.getElementById('monthlyChart');
+                if (!canvas) {
+                    console.error('Canvas element with ID "monthlyChart" not found');
+                    return;
+                }
+                
+                const ctx = canvas.getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (chartInstances.monthly) {
+                    chartInstances.monthly.destroy();
+                }
+                
+                chartInstances.monthly = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: months.map(month => {
+                            const [year, monthNum] = month.split('-');
+                            return new Date(year, monthNum - 1).toLocaleDateString('en-US', { month: 'short' });
+                        }),
+                        datasets: [
+                            {
+                                label: 'Sales (AED)',
+                                data: sales,
+                                borderColor: 'rgba(220, 53, 69, 1)',
+                                backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: 'Transactions',
+                                data: transactions,
+                                borderColor: 'rgba(32, 201, 151, 1)',
+                                backgroundColor: 'rgba(32, 201, 151, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y1'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Sales (AED)'
+                                }
+                            },
+                            y1: {
+                                beginAtZero: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Transactions'
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Month'
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Monthly Delivery Performance Trends'
+                            }
+                        }
+                    }
+                });
+                
+                console.log('Monthly chart updated successfully');
+            } catch (error) {
+                console.error('Error updating monthly chart:', error);
+                showNotification('Error updating monthly chart', 'error');
             }
         }
 
         // Update target chart
         function updateTargetChart() {
+            console.log('Updating target chart...');
+            
             try {
                 const { branchSummary } = processSalesData();
                 const { targetData } = calculateTargetPlan(branchSummary);
@@ -1592,18 +1923,20 @@
                 const currentSales = branches.map(branch => branchSummary[branch].Total_Sales);
                 const targetSales = branches.map(branch => targetData[branch].Target_Sales);
                 
-                const ctx = document.getElementById('targetChart');
-                if (!ctx) return;
-                
-                const chartCtx = ctx.getContext('2d');
-                if (!chartCtx) return;
-                
-                // Destroy existing chart if it exists
-                if (window.targetChartInstance) {
-                    window.targetChartInstance.destroy();
+                const canvas = document.getElementById('targetChart');
+                if (!canvas) {
+                    console.error('Canvas element with ID "targetChart" not found');
+                    return;
                 }
                 
-                window.targetChartInstance = new Chart(chartCtx, {
+                const ctx = canvas.getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (chartInstances.target) {
+                    chartInstances.target.destroy();
+                }
+                
+                chartInstances.target = new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: branches,
@@ -1650,18 +1983,26 @@
                         }
                     }
                 });
-            } catch (e) {
-                console.error("Error updating target chart:", e);
+                
+                console.log('Target chart updated successfully');
+            } catch (error) {
+                console.error('Error updating target chart:', error);
+                showNotification('Error updating target chart', 'error');
             }
         }
 
         // Update branch table
         function updateBranchTable() {
+            console.log('Updating branch table...');
+            
             try {
                 const { branchSummary } = processSalesData();
                 
-                const tableBody = document.querySelector('#branchTable tbody');
-                if (!tableBody) return;
+                const tableBody = document.getElementById('branchTable').getElementsByTagName('tbody')[0];
+                if (!tableBody) {
+                    console.error('Table body for branchTable not found');
+                    return;
+                }
                 
                 tableBody.innerHTML = '';
                 
@@ -1675,18 +2016,26 @@
                     row.insertCell(3).textContent = `AED ${summary.Avg_Transaction_Value.toFixed(2)}`;
                     row.insertCell(4).textContent = `AED ${summary.Avg_Daily_Sales.toFixed(2)}`;
                 });
-            } catch (e) {
-                console.error("Error updating branch table:", e);
+                
+                console.log('Branch table updated successfully');
+            } catch (error) {
+                console.error('Error updating branch table:', error);
+                showNotification('Error updating branch table', 'error');
             }
         }
 
         // Update daily table
         function updateDailyTable() {
+            console.log('Updating daily table...');
+            
             try {
                 const { dailySummary } = processSalesData();
                 
-                const tableBody = document.querySelector('#dailyTable tbody');
-                if (!tableBody) return;
+                const tableBody = document.getElementById('dailyTable').getElementsByTagName('tbody')[0];
+                if (!tableBody) {
+                    console.error('Table body for dailyTable not found');
+                    return;
+                }
                 
                 tableBody.innerHTML = '';
                 
@@ -1700,19 +2049,94 @@
                     row.insertCell(3).textContent = `AED ${summary.Total_Sales.toFixed(2)}`;
                     row.insertCell(4).textContent = `AED ${summary.Avg_Transaction_Value.toFixed(2)}`;
                 });
-            } catch (e) {
-                console.error("Error updating daily table:", e);
+                
+                console.log('Daily table updated successfully');
+            } catch (error) {
+                console.error('Error updating daily table:', error);
+                showNotification('Error updating daily table', 'error');
+            }
+        }
+
+        // Update weekly table
+        function updateWeeklyTable() {
+            console.log('Updating weekly table...');
+            
+            try {
+                const { weeklySummary } = processSalesData();
+                
+                const tableBody = document.getElementById('weeklyTable').getElementsByTagName('tbody')[0];
+                if (!tableBody) {
+                    console.error('Table body for weeklyTable not found');
+                    return;
+                }
+                
+                tableBody.innerHTML = '';
+                
+                Object.keys(weeklySummary).sort().forEach(week => {
+                    const summary = weeklySummary[week];
+                    
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).textContent = `Week ${Object.keys(weeklySummary).indexOf(week) + 1}`;
+                    row.insertCell(1).textContent = summary.Week_Start;
+                    row.insertCell(2).textContent = summary.Week_End;
+                    row.insertCell(3).textContent = summary.Total_Transactions.toLocaleString();
+                    row.insertCell(4).textContent = `AED ${summary.Total_Sales.toFixed(2)}`;
+                    row.insertCell(5).textContent = `AED ${summary.Avg_Transaction_Value.toFixed(2)}`;
+                });
+                
+                console.log('Weekly table updated successfully');
+            } catch (error) {
+                console.error('Error updating weekly table:', error);
+                showNotification('Error updating weekly table', 'error');
+            }
+        }
+
+        // Update monthly table
+        function updateMonthlyTable() {
+            console.log('Updating monthly table...');
+            
+            try {
+                const { monthlySummary } = processSalesData();
+                
+                const tableBody = document.getElementById('monthlyTable').getElementsByTagName('tbody')[0];
+                if (!tableBody) {
+                    console.error('Table body for monthlyTable not found');
+                    return;
+                }
+                
+                tableBody.innerHTML = '';
+                
+                Object.keys(monthlySummary).sort().forEach(month => {
+                    const summary = monthlySummary[month];
+                    
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).textContent = new Date(summary.Year, summary.Month - 1).toLocaleDateString('en-US', { month: 'long' });
+                    row.insertCell(1).textContent = summary.Year;
+                    row.insertCell(2).textContent = summary.Total_Transactions.toLocaleString();
+                    row.insertCell(3).textContent = `AED ${summary.Total_Sales.toFixed(2)}`;
+                    row.insertCell(4).textContent = `AED ${summary.Avg_Transaction_Value.toFixed(2)}`;
+                });
+                
+                console.log('Monthly table updated successfully');
+            } catch (error) {
+                console.error('Error updating monthly table:', error);
+                showNotification('Error updating monthly table', 'error');
             }
         }
 
         // Update target table
         function updateTargetTable() {
+            console.log('Updating target table...');
+            
             try {
                 const { branchSummary } = processSalesData();
                 const { targetData } = calculateTargetPlan(branchSummary);
                 
-                const tableBody = document.querySelector('#targetTable tbody');
-                if (!tableBody) return;
+                const tableBody = document.getElementById('targetTable').getElementsByTagName('tbody')[0];
+                if (!tableBody) {
+                    console.error('Table body for targetTable not found');
+                    return;
+                }
                 
                 tableBody.innerHTML = '';
                 
@@ -1728,23 +2152,29 @@
                     row.insertCell(4).textContent = `AED ${target.Target_Sales.toFixed(2)}`;
                     row.insertCell(5).textContent = `AED ${target.Target_Increase.toFixed(2)}`;
                 });
-            } catch (e) {
-                console.error("Error updating target table:", e);
+                
+                console.log('Target table updated successfully');
+            } catch (error) {
+                console.error('Error updating target table:', error);
+                showNotification('Error updating target table', 'error');
             }
         }
 
         // Update current data table
         function updateCurrentDataTable() {
+            console.log('Updating current data table...');
+            
             try {
-                const tableBody = document.querySelector('#currentDataTable tbody');
-                if (!tableBody) return;
+                const tableBody = document.getElementById('currentDataTable').getElementsByTagName('tbody')[0];
+                if (!tableBody) {
+                    console.error('Table body for currentDataTable not found');
+                    return;
+                }
                 
                 tableBody.innerHTML = '';
                 
                 salesData.forEach((entry, index) => {
                     const row = tableBody.insertRow();
-                    row.className = 'table-row-hover';
-                    
                     row.insertCell(0).textContent = entry.Date;
                     row.insertCell(1).textContent = entry.Branch;
                     row.insertCell(2).textContent = entry.Channel;
@@ -1753,121 +2183,75 @@
                     
                     const actionsCell = row.insertCell(5);
                     actionsCell.innerHTML = `
-                        <div class="action-buttons">
-                            <button class="btn btn-sm btn-primary" onclick="editEntry(${index})">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteEntry(${index})">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
-                        </div>
+                        <button class="btn btn-sm btn-danger" onclick="deleteEntry(${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     `;
                 });
-            } catch (e) {
-                console.error("Error updating current data table:", e);
+                
+                console.log('Current data table updated successfully');
+            } catch (error) {
+                console.error('Error updating current data table:', error);
+                showNotification('Error updating current data table', 'error');
             }
-        }
-
-        // Edit entry
-        function editEntry(index) {
-            const entry = salesData[index];
-            
-            // Pre-fill the form
-            document.getElementById('entryDate').value = entry.Date;
-            document.getElementById('entryBranch').value = entry.Branch;
-            document.getElementById('entryChannel').value = entry.Channel;
-            document.getElementById('entryTransactions').value = entry.Transactions;
-            document.getElementById('entrySales').value = entry.Sales;
-            
-            // Set edit index
-            document.getElementById('editIndex').value = index;
-            
-            // Update form title and button
-            document.getElementById('formTitle').textContent = 'Edit Sales Data';
-            document.getElementById('submitButtonText').textContent = 'Update Entry';
-            
-            // Scroll to form
-            document.getElementById('dataEntryForm').scrollIntoView({ behavior: 'smooth' });
         }
 
         // Delete entry
         function deleteEntry(index) {
-            const entry = salesData[index];
+            console.log('Deleting entry at index:', index);
             
-            // Show confirmation dialog
-            showConfirmationDialog(
-                'Confirm Deletion',
-                'Are you sure you want to delete this entry?',
-                `<strong>Date:</strong> ${entry.Date}<br>
-                 <strong>Branch:</strong> ${entry.Branch}<br>
-                 <strong>Channel:</strong> ${entry.Channel}<br>
-                 <strong>Transactions:</strong> ${entry.Transactions}<br>
-                 <strong>Sales:</strong> AED ${entry.Sales.toFixed(2)}`,
-                () => {
-                    salesData.splice(index, 1);
-                    updateCurrentDataTable();
-                    updateDashboard();
-                    updateDataStatus(false);
-                    showNotification('Entry deleted successfully!', 'success');
-                }
-            );
+            try {
+                salesData.splice(index, 1);
+                updateCurrentDataTable();
+                updateDataStatus(false);
+                updateDashboard();
+                showNotification('Entry deleted successfully', 'success');
+            } catch (error) {
+                console.error('Error deleting entry:', error);
+                showNotification('Error deleting entry', 'error');
+            }
         }
 
-        // Clear all data
-        function clearAllData() {
-            // Double-click confirmation
-            const clearBtn = document.getElementById('clearAllDataBtn');
-            let clickCount = 0;
+        // Update dashboard
+        function updateDashboard() {
+            console.log('Updating dashboard...');
             
-            clearBtn.addEventListener('click', function() {
-                clickCount++;
-                
-                if (clickCount === 1) {
-                    // First click: show message
-                    showNotification('Double-click to confirm clearing all data!', 'info');
-                    
-                    // Reset click count after 3 seconds
-                    setTimeout(() => {
-                        clickCount = 0;
-                    }, 3000);
-                } else if (clickCount === 2) {
-                    // Second click: clear data
-                    showConfirmationDialog(
-                        'Confirm Clear All Data',
-                        'Are you sure you want to clear all data? This action cannot be undone.',
-                        '',
-                        () => {
-                            salesData = [];
-                            updateCurrentDataTable();
-                            updateDashboard();
-                            updateDataStatus(false);
-                            showNotification('All data cleared!', 'success');
-                        }
-                    );
-                    
-                    // Reset click count
-                    clickCount = 0;
-                }
-            });
+            try {
+                updateDashboardMetrics();
+                updateBranchChart();
+                updateDailyChart();
+                updateWeeklyChart();
+                updateMonthlyChart();
+                updateTargetChart();
+                updateBranchTable();
+                updateDailyTable();
+                updateWeeklyTable();
+                updateMonthlyTable();
+                updateTargetTable();
+                console.log('Dashboard updated successfully');
+            } catch (error) {
+                console.error('Error updating dashboard:', error);
+                showNotification('Error updating dashboard', 'error');
+            }
         }
 
         // Update management report
         function updateManagementReport() {
+            console.log('Updating management report...');
+            
             try {
-                const { branchSummary, dailySummary } = processSalesData();
+                const { branchSummary, dailySummary, weeklySummary, monthlySummary } = processSalesData();
                 const { targetData, overallTarget } = calculateTargetPlan(branchSummary);
                 
                 // Set report date
                 const now = new Date();
-                const reportDateElement = document.getElementById('reportDate');
-                if (reportDateElement) reportDateElement.textContent = now.toLocaleDateString();
+                document.getElementById('reportDate').textContent = now.toLocaleDateString();
                 
                 // Set report period
                 const dates = Object.keys(dailySummary).map(date => new Date(date));
                 const minDate = new Date(Math.min(...dates));
                 const maxDate = new Date(Math.max(...dates));
-                const reportPeriodElement = document.getElementById('reportPeriod');
-                if (reportPeriodElement) reportPeriodElement.textContent = 
+                document.getElementById('reportPeriod').textContent = 
                     `${minDate.toLocaleDateString()} to ${maxDate.toLocaleDateString()}`;
                 
                 // Calculate total metrics
@@ -1881,19 +2265,6 @@
                 
                 const avgTransaction = totalSales / totalTransactions;
                 
-                // Update executive summary
-                const execTotalSalesElement = document.getElementById('execTotalSales');
-                if (execTotalSalesElement) execTotalSalesElement.textContent = totalSales.toFixed(2);
-                
-                const execTargetElement = document.getElementById('execTarget');
-                if (execTargetElement) execTargetElement.textContent = overallTarget.toFixed(2);
-                
-                const execTransactionsElement = document.getElementById('execTransactions');
-                if (execTransactionsElement) execTransactionsElement.textContent = totalTransactions.toLocaleString();
-                
-                const execAvgValueElement = document.getElementById('execAvgValue');
-                if (execAvgValueElement) execAvgValueElement.textContent = avgTransaction.toFixed(2);
-                
                 // Find peak day
                 let peakDay = '';
                 let peakSales = 0;
@@ -1904,12 +2275,6 @@
                         peakDay = date;
                     }
                 });
-                
-                const execPeakDayElement = document.getElementById('execPeakDay');
-                if (execPeakDayElement) execPeakDayElement.textContent = peakDay;
-                
-                const execPeakSalesElement = document.getElementById('execPeakSales');
-                if (execPeakSalesElement) execPeakSalesElement.textContent = peakSales.toFixed(2);
                 
                 // Find top branch
                 let topBranch = '';
@@ -1922,15 +2287,18 @@
                     }
                 });
                 
-                const execTopBranchElement = document.getElementById('execTopBranch');
-                if (execTopBranchElement) execTopBranchElement.textContent = topBranch;
-                
-                const execTopBranchSalesElement = document.getElementById('execTopBranchSales');
-                if (execTopBranchSalesElement) execTopBranchSalesElement.textContent = topBranchSales.toFixed(2);
+                // Update executive summary
+                document.getElementById('execTotalSales').textContent = totalSales.toFixed(2);
+                document.getElementById('execTarget').textContent = overallTarget.toFixed(2);
+                document.getElementById('execTransactions').textContent = totalTransactions.toLocaleString();
+                document.getElementById('execAvgValue').textContent = avgTransaction.toFixed(2);
+                document.getElementById('execPeakDay').textContent = peakDay;
+                document.getElementById('execPeakSales').textContent = peakSales.toFixed(2);
+                document.getElementById('execTopBranch').textContent = topBranch;
+                document.getElementById('execTopBranchSales').textContent = topBranchSales.toFixed(2);
                 
                 // Update report findings
-                const reportTopBranchElement = document.getElementById('reportTopBranch');
-                if (reportTopBranchElement) reportTopBranchElement.textContent = topBranch;
+                document.getElementById('reportTopBranch').textContent = topBranch;
                 
                 let highValueBranch = '';
                 let highValue = 0;
@@ -1942,26 +2310,19 @@
                     }
                 });
                 
-                const reportHighValueBranchElement = document.getElementById('reportHighValueBranch');
-                if (reportHighValueBranchElement) reportHighValueBranchElement.textContent = highValueBranch;
+                document.getElementById('reportHighValueBranch').textContent = highValueBranch;
                 
                 const sortedBranches = Object.keys(branchSummary).sort((a, b) => 
                     branchSummary[a].Total_Sales - branchSummary[b].Total_Sales
                 );
                 
-                const reportLowBranchesElement = document.getElementById('reportLowBranches');
-                if (reportLowBranchesElement) reportLowBranchesElement.textContent = 
+                document.getElementById('reportLowBranches').textContent = 
                     sortedBranches.slice(0, 2).join(', ');
                 
                 // Update daily trends
-                const reportPeakDayElement = document.getElementById('reportPeakDay');
-                if (reportPeakDayElement) reportPeakDayElement.textContent = peakDay;
-                
-                const reportPeakDayOfWeekElement = document.getElementById('reportPeakDayOfWeek');
-                if (reportPeakDayOfWeekElement) reportPeakDayOfWeekElement.textContent = dailySummary[peakDay].Day_of_Week;
-                
-                const reportPeakDaySalesElement = document.getElementById('reportPeakDaySales');
-                if (reportPeakDaySalesElement) reportPeakDaySalesElement.textContent = peakSales.toFixed(2);
+                document.getElementById('reportPeakDay').textContent = peakDay;
+                document.getElementById('reportPeakDayOfWeek').textContent = dailySummary[peakDay].Day_of_Week;
+                document.getElementById('reportPeakDaySales').textContent = peakSales.toFixed(2);
                 
                 let lowDay = '';
                 let lowSales = Number.MAX_VALUE;
@@ -1973,14 +2334,9 @@
                     }
                 });
                 
-                const reportLowDayElement = document.getElementById('reportLowDay');
-                if (reportLowDayElement) reportLowDayElement.textContent = lowDay;
-                
-                const reportLowDayOfWeekElement = document.getElementById('reportLowDayOfWeek');
-                if (reportLowDayOfWeekElement) reportLowDayOfWeekElement.textContent = dailySummary[lowDay].Day_of_Week;
-                
-                const reportLowDaySalesElement = document.getElementById('reportLowDaySales');
-                if (reportLowDaySalesElement) reportLowDaySalesElement.textContent = lowSales.toFixed(2);
+                document.getElementById('reportLowDay').textContent = lowDay;
+                document.getElementById('reportLowDayOfWeek').textContent = dailySummary[lowDay].Day_of_Week;
+                document.getElementById('reportLowDaySales').textContent = lowSales.toFixed(2);
                 
                 // Calculate weekend vs weekday averages
                 let weekendSales = 0;
@@ -2002,38 +2358,100 @@
                 const weekendAvg = weekendCount > 0 ? weekendSales / weekendCount : 0;
                 const weekdayAvg = weekdayCount > 0 ? weekdaySales / weekdayCount : 0;
                 
-                const reportWeekendAvgElement = document.getElementById('reportWeekendAvg');
-                if (reportWeekendAvgElement) reportWeekendAvgElement.textContent = weekendAvg.toFixed(2);
+                document.getElementById('reportWeekendAvg').textContent = weekendAvg.toFixed(2);
+                document.getElementById('reportWeekdayAvg').textContent = weekdayAvg.toFixed(2);
                 
-                const reportWeekdayAvgElement = document.getElementById('reportWeekdayAvg');
-                if (reportWeekdayAvgElement) reportWeekdayAvgElement.textContent = weekdayAvg.toFixed(2);
+                // Update weekly trends
+                let peakWeek = '';
+                let peakWeekSales = 0;
+                
+                Object.keys(weeklySummary).forEach(week => {
+                    if (weeklySummary[week].Total_Sales > peakWeekSales) {
+                        peakWeekSales = weeklySummary[week].Total_Sales;
+                        peakWeek = week;
+                    }
+                });
+                
+                document.getElementById('reportPeakWeek').textContent = `Week ${Object.keys(weeklySummary).indexOf(peakWeek) + 1}`;
+                document.getElementById('reportPeakWeekSales').textContent = peakWeekSales.toFixed(2);
+                
+                let lowWeek = '';
+                let lowWeekSales = Number.MAX_VALUE;
+                
+                Object.keys(weeklySummary).forEach(week => {
+                    if (weeklySummary[week].Total_Sales < lowWeekSales) {
+                        lowWeekSales = weeklySummary[week].Total_Sales;
+                        lowWeek = week;
+                    }
+                });
+                
+                document.getElementById('reportLowWeek').textContent = `Week ${Object.keys(weeklySummary).indexOf(lowWeek) + 1}`;
+                document.getElementById('reportLowWeekSales').textContent = lowWeekSales.toFixed(2);
+                
+                // Update monthly trends
+                let peakMonth = '';
+                let peakMonthSales = 0;
+                
+                Object.keys(monthlySummary).forEach(month => {
+                    if (monthlySummary[month].Total_Sales > peakMonthSales) {
+                        peakMonthSales = monthlySummary[month].Total_Sales;
+                        peakMonth = month;
+                    }
+                });
+                
+                const peakMonthData = monthlySummary[peakMonth];
+                document.getElementById('reportPeakMonth').textContent = new Date(peakMonthData.Year, peakMonthData.Month - 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                document.getElementById('reportPeakMonthSales').textContent = peakMonthSales.toFixed(2);
+                
+                let lowMonth = '';
+                let lowMonthSales = Number.MAX_VALUE;
+                
+                Object.keys(monthlySummary).forEach(month => {
+                    if (monthlySummary[month].Total_Sales < lowMonthSales) {
+                        lowMonthSales = monthlySummary[month].Total_Sales;
+                        lowMonth = month;
+                    }
+                });
+                
+                const lowMonthData = monthlySummary[lowMonth];
+                document.getElementById('reportLowMonth').textContent = new Date(lowMonthData.Year, lowMonthData.Month - 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                document.getElementById('reportLowMonthSales').textContent = lowMonthSales.toFixed(2);
                 
                 // Update target plan
-                const reportOverallTargetElement = document.getElementById('reportOverallTarget');
-                if (reportOverallTargetElement) reportOverallTargetElement.textContent = overallTarget.toFixed(2);
-                
-                const reportCurrentTotalElement = document.getElementById('reportCurrentTotal');
-                if (reportCurrentTotalElement) reportCurrentTotalElement.textContent = totalSales.toFixed(2);
+                document.getElementById('reportOverallTarget').textContent = overallTarget.toFixed(2);
+                document.getElementById('reportCurrentTotal').textContent = totalSales.toFixed(2);
                 
                 // Update report tables
                 updateReportBranchTable(branchSummary);
                 updateReportDailyTable(dailySummary);
+                updateReportWeeklyTable(weeklySummary);
+                updateReportMonthlyTable(monthlySummary);
                 updateReportTargetTable(branchSummary, targetData);
                 
                 // Update report charts
                 updateReportBranchChart(branchSummary);
                 updateReportDailyChart(dailySummary);
+                updateReportWeeklyChart(weeklySummary);
+                updateReportMonthlyChart(monthlySummary);
                 updateReportTargetChart(branchSummary, targetData);
-            } catch (e) {
-                console.error("Error updating management report:", e);
+                
+                console.log('Management report updated successfully');
+            } catch (error) {
+                console.error('Error updating management report:', error);
+                showNotification('Error updating management report', 'error');
             }
         }
 
         // Update report branch table
         function updateReportBranchTable(branchSummary) {
+            console.log('Updating report branch table...');
+            
             try {
                 const tableBody = document.getElementById('reportBranchTableBody');
-                if (!tableBody) return;
+                if (!tableBody) {
+                    console.error('Table body for reportBranchTableBody not found');
+                    return;
+                }
                 
                 tableBody.innerHTML = '';
                 
@@ -2047,16 +2465,24 @@
                     row.insertCell(3).textContent = summary.Avg_Transaction_Value.toFixed(2);
                     row.insertCell(4).textContent = summary.Avg_Daily_Sales.toFixed(2);
                 });
-            } catch (e) {
-                console.error("Error updating report branch table:", e);
+                
+                console.log('Report branch table updated successfully');
+            } catch (error) {
+                console.error('Error updating report branch table:', error);
+                showNotification('Error updating report branch table', 'error');
             }
         }
 
         // Update report daily table
         function updateReportDailyTable(dailySummary) {
+            console.log('Updating report daily table...');
+            
             try {
                 const tableBody = document.getElementById('reportDailyTableBody');
-                if (!tableBody) return;
+                if (!tableBody) {
+                    console.error('Table body for reportDailyTableBody not found');
+                    return;
+                }
                 
                 tableBody.innerHTML = '';
                 
@@ -2070,16 +2496,87 @@
                     row.insertCell(3).textContent = summary.Total_Sales.toFixed(2);
                     row.insertCell(4).textContent = summary.Avg_Transaction_Value.toFixed(2);
                 });
-            } catch (e) {
-                console.error("Error updating report daily table:", e);
+                
+                console.log('Report daily table updated successfully');
+            } catch (error) {
+                console.error('Error updating report daily table:', error);
+                showNotification('Error updating report daily table', 'error');
+            }
+        }
+
+        // Update report weekly table
+        function updateReportWeeklyTable(weeklySummary) {
+            console.log('Updating report weekly table...');
+            
+            try {
+                const tableBody = document.getElementById('reportWeeklyTableBody');
+                if (!tableBody) {
+                    console.error('Table body for reportWeeklyTableBody not found');
+                    return;
+                }
+                
+                tableBody.innerHTML = '';
+                
+                Object.keys(weeklySummary).sort().forEach(week => {
+                    const summary = weeklySummary[week];
+                    
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).textContent = `Week ${Object.keys(weeklySummary).indexOf(week) + 1}`;
+                    row.insertCell(1).textContent = summary.Week_Start;
+                    row.insertCell(2).textContent = summary.Week_End;
+                    row.insertCell(3).textContent = summary.Total_Transactions.toLocaleString();
+                    row.insertCell(4).textContent = summary.Total_Sales.toFixed(2);
+                    row.insertCell(5).textContent = summary.Avg_Transaction_Value.toFixed(2);
+                });
+                
+                console.log('Report weekly table updated successfully');
+            } catch (error) {
+                console.error('Error updating report weekly table:', error);
+                showNotification('Error updating report weekly table', 'error');
+            }
+        }
+
+        // Update report monthly table
+        function updateReportMonthlyTable(monthlySummary) {
+            console.log('Updating report monthly table...');
+            
+            try {
+                const tableBody = document.getElementById('reportMonthlyTableBody');
+                if (!tableBody) {
+                    console.error('Table body for reportMonthlyTableBody not found');
+                    return;
+                }
+                
+                tableBody.innerHTML = '';
+                
+                Object.keys(monthlySummary).sort().forEach(month => {
+                    const summary = monthlySummary[month];
+                    
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).textContent = new Date(summary.Year, summary.Month - 1).toLocaleDateString('en-US', { month: 'long' });
+                    row.insertCell(1).textContent = summary.Year;
+                    row.insertCell(2).textContent = summary.Total_Transactions.toLocaleString();
+                    row.insertCell(3).textContent = summary.Total_Sales.toFixed(2);
+                    row.insertCell(4).textContent = summary.Avg_Transaction_Value.toFixed(2);
+                });
+                
+                console.log('Report monthly table updated successfully');
+            } catch (error) {
+                console.error('Error updating report monthly table:', error);
+                showNotification('Error updating report monthly table', 'error');
             }
         }
 
         // Update report target table
         function updateReportTargetTable(branchSummary, targetData) {
+            console.log('Updating report target table...');
+            
             try {
                 const tableBody = document.getElementById('reportTargetTableBody');
-                if (!tableBody) return;
+                if (!tableBody) {
+                    console.error('Table body for reportTargetTableBody not found');
+                    return;
+                }
                 
                 tableBody.innerHTML = '';
                 
@@ -2095,29 +2592,36 @@
                     row.insertCell(4).textContent = target.Target_Sales.toFixed(2);
                     row.insertCell(5).textContent = target.Target_Increase.toFixed(2);
                 });
-            } catch (e) {
-                console.error("Error updating report target table:", e);
+                
+                console.log('Report target table updated successfully');
+            } catch (error) {
+                console.error('Error updating report target table:', error);
+                showNotification('Error updating report target table', 'error');
             }
         }
 
         // Update report branch chart
         function updateReportBranchChart(branchSummary) {
+            console.log('Updating report branch chart...');
+            
             try {
                 const branches = Object.keys(branchSummary);
                 const sales = branches.map(branch => branchSummary[branch].Total_Sales);
                 
-                const ctx = document.getElementById('reportBranchChart');
-                if (!ctx) return;
-                
-                const chartCtx = ctx.getContext('2d');
-                if (!chartCtx) return;
-                
-                // Destroy existing chart if it exists
-                if (window.reportBranchChartInstance) {
-                    window.reportBranchChartInstance.destroy();
+                const canvas = document.getElementById('reportBranchChart');
+                if (!canvas) {
+                    console.error('Canvas element with ID "reportBranchChart" not found');
+                    return;
                 }
                 
-                window.reportBranchChartInstance = new Chart(chartCtx, {
+                const ctx = canvas.getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (chartInstances.reportBranch) {
+                    chartInstances.reportBranch.destroy();
+                }
+                
+                chartInstances.reportBranch = new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: branches,
@@ -2174,30 +2678,37 @@
                         }
                     }
                 });
-            } catch (e) {
-                console.error("Error updating report branch chart:", e);
+                
+                console.log('Report branch chart updated successfully');
+            } catch (error) {
+                console.error('Error updating report branch chart:', error);
+                showNotification('Error updating report branch chart', 'error');
             }
         }
 
         // Update report daily chart
         function updateReportDailyChart(dailySummary) {
+            console.log('Updating report daily chart...');
+            
             try {
                 const dates = Object.keys(dailySummary).sort();
                 const sales = dates.map(date => dailySummary[date].Total_Sales);
                 const transactions = dates.map(date => dailySummary[date].Total_Transactions);
                 
-                const ctx = document.getElementById('reportDailyChart');
-                if (!ctx) return;
-                
-                const chartCtx = ctx.getContext('2d');
-                if (!chartCtx) return;
-                
-                // Destroy existing chart if it exists
-                if (window.reportDailyChartInstance) {
-                    window.reportDailyChartInstance.destroy();
+                const canvas = document.getElementById('reportDailyChart');
+                if (!canvas) {
+                    console.error('Canvas element with ID "reportDailyChart" not found');
+                    return;
                 }
                 
-                window.reportDailyChartInstance = new Chart(chartCtx, {
+                const ctx = canvas.getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (chartInstances.reportDaily) {
+                    chartInstances.reportDaily.destroy();
+                }
+                
+                chartInstances.reportDaily = new Chart(ctx, {
                     type: 'line',
                     data: {
                         labels: dates,
@@ -2262,30 +2773,230 @@
                         }
                     }
                 });
-            } catch (e) {
-                console.error("Error updating report daily chart:", e);
+                
+                console.log('Report daily chart updated successfully');
+            } catch (error) {
+                console.error('Error updating report daily chart:', error);
+                showNotification('Error updating report daily chart', 'error');
+            }
+        }
+
+        // Update report weekly chart
+        function updateReportWeeklyChart(weeklySummary) {
+            console.log('Updating report weekly chart...');
+            
+            try {
+                const weeks = Object.keys(weeklySummary).sort();
+                const sales = weeks.map(week => weeklySummary[week].Total_Sales);
+                const transactions = weeks.map(week => weeklySummary[week].Total_Transactions);
+                
+                const canvas = document.getElementById('reportWeeklyChart');
+                if (!canvas) {
+                    console.error('Canvas element with ID "reportWeeklyChart" not found');
+                    return;
+                }
+                
+                const ctx = canvas.getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (chartInstances.reportWeekly) {
+                    chartInstances.reportWeekly.destroy();
+                }
+                
+                chartInstances.reportWeekly = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: weeks.map(week => `Week ${weeks.indexOf(week) + 1}`),
+                        datasets: [
+                            {
+                                label: 'Sales (AED)',
+                                data: sales,
+                                borderColor: 'rgba(220, 53, 69, 1)',
+                                backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: 'Transactions',
+                                data: transactions,
+                                borderColor: 'rgba(32, 201, 151, 1)',
+                                backgroundColor: 'rgba(32, 201, 151, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y1'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Sales (AED)'
+                                }
+                            },
+                            y1: {
+                                beginAtZero: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Transactions'
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Week'
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Weekly Delivery Performance Trends'
+                            }
+                        }
+                    }
+                });
+                
+                console.log('Report weekly chart updated successfully');
+            } catch (error) {
+                console.error('Error updating report weekly chart:', error);
+                showNotification('Error updating report weekly chart', 'error');
+            }
+        }
+
+        // Update report monthly chart
+        function updateReportMonthlyChart(monthlySummary) {
+            console.log('Updating report monthly chart...');
+            
+            try {
+                const months = Object.keys(monthlySummary).sort();
+                const sales = months.map(month => monthlySummary[month].Total_Sales);
+                const transactions = months.map(month => monthlySummary[month].Total_Transactions);
+                
+                const canvas = document.getElementById('reportMonthlyChart');
+                if (!canvas) {
+                    console.error('Canvas element with ID "reportMonthlyChart" not found');
+                    return;
+                }
+                
+                const ctx = canvas.getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (chartInstances.reportMonthly) {
+                    chartInstances.reportMonthly.destroy();
+                }
+                
+                chartInstances.reportMonthly = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: months.map(month => {
+                            const [year, monthNum] = month.split('-');
+                            return new Date(year, monthNum - 1).toLocaleDateString('en-US', { month: 'short' });
+                        }),
+                        datasets: [
+                            {
+                                label: 'Sales (AED)',
+                                data: sales,
+                                borderColor: 'rgba(220, 53, 69, 1)',
+                                backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: 'Transactions',
+                                data: transactions,
+                                borderColor: 'rgba(32, 201, 151, 1)',
+                                backgroundColor: 'rgba(32, 201, 151, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y1'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Sales (AED)'
+                                }
+                            },
+                            y1: {
+                                beginAtZero: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Transactions'
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Month'
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Monthly Delivery Performance Trends'
+                            }
+                        }
+                    }
+                });
+                
+                console.log('Report monthly chart updated successfully');
+            } catch (error) {
+                console.error('Error updating report monthly chart:', error);
+                showNotification('Error updating report monthly chart', 'error');
             }
         }
 
         // Update report target chart
         function updateReportTargetChart(branchSummary, targetData) {
+            console.log('Updating report target chart...');
+            
             try {
                 const branches = Object.keys(branchSummary);
                 const currentSales = branches.map(branch => branchSummary[branch].Total_Sales);
                 const targetSales = branches.map(branch => targetData[branch].Target_Sales);
                 
-                const ctx = document.getElementById('reportTargetChart');
-                if (!ctx) return;
-                
-                const chartCtx = ctx.getContext('2d');
-                if (!chartCtx) return;
-                
-                // Destroy existing chart if it exists
-                if (window.reportTargetChartInstance) {
-                    window.reportTargetChartInstance.destroy();
+                const canvas = document.getElementById('reportTargetChart');
+                if (!canvas) {
+                    console.error('Canvas element with ID "reportTargetChart" not found');
+                    return;
                 }
                 
-                window.reportTargetChartInstance = new Chart(chartCtx, {
+                const ctx = canvas.getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (chartInstances.reportTarget) {
+                    chartInstances.reportTarget.destroy();
+                }
+                
+                chartInstances.reportTarget = new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: branches,
@@ -2332,187 +3043,64 @@
                         }
                     }
                 });
-            } catch (e) {
-                console.error("Error updating report target chart:", e);
+                
+                console.log('Report target chart updated successfully');
+            } catch (error) {
+                console.error('Error updating report target chart:', error);
+                showNotification('Error updating report target chart', 'error');
             }
         }
 
-        // Download report as text file
-        function downloadReport() {
+        // Add data entry
+        function addDataEntry() {
+            console.log('Adding data entry...');
+            
             try {
-                const { branchSummary, dailySummary } = processSalesData();
-                const { targetData, overallTarget } = calculateTargetPlan(branchSummary);
+                const date = document.getElementById('entryDate').value;
+                const branch = document.getElementById('entryBranch').value;
+                const channel = document.getElementById('entryChannel').value;
+                const transactions = parseInt(document.getElementById('entryTransactions').value);
+                const sales = parseFloat(document.getElementById('entrySales').value);
                 
-                // Calculate total metrics
-                let totalSales = 0;
-                let totalTransactions = 0;
+                // Validate inputs
+                if (!date || !branch || !channel || isNaN(transactions) || isNaN(sales)) {
+                    showNotification('Please fill all fields with valid data', 'error');
+                    return;
+                }
                 
-                Object.keys(branchSummary).forEach(branch => {
-                    totalSales += branchSummary[branch].Total_Sales;
-                    totalTransactions += branchSummary[branch].Total_Transactions;
+                // Add to sales data
+                salesData.push({
+                    Date: date,
+                    Branch: branch,
+                    Channel: channel,
+                    Transactions: transactions,
+                    Sales: sales
                 });
                 
-                const avgTransaction = totalSales / totalTransactions;
+                // Update UI
+                updateCurrentDataTable();
+                updateDataStatus(false);
+                updateDashboard();
                 
-                // Find peak day
-                let peakDay = '';
-                let peakSales = 0;
+                // Reset form
+                document.getElementById('dataEntryForm').reset();
                 
-                Object.keys(dailySummary).forEach(date => {
-                    if (dailySummary[date].Total_Sales > peakSales) {
-                        peakSales = dailySummary[date].Total_Sales;
-                        peakDay = date;
-                    }
-                });
-                
-                // Find top branch
-                let topBranch = '';
-                let topBranchSales = 0;
-                
-                Object.keys(branchSummary).forEach(branch => {
-                    if (branchSummary[branch].Total_Sales > topBranchSales) {
-                        topBranchSales = branchSummary[branch].Total_Sales;
-                        topBranch = branch;
-                    }
-                });
-                
-                // Create report text
-                const reportText = `CRISPY CHICKEN DELIVERY PERFORMANCE REPORT
-========================================
-Report Date: ${new Date().toLocaleDateString()}
-Data Period: ${Object.keys(dailySummary).map(date => new Date(date)).reduce((min, date) => date < min ? date : min).toLocaleDateString()} to ${Object.keys(dailySummary).map(date => new Date(date)).reduce((max, date) => date > max ? date : max).toLocaleDateString()}
-
-EXECUTIVE SUMMARY
------------------
-Total Current Sales: AED ${totalSales.toFixed(2)}
-Overall Target: AED ${overallTarget.toFixed(2)} (10% increase)
-Total Transactions: ${totalTransactions.toLocaleString()}
-Average Transaction Value: AED ${avgTransaction.toFixed(2)}
-
-BRANCH PERFORMANCE
-------------------
- ${Object.keys(branchSummary).map(branch => 
-    `${branch}: ${branchSummary[branch].Total_Transactions.toLocaleString()} transactions, AED ${branchSummary[branch].Total_Sales.toFixed(2)} sales, AED ${branchSummary[branch].Avg_Transaction_Value.toFixed(2)} avg transaction`
-).join('\n')}
-
-DAILY TRENDS
-------------
- ${Object.keys(dailySummary).sort().map(date => 
-    `${date} (${dailySummary[date].Day_of_Week}): ${dailySummary[date].Total_Transactions.toLocaleString()} transactions, AED ${dailySummary[date].Total_Sales.toFixed(2)} sales, AED ${dailySummary[date].Avg_Transaction_Value.toFixed(2)} avg transaction`
-).join('\n')}
-
-TARGET PLAN
------------
- ${Object.keys(branchSummary).map(branch => 
-    `${branch}: Current AED ${branchSummary[branch].Total_Sales.toFixed(2)}, Target AED ${targetData[branch].Target_Sales.toFixed(2)}, Increase AED ${targetData[branch].Target_Increase.toFixed(2)}`
-).join('\n')}
-
-MANAGEMENT RECOMMENDATIONS
---------------------------
-1. Operational Improvements:
-   - Implement demand forecasting for peak days (especially weekends)
-   - Optimize staff scheduling based on historical delivery patterns
-   - Standardize order processing across all branches
-
-2. Performance Monitoring:
-   - Track daily performance against targets with weekly reviews
-   - Implement real-time dashboard for delivery metrics
-   - Conduct monthly performance reviews with branch managers
-
-3. Growth Initiatives:
-   - Launch loyalty program for repeat delivery customers
-   - Introduce time-based promotions during low-traffic periods
-   - Explore partnerships with food delivery platforms for wider reach
-
-4. Resource Allocation:
-   - Allocate additional delivery staff to high-performing branches during peak hours
-   - Invest in training programs for underperforming branches
-   - Consider menu adjustments based on local preferences at low-performing branches
-
-5. Performance Incentives:
-   - Implement bonus structure for branches exceeding targets
-   - Recognize top-performing branches in company communications
-   - Create healthy competition between branches with monthly performance awards
-
----
-Report generated on: ${new Date().toLocaleDateString()}`;
-                
-                // Create download link
-                const blob = new Blob([reportText], { type: 'text/plain' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `Crispy_Chicken_Report_${new Date().toISOString().split('T')[0]}.txt`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                
-                showNotification('Report downloaded successfully!', 'success');
-            } catch (e) {
-                console.error("Error downloading report:", e);
-                showNotification('Error downloading report!', 'error');
+                showNotification('Data entry added successfully', 'success');
+            } catch (error) {
+                console.error('Error adding data entry:', error);
+                showNotification('Error adding data entry', 'error');
             }
         }
 
-        // Export data to CSV
-        function exportDataToCSV() {
-            try {
-                let csv = 'Date,Branch,Channel,Transactions,Sales\n';
-                
-                salesData.forEach(entry => {
-                    csv += `${entry.Date},${entry.Branch},${entry.Channel},${entry.Transactions},${entry.Sales}\n`;
-                });
-                
-                const blob = new Blob([csv], { type: 'text/csv' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `Crispy_Chicken_Sales_Data_${new Date().toISOString().split('T')[0]}.csv`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                
-                showNotification('Data exported successfully!', 'success');
-            } catch (e) {
-                console.error("Error exporting data to CSV:", e);
-                showNotification('Error exporting data!', 'error');
-            }
+        // Trigger file load
+        function triggerFileLoad() {
+            document.getElementById('fileInput').click();
         }
 
-        // Save data to file
-        function saveDataToFile() {
-            try {
-                const dataStr = JSON.stringify(salesData);
-                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-                
-                const exportFileDefaultName = `Crispy_Chicken_Sales_Data_${new Date().toISOString().split('T')[0]}.json`;
-                
-                const linkElement = document.createElement('a');
-                linkElement.setAttribute('href', dataUri);
-                linkElement.setAttribute('download', exportFileDefaultName);
-                linkElement.click();
-                
-                showNotification('Data saved to file successfully!', 'success');
-            } catch (e) {
-                console.error("Error saving data to file:", e);
-                showNotification('Error saving data to file!', 'error');
-            }
-        }
-
-        // Load data from file
-        function loadDataFromFile() {
-            try {
-                document.getElementById('fileInput').click();
-            } catch (e) {
-                console.error("Error loading data from file:", e);
-                showNotification('Error loading data!', 'error');
-            }
-        }
-
-        // Handle file input change
-        function handleFileSelect(event) {
+        // Handle file load
+        function handleFileLoad(event) {
+            console.log('Handling file load...');
+            
             try {
                 const file = event.target.files[0];
                 if (!file) return;
@@ -2520,11 +3108,13 @@ Report generated on: ${new Date().toLocaleDateString()}`;
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     try {
+                        const content = e.target.result;
+                        
                         if (file.name.endsWith('.json')) {
-                            salesData = JSON.parse(e.target.result);
+                            salesData = JSON.parse(content);
                         } else if (file.name.endsWith('.csv')) {
-                            // Simple CSV parsing (in a real app, use a proper CSV parser)
-                            const lines = e.target.result.split('\n');
+                            // Simple CSV parser
+                            const lines = content.split('\n');
                             const headers = lines[0].split(',');
                             
                             salesData = [];
@@ -2544,340 +3134,93 @@ Report generated on: ${new Date().toLocaleDateString()}`;
                         
                         updateCurrentDataTable();
                         updateDashboard();
-                        saveDataToStorage();
-                        showNotification('Data loaded successfully!', 'success');
+                        showNotification('Data loaded successfully', 'success');
                     } catch (error) {
-                        console.error("Error parsing file:", error);
-                        showNotification('Error loading data. Please check the file format.', 'error');
+                        console.error('Error parsing file:', error);
+                        showNotification('Error parsing file', 'error');
                     }
                 };
                 
                 reader.readAsText(file);
+            } catch (error) {
+                console.error('Error loading file:', error);
+                showNotification('Error loading file', 'error');
+            }
+        }
+
+        // Export data to CSV
+        function exportDataToCSV() {
+            console.log('Exporting data to CSV...');
+            
+            try {
+                let csv = 'Date,Branch,Channel,Transactions,Sales\n';
                 
-                // Reset file input
-                event.target.value = '';
-            } catch (e) {
-                console.error("Error handling file select:", e);
-                showNotification('Error handling file selection!', 'error');
+                salesData.forEach(entry => {
+                    csv += `${entry.Date},${entry.Branch},${entry.Channel},${entry.Transactions},${entry.Sales}\n`;
+                });
+                
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `crispy_chicken_sales_${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                URL.revokeObjectURL(url);
+                
+                showNotification('Data exported successfully', 'success');
+            } catch (error) {
+                console.error('Error exporting data:', error);
+                showNotification('Error exporting data', 'error');
             }
         }
 
         // Reset data
         function resetData() {
+            console.log('Resetting data...');
+            
             try {
-                showConfirmationDialog(
-                    'Confirm Reset All Data',
-                    'Are you sure you want to reset all data? This action cannot be undone.',
-                    '',
-                    () => {
-                        salesData = [];
-                        updateCurrentDataTable();
-                        updateDashboard();
-                        updateDataStatus(false);
-                        showNotification('Data reset successfully!', 'success');
-                    }
-                );
-            } catch (e) {
-                console.error("Error resetting data:", e);
-                showNotification('Error resetting data!', 'error');
+                if (confirm('Are you sure you want to reset all data? This cannot be undone.')) {
+                    salesData = [...initialSalesData];
+                    updateCurrentDataTable();
+                    updateDashboard();
+                    showNotification('Data reset successfully', 'success');
+                }
+            } catch (error) {
+                console.error('Error resetting data:', error);
+                showNotification('Error resetting data', 'error');
             }
         }
 
-        // Show page
-        function showPage(pageName) {
+        // Download report
+        function downloadReport() {
+            console.log('Downloading report...');
+            
             try {
-                // Hide all pages
-                document.querySelectorAll('.page').forEach(page => {
-                    page.style.display = 'none';
-                });
+                // Create a simple HTML report
+                const reportContent = document.getElementById('reportPage').innerHTML;
                 
-                // Show selected page
-                const targetPage = document.getElementById(`${pageName}Page`);
-                if (targetPage) {
-                    targetPage.style.display = 'block';
-                }
+                const blob = new Blob([reportContent], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
                 
-                // Update active nav link in sidebar
-                document.querySelectorAll('.sidebar .nav-link').forEach(link => {
-                    link.classList.remove('active');
-                });
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `crispy_chicken_report_${new Date().toISOString().split('T')[0]}.html`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
                 
-                const activeSidebarLink = document.getElementById(`sidebar${pageName.charAt(0).toUpperCase() + pageName.slice(1).replace('-', '')}Link`);
-                if (activeSidebarLink) {
-                    activeSidebarLink.classList.add('active');
-                }
+                URL.revokeObjectURL(url);
                 
-                // Update active nav link in top navbar
-                document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
-                    link.classList.remove('active');
-                });
-                
-                const activeTopLink = document.getElementById(`${pageName.replace('-', '')}Link`);
-                if (activeTopLink) {
-                    activeTopLink.classList.add('active');
-                }
-                
-                // If report page, update management report
-                if (pageName === 'report') {
-                    updateManagementReport();
-                }
-            } catch (e) {
-                console.error("Error showing page:", e);
+                showNotification('Report downloaded successfully', 'success');
+            } catch (error) {
+                console.error('Error downloading report:', error);
+                showNotification('Error downloading report', 'error');
             }
         }
-
-        // Update dashboard
-        function updateDashboard() {
-            try {
-                updateDashboardMetrics();
-                updateBranchChart();
-                updateDailyChart();
-                updateTargetChart();
-                updateBranchTable();
-                updateDailyTable();
-                updateTargetTable();
-            } catch (e) {
-                console.error("Error updating dashboard:", e);
-            }
-        }
-
-        // Initialize the app
-        document.addEventListener('DOMContentLoaded', function() {
-            try {
-                console.log("DOM fully loaded and parsed");
-                
-                // Load data from localStorage
-                loadDataFromStorage();
-                
-                // Set today's date as default in the form
-                const today = new Date().toISOString().split('T')[0];
-                const entryDateElement = document.getElementById('entryDate');
-                if (entryDateElement) {
-                    entryDateElement.value = today;
-                }
-                
-                // Update UI
-                updateCurrentDataTable();
-                updateDashboard();
-                
-                // Setup navigation event listeners
-                // Sidebar navigation links
-                const sidebarDashboardLink = document.getElementById('sidebarDashboardLink');
-                const sidebarDataManagementLink = document.getElementById('sidebarDataManagementLink');
-                const sidebarReportLink = document.getElementById('sidebarReportLink');
-                
-                if (sidebarDashboardLink) {
-                    sidebarDashboardLink.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        showPage('dashboard');
-                    });
-                }
-                
-                if (sidebarDataManagementLink) {
-                    sidebarDataManagementLink.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        showPage('data-management');
-                    });
-                }
-                
-                if (sidebarReportLink) {
-                    sidebarReportLink.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        showPage('report');
-                    });
-                }
-                
-                // Top navigation links
-                const dashboardLink = document.getElementById('dashboardLink');
-                const dataManagementLink = document.getElementById('dataManagementLink');
-                const reportLink = document.getElementById('reportLink');
-                
-                if (dashboardLink) {
-                    dashboardLink.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        showPage('dashboard');
-                    });
-                }
-                
-                if (dataManagementLink) {
-                    dataManagementLink.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        showPage('data-management');
-                    });
-                }
-                
-                if (reportLink) {
-                    reportLink.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        showPage('report');
-                    });
-                }
-                
-                // Save Data buttons
-                const saveDataBtn = document.getElementById('saveDataBtn');
-                const saveDataBtn2 = document.getElementById('saveDataBtn2');
-                
-                if (saveDataBtn) {
-                    saveDataBtn.addEventListener('click', saveDataToStorage);
-                }
-                if (saveDataBtn2) {
-                    saveDataBtn2.addEventListener('click', saveDataToStorage);
-                }
-                
-                // Load Data buttons
-                const loadDataBtn = document.getElementById('loadDataBtn');
-                const loadDataBtn2 = document.getElementById('loadDataBtn2');
-                
-                if (loadDataBtn) {
-                    loadDataBtn.addEventListener('click', loadDataFromFile);
-                }
-                if (loadDataBtn2) {
-                    loadDataBtn2.addEventListener('click', loadDataFromFile);
-                }
-                
-                // Export Data buttons
-                const exportDataBtn = document.getElementById('exportDataBtn');
-                const exportDataBtn2 = document.getElementById('exportDataBtn2');
-                
-                if (exportDataBtn) {
-                    exportDataBtn.addEventListener('click', exportDataToCSV);
-                }
-                if (exportDataBtn2) {
-                    exportDataBtn2.addEventListener('click', exportDataToCSV);
-                }
-                
-                // Reset Data button
-                const resetDataBtn = document.getElementById('resetDataBtn');
-                const resetDataBtn2 = document.getElementById('resetDataBtn2');
-                
-                if (resetDataBtn) {
-                    resetDataBtn.addEventListener('click', resetData);
-                }
-                if (resetDataBtn2) {
-                    resetDataBtn2.addEventListener('click', resetData);
-                }
-                
-                // File input
-                const fileInput = document.getElementById('fileInput');
-                if (fileInput) {
-                    fileInput.addEventListener('change', handleFileSelect);
-                }
-                
-                // Dashboard refresh
-                const refreshDashboardBtn = document.getElementById('refreshDashboardBtn');
-                if (refreshDashboardBtn) {
-                    refreshDashboardBtn.addEventListener('click', function() {
-                        updateDashboard();
-                        showNotification('Dashboard refreshed!', 'info');
-                    });
-                }
-                
-                // Report generation
-                const generateReportBtn = document.getElementById('generateReportBtn');
-                if (generateReportBtn) {
-                    generateReportBtn.addEventListener('click', function() {
-                        updateManagementReport();
-                        showNotification('Report generated successfully!', 'success');
-                    });
-                }
-                
-                // Report download
-                const downloadReportBtn = document.getElementById('downloadReportBtn');
-                if (downloadReportBtn) {
-                    downloadReportBtn.addEventListener('click', downloadReport);
-                }
-                
-                // Data entry form
-                const dataEntryForm = document.getElementById('dataEntryForm');
-                if (dataEntryForm) {
-                    dataEntryForm.addEventListener('submit', function(e) {
-                        e.preventDefault();
-                        
-                        const editIndex = document.getElementById('editIndex').value;
-                        
-                        const newEntry = {
-                            Date: document.getElementById('entryDate').value,
-                            Branch: document.getElementById('entryBranch').value,
-                            Channel: document.getElementById('entryChannel').value,
-                            Transactions: parseInt(document.getElementById('entryTransactions').value),
-                            Sales: parseFloat(document.getElementById('entrySales').value)
-                        };
-                        
-                        if (editIndex === '-1') {
-                            // Add new entry
-                            salesData.push(newEntry);
-                            showNotification('Data added successfully!', 'success');
-                        } else {
-                            // Update existing entry
-                            salesData[editIndex] = newEntry;
-                            showNotification('Data updated successfully!', 'success');
-                            
-                            // Reset form for new entries
-                            document.getElementById('editIndex').value = '-1';
-                            document.getElementById('formTitle').textContent = 'Add New Sales Data';
-                            document.getElementById('submitButtonText').textContent = 'Add Entry';
-                        }
-                        
-                        updateCurrentDataTable();
-                        updateDashboard();
-                        updateDataStatus(false);
-                        
-                        // Reset form
-                        this.reset();
-                        const today = new Date().toISOString().split('T')[0];
-                        const entryDateElement = document.getElementById('entryDate');
-                        if (entryDateElement) {
-                            entryDateElement.value = today;
-                        }
-                    });
-                }
-                
-                // Add New Entry button
-                const addNewEntryBtn = document.getElementById('addNewEntryBtn');
-                if (addNewEntryBtn) {
-                    addNewEntryBtn.addEventListener('click', function() {
-                        // Reset form
-                        document.getElementById('dataEntryForm').reset();
-                        document.getElementById('editIndex').value = '-1';
-                        document.getElementById('formTitle').textContent = 'Add New Sales Data';
-                        document.getElementById('submitButtonText').textContent = 'Add Entry';
-                        
-                        // Set today's date
-                        const today = new Date().toISOString().split('T')[0];
-                        document.getElementById('entryDate').value = today;
-                        
-                        // Scroll to form
-                        document.getElementById('dataEntryForm').scrollIntoView({ behavior: 'smooth' });
-                    });
-                }
-                
-                // Clear all data button
-                clearAllData();
-                
-                // Confirmation dialog cancel button
-                const cancelConfirmation = document.getElementById('cancelConfirmation');
-                if (cancelConfirmation) {
-                    cancelConfirmation.addEventListener('click', hideConfirmationDialog);
-                }
-                
-                // Mobile sidebar toggle
-                const sidebarToggle = document.createElement('button');
-                sidebarToggle.className = 'navbar-toggler d-md-none';
-                sidebarToggle.setAttribute('type', 'button');
-                sidebarToggle.setAttribute('data-bs-toggle', 'collapse');
-                sidebarToggle.setAttribute('data-bs-target', '#sidebar');
-                sidebarToggle.innerHTML = '<span class="navbar-toggler-icon"></span>';
-                
-                const navbarNav = document.querySelector('.navbar-nav');
-                if (navbarNav) {
-                    navbarNav.appendChild(sidebarToggle);
-                }
-                
-                console.log("All event listeners set up successfully");
-            } catch (e) {
-                console.error("Error initializing app:", e);
-            }
-        });
     </script>
 </body>
 </html>
