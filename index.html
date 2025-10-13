@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم مبيعات كرسبي تشكن</title>
+    <title>Crispy Chicken Sales Dashboard - Enhanced</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
@@ -175,14 +175,14 @@
         .notification {
             position: fixed;
             top: 80px;
-            left: 20px;
+            right: 20px;
             padding: 15px 25px;
             border-radius: 10px;
             color: #fff;
             font-weight: 600;
             z-index: 9999;
             opacity: 0;
-            transform: translateX(-100%);
+            transform: translateX(100%);
             transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
@@ -288,6 +288,21 @@
             transform: scale(1.1);
             box-shadow: 0 3px 10px rgba(220, 53, 69, 0.4);
         }
+
+        .edit-btn {
+            background: linear-gradient(135deg, #0dcaf0 0%, #0aa2c0 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 5px 15px;
+            color: #fff;
+            transition: all 0.3s;
+            margin-right: 5px;
+        }
+        
+        .edit-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 3px 10px rgba(13, 202, 240, 0.4);
+        }
         
         @media print {
             .sidebar, .navbar, .btn, .notification {
@@ -313,46 +328,124 @@
             border-radius: 15px;
             margin: 10px 0;
         }
+
+        .filter-section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .date-range-picker {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .growth-indicator {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .growth-up {
+            color: #198754;
+        }
+
+        .growth-down {
+            color: #dc3545;
+        }
+
+        .channel-badge {
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .channel-delivery {
+            background: #e7f5ff;
+            color: #0c63e4;
+        }
+
+        .channel-dinein {
+            background: #fff3cd;
+            color: #997404;
+        }
+
+        .channel-takeaway {
+            background: #d1e7dd;
+            color: #0a3622;
+        }
+
+        .mini-chart {
+            height: 80px;
+            margin-top: 10px;
+        }
+
+        .goal-progress {
+            margin-top: 10px;
+        }
+
+        .goal-bar {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .goal-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #198754 0%, #20c997 100%);
+            transition: width 1s ease;
+            border-radius: 10px;
+        }
+
+        .forecast-card {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .bulk-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .search-box {
+            max-width: 300px;
+        }
     </style>
 </head>
 <body>
-    <!-- Loading Spinner -->
     <div class="loading-spinner" id="loadingSpinner">
         <div class="spinner-border text-primary"></div>
     </div>
 
-    <!-- Notification -->
     <div class="notification" id="notification">
-        <i class="fas fa-check-circle ms-2"></i>
+        <i class="fas fa-check-circle me-2"></i>
         <span id="notificationText"></span>
     </div>
 
-    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
                 <i class="fas fa-drumstick-bite"></i>
-                لوحة تحكم مبيعات كرسبي تشكن
+                Crispy Chicken Sales Dashboard
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#" id="dashboardLink">
-                            <i class="fas fa-chart-line ms-1"></i> لوحة التحكم
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" id="dataEntryLink">
-                            <i class="fas fa-edit ms-1"></i> إدخال البيانات
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" id="reportLink">
-                            <i class="fas fa-file-alt ms-1"></i> التقرير الإداري
-                        </a>
+                        <span class="nav-link text-white">
+                            <i class="fas fa-calendar me-1"></i>
+                            <span id="currentDate"></span>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -361,54 +454,115 @@
 
     <div class="container-fluid">
         <div class="row">
-            <!-- Sidebar -->
             <div class="col-md-3 col-lg-2 px-0 sidebar">
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link active" href="#" data-page="dashboard">
-                            <i class="fas fa-chart-line ms-2"></i> لوحة التحكم
+                            <i class="fas fa-chart-line me-2"></i> Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-page="data-entry">
-                            <i class="fas fa-edit ms-2"></i> إدخال البيانات
+                            <i class="fas fa-edit me-2"></i> Data Entry
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="analytics">
+                            <i class="fas fa-chart-pie me-2"></i> Analytics
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="comparison">
+                            <i class="fas fa-balance-scale me-2"></i> Comparisons
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="forecast">
+                            <i class="fas fa-chart-area me-2"></i> Forecast
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-page="report">
-                            <i class="fas fa-file-alt ms-2"></i> التقرير الإداري
+                            <i class="fas fa-file-alt me-2"></i> Report
                         </a>
                     </li>
                     <li class="nav-item mt-4">
-                        <a class="nav-link" href="#" id="saveDataBtn">
-                            <i class="fas fa-save ms-2"></i> حفظ البيانات
+                        <a class="nav-link" href="#" id="exportDataBtn">
+                            <i class="fas fa-file-export me-2"></i> Export CSV
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" id="exportDataBtn">
-                            <i class="fas fa-file-export ms-2"></i> تصدير CSV
+                        <a class="nav-link" href="#" id="importDataBtn">
+                            <i class="fas fa-file-import me-2"></i> Import CSV
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" id="resetDataBtn">
-                            <i class="fas fa-redo ms-2"></i> إعادة تعيين
+                            <i class="fas fa-redo me-2"></i> Reset Data
                         </a>
                     </li>
                 </ul>
             </div>
 
-            <!-- Main Content -->
             <div class="col-md-9 col-lg-10 px-4 main-content">
                 <!-- Dashboard Page -->
                 <div id="dashboardPage" class="page">
                     <div class="d-flex justify-content-between align-items-center pt-4 pb-3 mb-4">
                         <h2 class="fw-bold">
-                            <i class="fas fa-chart-line text-primary ms-2"></i>
-                            لوحة أداء المبيعات
+                            <i class="fas fa-chart-line text-primary me-2"></i>
+                            Sales Performance Dashboard
                         </h2>
                         <button class="btn btn-primary" id="refreshDashboardBtn">
-                            <i class="fas fa-sync-alt ms-2"></i> تحديث
+                            <i class="fas fa-sync-alt me-2"></i> Refresh
                         </button>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="filter-section">
+                        <div class="row align-items-end">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Date Range</label>
+                                <div class="date-range-picker">
+                                    <input type="date" class="form-control" id="filterStartDate">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">&nbsp;</label>
+                                <input type="date" class="form-control" id="filterEndDate">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Branch</label>
+                                <select class="form-select" id="filterBranch">
+                                    <option value="">All Branches</option>
+                                    <option value="Crispy Chicken-Hamdan St">Hamdan St</option>
+                                    <option value="Crispy Chicken Khaldia">Khaldia</option>
+                                    <option value="Crispy Chicken Shabiya 11">Shabiya 11</option>
+                                    <option value="Crispy Chicken Muroor">Muroor</option>
+                                    <option value="Crispy Chicken Al Barsha">Al Barsha</option>
+                                    <option value="Crispy Chicken Al Satwa">Al Satwa</option>
+                                    <option value="Crispy Chicken Al Rgga">Al Rgga</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Channel</label>
+                                <select class="form-select" id="filterChannel">
+                                    <option value="">All Channels</option>
+                                    <option value="Delivery">Delivery</option>
+                                    <option value="Dine-in">Dine-in</option>
+                                    <option value="Takeaway">Takeaway</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <button class="btn btn-primary" id="applyFiltersBtn">
+                                    <i class="fas fa-filter me-2"></i> Apply Filters
+                                </button>
+                                <button class="btn btn-secondary" id="clearFiltersBtn">
+                                    <i class="fas fa-times me-2"></i> Clear
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Key Metrics -->
@@ -417,8 +571,17 @@
                             <div class="card metric-card">
                                 <div class="card-body position-relative">
                                     <i class="fas fa-money-bill-wave metric-icon text-success"></i>
-                                    <div class="metric-label text-muted mb-2">إجمالي المبيعات</div>
-                                    <div class="metric-value text-success" id="totalSales">0 د.إ</div>
+                                    <div class="metric-label text-muted mb-2">Total Sales</div>
+                                    <div class="metric-value text-success" id="totalSales">AED 0</div>
+                                    <div class="growth-indicator growth-up" id="salesGrowth">
+                                        <i class="fas fa-arrow-up"></i> 0%
+                                    </div>
+                                    <div class="goal-progress">
+                                        <small class="text-muted">Goal: <span id="salesGoal">AED 50,000</span></small>
+                                        <div class="goal-bar">
+                                            <div class="goal-fill" id="salesGoalFill" style="width: 0%"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -426,8 +589,11 @@
                             <div class="card metric-card">
                                 <div class="card-body position-relative">
                                     <i class="fas fa-shopping-cart metric-icon text-info"></i>
-                                    <div class="metric-label text-muted mb-2">عدد المعاملات</div>
+                                    <div class="metric-label text-muted mb-2">Total Transactions</div>
                                     <div class="metric-value text-info" id="totalTransactions">0</div>
+                                    <div class="growth-indicator growth-up" id="transactionsGrowth">
+                                        <i class="fas fa-arrow-up"></i> 0%
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -435,87 +601,34 @@
                             <div class="card metric-card">
                                 <div class="card-body position-relative">
                                     <i class="fas fa-chart-bar metric-icon text-warning"></i>
-                                    <div class="metric-label text-muted mb-2">متوسط المعاملة</div>
-                                    <div class="metric-value text-warning" id="avgTransaction">0 د.إ</div>
+                                    <div class="metric-label text-muted mb-2">Avg Transaction</div>
+                                    <div class="metric-value text-warning" id="avgTransaction">AED 0</div>
+                                    <div class="growth-indicator growth-down" id="avgGrowth">
+                                        <i class="fas fa-arrow-down"></i> 0%
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-6 mb-3">
                             <div class="card metric-card">
                                 <div class="card-body position-relative">
-                                    <i class="fas fa-bullseye metric-icon text-danger"></i>
-                                    <div class="metric-label text-muted mb-2">الهدف الإجمالي</div>
-                                    <div class="metric-value text-danger" id="overallTarget">0 د.إ</div>
+                                    <i class="fas fa-store metric-icon text-danger"></i>
+                                    <div class="metric-label text-muted mb-2">Active Branches</div>
+                                    <div class="metric-value text-danger" id="activeBranches">0</div>
+                                    <small class="text-muted">Total: 7 branches</small>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Tabs -->
-                    <ul class="nav nav-tabs mb-3" id="dashboardTabs">
-                        <li class="nav-item">
-                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#branch">
-                                <i class="fas fa-store ms-1"></i> أداء الفروع
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#daily">
-                                <i class="fas fa-calendar-day ms-1"></i> الاتجاهات اليومية
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#comparison">
-                                <i class="fas fa-balance-scale ms-1"></i> المقارنات
-                            </button>
-                        </li>
-                    </ul>
-
-                    <div class="tab-content">
-                        <!-- Branch Tab -->
-                        <div class="tab-pane fade show active" id="branch">
+                    <!-- Charts Row -->
+                    <div class="row mb-4">
+                        <div class="col-lg-8">
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title fw-bold mb-4">
-                                        <i class="fas fa-store text-primary ms-2"></i>
-                                        أداء الفروع - التوصيل
-                                    </h5>
-                                    <div class="chart-container">
-                                        <canvas id="branchChart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="card mt-4">
-                                <div class="card-body">
-                                    <h5 class="card-title fw-bold mb-4">
-                                        <i class="fas fa-table text-primary ms-2"></i>
-                                        تفاصيل أداء الفروع
-                                    </h5>
-                                    <div class="table-responsive">
-                                        <table class="table table-hover" id="branchTable">
-                                            <thead>
-                                                <tr>
-                                                    <th>الفرع</th>
-                                                    <th>المعاملات</th>
-                                                    <th>المبيعات (د.إ)</th>
-                                                    <th>متوسط المعاملة</th>
-                                                    <th>الأداء</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Daily Tab -->
-                        <div class="tab-pane fade" id="daily">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title fw-bold mb-4">
-                                        <i class="fas fa-chart-line text-primary ms-2"></i>
-                                        الاتجاهات اليومية
+                                        <i class="fas fa-chart-line text-primary me-2"></i>
+                                        Daily Sales Trend
                                     </h5>
                                     <div class="chart-container">
                                         <canvas id="dailyChart"></canvas>
@@ -523,30 +636,30 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold mb-4">
+                                        <i class="fas fa-chart-pie text-primary me-2"></i>
+                                        Channel Distribution
+                                    </h5>
+                                    <div class="chart-container" style="height: 280px;">
+                                        <canvas id="channelChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                        <!-- Comparison Tab -->
-                        <div class="tab-pane fade" id="comparison">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <div class="comparison-card">
-                                        <h5 class="fw-bold mb-3">
-                                            <i class="fas fa-trophy ms-2"></i>
-                                            أعلى فرع أداءً
-                                        </h5>
-                                        <h3 id="topBranch">-</h3>
-                                        <p id="topBranchSales" class="mb-0">0 د.إ</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <div class="comparison-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                                        <h5 class="fw-bold mb-3">
-                                            <i class="fas fa-calendar-check ms-2"></i>
-                                            أفضل يوم
-                                        </h5>
-                                        <h3 id="bestDay">-</h3>
-                                        <p id="bestDaySales" class="mb-0">0 د.إ</p>
-                                    </div>
-                                </div>
+                    <!-- Branch Performance -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold mb-4">
+                                <i class="fas fa-store text-primary me-2"></i>
+                                Branch Performance Leaderboard
+                            </h5>
+                            <div class="chart-container">
+                                <canvas id="branchChart"></canvas>
                             </div>
                         </div>
                     </div>
@@ -556,8 +669,8 @@
                 <div id="dataEntryPage" class="page" style="display: none;">
                     <div class="d-flex justify-content-between align-items-center pt-4 pb-3 mb-4">
                         <h2 class="fw-bold">
-                            <i class="fas fa-edit text-primary ms-2"></i>
-                            إدخال بيانات المبيعات
+                            <i class="fas fa-edit text-primary me-2"></i>
+                            Sales Data Entry
                         </h2>
                     </div>
 
@@ -565,542 +678,73 @@
                         <form id="dataEntryForm">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">التاريخ</label>
+                                    <label class="form-label fw-bold">Date</label>
                                     <input type="date" class="form-control" id="entryDate" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">الفرع</label>
+                                    <label class="form-label fw-bold">Branch</label>
                                     <select class="form-select" id="entryBranch" required>
-                                        <option value="">اختر الفرع</option>
-                                        <option value="Crispy Chicken-Hamdan St">كرسبي تشكن - شارع حمدان</option>
-                                        <option value="Crispy Chicken Khaldia">كرسبي تشكن الخالدية</option>
-                                        <option value="Crispy Chicken Shabiya 11">كرسبي تشكن الشعبية 11</option>
-                                        <option value="Crispy Chicken Muroor">كرسبي تشكن المرور</option>
-                                        <option value="Crispy Chicken Al Barsha">كرسبي تشكن البرشاء</option>
-                                        <option value="Crispy Chicken Al Satwa">كرسبي تشكن الصفا</option>
-                                        <option value="Crispy Chicken Al Rgga">كرسبي تشكن الرقة</option>
+                                        <option value="">Select Branch</option>
+                                        <option value="Crispy Chicken-Hamdan St">Crispy Chicken - Hamdan St</option>
+                                        <option value="Crispy Chicken Khaldia">Crispy Chicken Khaldia</option>
+                                        <option value="Crispy Chicken Shabiya 11">Crispy Chicken Shabiya 11</option>
+                                        <option value="Crispy Chicken Muroor">Crispy Chicken Muroor</option>
+                                        <option value="Crispy Chicken Al Barsha">Crispy Chicken Al Barsha</option>
+                                        <option value="Crispy Chicken Al Satwa">Crispy Chicken Al Satwa</option>
+                                        <option value="Crispy Chicken Al Rgga">Crispy Chicken Al Rgga</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4 mb-3">
-                                    <label class="form-label fw-bold">القناة</label>
+                                    <label class="form-label fw-bold">Channel</label>
                                     <select class="form-select" id="entryChannel" required>
-                                        <option value="Delivery">توصيل</option>
-                                        <option value="Dine-in">تناول في المطعم</option>
-                                        <option value="Takeaway">تيك أواي</option>
+                                        <option value="Delivery">Delivery</option>
+                                        <option value="Dine-in">Dine-in</option>
+                                        <option value="Takeaway">Takeaway</option>
                                     </select>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <label class="form-label fw-bold">عدد المعاملات</label>
+                                    <label class="form-label fw-bold">Transactions</label>
                                     <input type="number" class="form-control" id="entryTransactions" min="0" required>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <label class="form-label fw-bold">المبيعات (د.إ)</label>
+                                    <label class="form-label fw-bold">Sales (AED)</label>
                                     <input type="number" class="form-control" id="entrySales" min="0" step="0.01" required>
                                 </div>
                             </div>
+                            <input type="hidden" id="editIndex" value="">
                             <button type="submit" class="btn btn-primary btn-lg w-100">
-                                <i class="fas fa-plus-circle ms-2"></i> إضافة البيانات
+                                <i class="fas fa-plus-circle me-2"></i> <span id="submitBtnText">Add Data</span>
                             </button>
                         </form>
                     </div>
 
                     <div class="card mt-4">
                         <div class="card-body">
-                            <h5 class="card-title fw-bold mb-4">
-                                <i class="fas fa-database text-primary ms-2"></i>
-                                البيانات الحالية
-                            </h5>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="card-title fw-bold mb-0">
+                                    <i class="fas fa-database text-primary me-2"></i>
+                                    Current Data
+                                </h5>
+                                <div class="search-box">
+                                    <input type="text" class="form-control" id="searchData" placeholder="Search...">
+                                </div>
+                            </div>
+                            <div class="bulk-actions">
+                                <button class="btn btn-sm btn-danger" id="deleteSelectedBtn" style="display: none;">
+                                    <i class="fas fa-trash me-1"></i> Delete Selected
+                                </button>
+                                <button class="btn btn-sm btn-secondary" id="selectAllBtn">
+                                    <i class="fas fa-check-square me-1"></i> Select All
+                                </button>
+                            </div>
                             <div class="table-responsive">
                                 <table class="table table-hover" id="currentDataTable">
                                     <thead>
                                         <tr>
-                                            <th>التاريخ</th>
-                                            <th>الفرع</th>
-                                            <th>القناة</th>
-                                            <th>المعاملات</th>
-                                            <th>المبيعات</th>
-                                            <th>إجراءات</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Report Page -->
-                <div id="reportPage" class="page" style="display: none;">
-                    <div class="d-flex justify-content-between align-items-center pt-4 pb-3 mb-4">
-                        <h2 class="fw-bold">
-                            <i class="fas fa-file-alt text-primary ms-2"></i>
-                            التقرير الإداري
-                        </h2>
-                        <button class="btn btn-primary" onclick="window.print()">
-                            <i class="fas fa-print ms-2"></i> طباعة
-                        </button>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="text-center mb-4">
-                                <h3 class="fw-bold text-primary">تقرير أداء مبيعات كرسبي تشكن</h3>
-                                <p class="text-muted">تاريخ التقرير: <span id="reportDate"></span></p>
-                            </div>
-
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <h5 class="fw-bold mb-3">الملخص التنفيذي</h5>
-                                    <p><strong>إجمالي المبيعات:</strong> <span id="execTotalSales">0</span> د.إ</p>
-                                    <p><strong>إجمالي المعاملات:</strong> <span id="execTransactions">0</span></p>
-                                    <p><strong>متوسط المعاملة:</strong> <span id="execAvgValue">0</span> د.إ</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <h5 class="fw-bold mb-3">أفضل الأداءات</h5>
-                                    <p><strong>أفضل فرع:</strong> <span id="execTopBranch">-</span></p>
-                                    <p><strong>مبيعات أفضل فرع:</strong> <span id="execTopBranchSales">0</span> د.إ</p>
-                                    <p><strong>أفضل يوم:</strong> <span id="execPeakDay">-</span></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const initialSalesData = [
-            {Date: '10/01/2025', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 73, Sales: 3216},
-            {Date: '10/01/2025', Branch: 'Crispy Chicken Khaldia', Channel: 'Delivery', Transactions: 38, Sales: 1859.8},
-            {Date: '10/01/2025', Branch: 'Crispy Chicken Shabiya 11', Channel: 'Delivery', Transactions: 39, Sales: 1965},
-            {Date: '10/01/2025', Branch: 'Crispy Chicken Muroor', Channel: 'Delivery', Transactions: 42, Sales: 2024},
-            {Date: '10/01/2025', Branch: 'Crispy Chicken Al Barsha', Channel: 'Delivery', Transactions: 24, Sales: 1376},
-            {Date: '10/01/2025', Branch: 'Crispy Chicken Al Satwa', Channel: 'Delivery', Transactions: 11, Sales: 387},
-            {Date: '10/01/2025', Branch: 'Crispy Chicken Al Rgga', Channel: 'Delivery', Transactions: 5, Sales: 204},
-            {Date: '10/02/2025', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 62, Sales: 3238},
-            {Date: '10/02/2025', Branch: 'Crispy Chicken Khaldia', Channel: 'Delivery', Transactions: 28, Sales: 1492},
-            {Date: '10/03/2025', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 72, Sales: 3100},
-            {Date: '10/03/2025', Branch: 'Crispy Chicken Khaldia', Channel: 'Delivery', Transactions: 46, Sales: 2930},
-            {Date: '10/04/2025', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 84, Sales: 4833},
-            {Date: '10/05/2025', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 76, Sales: 2921},
-            {Date: '10/06/2025', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 101, Sales: 4363},
-            {Date: '10/07/2025', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 119, Sales: 5056}
-        ];
-
-        let salesData = [...initialSalesData];
-        let charts = {};
-
-        document.addEventListener('DOMContentLoaded', function() {
-            loadData();
-            setupEventListeners();
-            showPage('dashboard');
-            updateDashboard();
-        });
-
-        function setupEventListeners() {
-            document.querySelectorAll('[data-page]').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    showPage(this.dataset.page);
-                });
-            });
-
-            document.getElementById('dashboardLink').addEventListener('click', (e) => {
-                e.preventDefault(); showPage('dashboard');
-            });
-            document.getElementById('dataEntryLink').addEventListener('click', (e) => {
-                e.preventDefault(); showPage('data-entry');
-            });
-            document.getElementById('reportLink').addEventListener('click', (e) => {
-                e.preventDefault(); showPage('report'); updateReport();
-            });
-
-            document.getElementById('saveDataBtn').addEventListener('click', saveData);
-            document.getElementById('exportDataBtn').addEventListener('click', exportCSV);
-            document.getElementById('resetDataBtn').addEventListener('click', resetData);
-            document.getElementById('refreshDashboardBtn').addEventListener('click', updateDashboard);
-            document.getElementById('dataEntryForm').addEventListener('submit', addEntry);
-        }
-
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-            document.getElementById(pageId + 'Page').style.display = 'block';
-            
-            document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
-            document.querySelector(`[data-page="${pageId}"]`)?.classList.add('active');
-            
-            document.querySelectorAll('.navbar-nav .nav-link').forEach(l => l.classList.remove('active'));
-            if(pageId === 'dashboard') document.getElementById('dashboardLink').classList.add('active');
-            if(pageId === 'data-entry') document.getElementById('dataEntryLink').classList.add('active');
-            if(pageId === 'report') document.getElementById('reportLink').classList.add('active');
-        }
-
-        function processSalesData() {
-            const branchSummary = {};
-            const dailySummary = {};
-            
-            salesData.forEach(entry => {
-                if (!branchSummary[entry.Branch]) {
-                    branchSummary[entry.Branch] = {
-                        transactions: 0,
-                        sales: 0,
-                        count: 0
-                    };
-                }
-                branchSummary[entry.Branch].transactions += entry.Transactions;
-                branchSummary[entry.Branch].sales += entry.Sales;
-                branchSummary[entry.Branch].count++;
-                
-                if (!dailySummary[entry.Date]) {
-                    dailySummary[entry.Date] = {
-                        transactions: 0,
-                        sales: 0
-                    };
-                }
-                dailySummary[entry.Date].transactions += entry.Transactions;
-                dailySummary[entry.Date].sales += entry.Sales;
-            });
-            
-            return { branchSummary, dailySummary };
-        }
-
-        function updateDashboard() {
-            showLoading();
-            
-            const { branchSummary, dailySummary } = processSalesData();
-            
-            let totalSales = 0;
-            let totalTransactions = 0;
-            
-            Object.values(branchSummary).forEach(b => {
-                totalSales += b.sales;
-                totalTransactions += b.transactions;
-            });
-            
-            const avgTransaction = totalTransactions > 0 ? totalSales / totalTransactions : 0;
-            const target = totalSales * 1.10;
-            
-            animateValue('totalSales', 0, totalSales, 1000, ' د.إ');
-            animateValue('totalTransactions', 0, totalTransactions, 1000);
-            animateValue('avgTransaction', 0, avgTransaction, 1000, ' د.إ');
-            animateValue('overallTarget', 0, target, 1000, ' د.إ');
-            
-            updateBranchChart(branchSummary);
-            updateDailyChart(dailySummary);
-            updateBranchTable(branchSummary);
-            updateComparison(branchSummary, dailySummary);
-            updateCurrentDataTable();
-            
-            hideLoading();
-        }
-
-        function updateBranchChart(branchSummary) {
-            const ctx = document.getElementById('branchChart');
-            if (!ctx) return;
-            
-            if (charts.branch) charts.branch.destroy();
-            
-            const branches = Object.keys(branchSummary);
-            const sales = branches.map(b => branchSummary[b].sales);
-            
-            charts.branch = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: branches,
-                    datasets: [{
-                        label: 'المبيعات (د.إ)',
-                        data: sales,
-                        backgroundColor: 'rgba(220, 53, 69, 0.8)',
-                        borderColor: 'rgba(220, 53, 69, 1)',
-                        borderWidth: 2,
-                        borderRadius: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            padding: 12,
-                            titleFont: { size: 14, weight: 'bold' },
-                            bodyFont: { size: 13 }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
-                        },
-                        x: {
-                            grid: { display: false }
-                        }
-                    },
-                    animation: {
-                        duration: 1500,
-                        easing: 'easeInOutQuart'
-                    }
-                }
-            });
-        }
-
-        function updateDailyChart(dailySummary) {
-            const ctx = document.getElementById('dailyChart');
-            if (!ctx) return;
-            
-            if (charts.daily) charts.daily.destroy();
-            
-            const dates = Object.keys(dailySummary).sort();
-            const sales = dates.map(d => dailySummary[d].sales);
-            const transactions = dates.map(d => dailySummary[d].transactions);
-            
-            charts.daily = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: dates,
-                    datasets: [{
-                        label: 'المبيعات',
-                        data: sales,
-                        borderColor: 'rgba(220, 53, 69, 1)',
-                        backgroundColor: 'rgba(220, 53, 69, 0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 5,
-                        pointHoverRadius: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: true },
-                        tooltip: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            padding: 12
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
-                        }
-                    },
-                    animation: {
-                        duration: 1500,
-                        easing: 'easeInOutQuart'
-                    }
-                }
-            });
-        }
-
-        function updateBranchTable(branchSummary) {
-            const tbody = document.querySelector('#branchTable tbody');
-            tbody.innerHTML = '';
-            
-            const sorted = Object.entries(branchSummary).sort((a, b) => b[1].sales - a[1].sales);
-            
-            sorted.forEach(([branch, data], index) => {
-                const avg = data.sales / data.transactions;
-                const performance = index === 0 ? '🏆 ممتاز' : index < 3 ? '✅ جيد' : '⚠️ يحتاج تحسين';
-                
-                const row = `
-                    <tr>
-                        <td class="fw-bold">${branch}</td>
-                        <td>${data.transactions.toLocaleString()}</td>
-                        <td class="text-success fw-bold">${data.sales.toFixed(2)} د.إ</td>
-                        <td>${avg.toFixed(2)} د.إ</td>
-                        <td>${performance}</td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
-        }
-
-        function updateComparison(branchSummary, dailySummary) {
-            const topBranch = Object.entries(branchSummary).sort((a, b) => b[1].sales - a[1].sales)[0];
-            document.getElementById('topBranch').textContent = topBranch[0];
-            document.getElementById('topBranchSales').textContent = topBranch[1].sales.toFixed(2) + ' د.إ';
-            
-            const bestDay = Object.entries(dailySummary).sort((a, b) => b[1].sales - a[1].sales)[0];
-            document.getElementById('bestDay').textContent = bestDay[0];
-            document.getElementById('bestDaySales').textContent = bestDay[1].sales.toFixed(2) + ' د.إ';
-        }
-
-        function updateCurrentDataTable() {
-            const tbody = document.querySelector('#currentDataTable tbody');
-            tbody.innerHTML = '';
-            
-            salesData.slice(-20).reverse().forEach((entry, index) => {
-                const row = `
-                    <tr>
-                        <td>${entry.Date}</td>
-                        <td>${entry.Branch}</td>
-                        <td>${entry.Channel}</td>
-                        <td>${entry.Transactions}</td>
-                        <td class="text-success fw-bold">${entry.Sales.toFixed(2)} د.إ</td>
-                        <td>
-                            <button class="delete-btn" onclick="deleteEntry(${salesData.length - index - 1})">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
-        }
-
-        function updateReport() {
-            document.getElementById('reportDate').textContent = new Date().toLocaleDateString('ar-AE');
-            
-            const { branchSummary, dailySummary } = processSalesData();
-            
-            let totalSales = 0;
-            let totalTransactions = 0;
-            
-            Object.values(branchSummary).forEach(b => {
-                totalSales += b.sales;
-                totalTransactions += b.transactions;
-            });
-            
-            const avgTransaction = totalTransactions > 0 ? totalSales / totalTransactions : 0;
-            
-            document.getElementById('execTotalSales').textContent = totalSales.toFixed(2);
-            document.getElementById('execTransactions').textContent = totalTransactions.toLocaleString();
-            document.getElementById('execAvgValue').textContent = avgTransaction.toFixed(2);
-            
-            const topBranch = Object.entries(branchSummary).sort((a, b) => b[1].sales - a[1].sales)[0];
-            document.getElementById('execTopBranch').textContent = topBranch[0];
-            document.getElementById('execTopBranchSales').textContent = topBranch[1].sales.toFixed(2);
-            
-            const bestDay = Object.entries(dailySummary).sort((a, b) => b[1].sales - a[1].sales)[0];
-            document.getElementById('execPeakDay').textContent = bestDay[0];
-        }
-
-        function addEntry(e) {
-            e.preventDefault();
-            
-            const entry = {
-                Date: document.getElementById('entryDate').value,
-                Branch: document.getElementById('entryBranch').value,
-                Channel: document.getElementById('entryChannel').value,
-                Transactions: parseInt(document.getElementById('entryTransactions').value),
-                Sales: parseFloat(document.getElementById('entrySales').value)
-            };
-            
-            salesData.push(entry);
-            updateCurrentDataTable();
-            updateDashboard();
-            e.target.reset();
-            
-            showNotification('تم إضافة البيانات بنجاح', 'success');
-        }
-
-        function deleteEntry(index) {
-            if (confirm('هل أنت متأكد من حذف هذا السجل؟')) {
-                salesData.splice(index, 1);
-                updateCurrentDataTable();
-                updateDashboard();
-                showNotification('تم حذف السجل بنجاح', 'success');
-            }
-        }
-
-        function saveData() {
-            try {
-                const data = JSON.stringify(salesData);
-                const blob = new Blob([data], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `crispy_data_${Date.now()}.json`;
-                a.click();
-                showNotification('تم حفظ البيانات بنجاح', 'success');
-            } catch (error) {
-                showNotification('حدث خطأ في حفظ البيانات', 'error');
-            }
-        }
-
-        function loadData() {
-            const saved = localStorage.getItem('crispyData');
-            if (saved) {
-                try {
-                    salesData = JSON.parse(saved);
-                } catch (e) {
-                    salesData = [...initialSalesData];
-                }
-            }
-        }
-
-        function exportCSV() {
-            let csv = 'التاريخ,الفرع,القناة,المعاملات,المبيعات\n';
-            salesData.forEach(e => {
-                csv += `${e.Date},${e.Branch},${e.Channel},${e.Transactions},${e.Sales}\n`;
-            });
-            
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `crispy_export_${Date.now()}.csv`;
-            a.click();
-            
-            showNotification('تم تصدير البيانات بنجاح', 'success');
-        }
-
-        function resetData() {
-            if (confirm('هل أنت متأكد من إعادة تعيين جميع البيانات؟')) {
-                salesData = [...initialSalesData];
-                localStorage.removeItem('crispyData');
-                updateDashboard();
-                showNotification('تم إعادة تعيين البيانات', 'info');
-            }
-        }
-
-        function showNotification(message, type) {
-            const notification = document.getElementById('notification');
-            const text = document.getElementById('notificationText');
-            text.textContent = message;
-            notification.className = `notification ${type} show`;
-            
-            setTimeout(() => {
-                notification.className = `notification ${type}`;
-            }, 3000);
-        }
-
-        function animateValue(id, start, end, duration, suffix = '') {
-            const element = document.getElementById(id);
-            const range = end - start;
-            const increment = range / (duration / 16);
-            let current = start;
-            
-            const timer = setInterval(() => {
-                current += increment;
-                if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
-                    current = end;
-                    clearInterval(timer);
-                }
-                element.textContent = Math.round(current).toLocaleString() + suffix;
-            }, 16);
-        }
-
-        function showLoading() {
-            document.getElementById('loadingSpinner').style.display = 'block';
-        }
-
-        function hideLoading() {
-            setTimeout(() => {
-                document.getElementById('loadingSpinner').style.display = 'none';
-            }, 500);
-        }
-
-        window.addEventListener('beforeunload', () => {
-            localStorage.setItem('crispyData', JSON.stringify(salesData));
-        });
-    </script>
-</body>
-</html>
+                                            <th><input type="checkbox" id="selectAllCheckbox"></th>
+                                            <th>Date</th>
+                                            <th>Branch</th>
+                                            <th>Channel</th>
+                                            <th>Transactions</th
