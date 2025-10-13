@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
     <style>
         * {
             font-family: 'Cairo', sans-serif;
@@ -747,4 +748,1582 @@
                                             <th>Date</th>
                                             <th>Branch</th>
                                             <th>Channel</th>
-                                            <th>Transactions</th
+                                            <th>Transactions</th>
+                                            <th>Sales</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Page -->
+                <div id="analyticsPage" class="page" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center pt-4 pb-3 mb-4">
+                        <h2 class="fw-bold">
+                            <i class="fas fa-chart-pie text-primary me-2"></i>
+                            Advanced Analytics
+                        </h2>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold mb-4">
+                                        <i class="fas fa-calendar-week text-primary me-2"></i>
+                                        Weekly Performance
+                                    </h5>
+                                    <div class="chart-container">
+                                        <canvas id="weeklyChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold mb-4">
+                                        <i class="fas fa-percentage text-primary me-2"></i>
+                                        Branch Market Share
+                                    </h5>
+                                    <div class="chart-container">
+                                        <canvas id="marketShareChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                <div class="card-body">
+                                    <h6 class="fw-bold mb-3">
+                                        <i class="fas fa-crown me-2"></i>
+                                        Best Performing Day
+                                    </h6>
+                                    <h4 id="bestPerformingDay">-</h4>
+                                    <p class="mb-0">AED <span id="bestDaySales">0</span></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+                                <div class="card-body">
+                                    <h6 class="fw-bold mb-3">
+                                        <i class="fas fa-star me-2"></i>
+                                        Top Branch
+                                    </h6>
+                                    <h4 id="topBranchName">-</h4>
+                                    <p class="mb-0">AED <span id="topBranchRevenue">0</span></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white;">
+                                <div class="card-body">
+                                    <h6 class="fw-bold mb-3">
+                                        <i class="fas fa-bolt me-2"></i>
+                                        Avg Daily Growth
+                                    </h6>
+                                    <h4 id="avgDailyGrowth">0%</h4>
+                                    <p class="mb-0">Week over week</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold mb-4">
+                                <i class="fas fa-chart-bar text-primary me-2"></i>
+                                Channel Performance Comparison
+                            </h5>
+                            <div class="chart-container">
+                                <canvas id="channelComparisonChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparison Page -->
+                <div id="comparisonPage" class="page" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center pt-4 pb-3 mb-4">
+                        <h2 class="fw-bold">
+                            <i class="fas fa-balance-scale text-primary me-2"></i>
+                            Branch & Period Comparisons
+                        </h2>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold mb-3">Compare Branches</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">Select Branches to Compare</label>
+                                        <select class="form-select mb-2" id="compareBranch1">
+                                            <option value="">Branch 1</option>
+                                            <option value="Crispy Chicken-Hamdan St">Hamdan St</option>
+                                            <option value="Crispy Chicken Khaldia">Khaldia</option>
+                                            <option value="Crispy Chicken Shabiya 11">Shabiya 11</option>
+                                            <option value="Crispy Chicken Muroor">Muroor</option>
+                                        </select>
+                                        <select class="form-select" id="compareBranch2">
+                                            <option value="">Branch 2</option>
+                                            <option value="Crispy Chicken-Hamdan St">Hamdan St</option>
+                                            <option value="Crispy Chicken Khaldia">Khaldia</option>
+                                            <option value="Crispy Chicken Shabiya 11">Shabiya 11</option>
+                                            <option value="Crispy Chicken Muroor">Muroor</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn btn-primary w-100" id="compareBranchesBtn">
+                                        <i class="fas fa-search me-2"></i> Compare
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold mb-3">Period Comparison</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">Select Periods</label>
+                                        <input type="date" class="form-control mb-2" id="period1Start" placeholder="Period 1 Start">
+                                        <input type="date" class="form-control mb-2" id="period1End" placeholder="Period 1 End">
+                                        <input type="date" class="form-control mb-2" id="period2Start" placeholder="Period 2 Start">
+                                        <input type="date" class="form-control" id="period2End" placeholder="Period 2 End">
+                                    </div>
+                                    <button class="btn btn-primary w-100" id="comparePeriodsBtn">
+                                        <i class="fas fa-calendar me-2"></i> Compare Periods
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="comparisonResults" style="display: none;">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold mb-4">
+                                <i class="fas fa-chart-line text-primary me-2"></i>
+                                Comparison Results
+                            </h5>
+                            <div class="chart-container">
+                                <canvas id="comparisonChart"></canvas>
+                            </div>
+                            <div class="row mt-4" id="comparisonStats"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Forecast Page -->
+                <div id="forecastPage" class="page" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center pt-4 pb-3 mb-4">
+                        <h2 class="fw-bold">
+                            <i class="fas fa-chart-area text-primary me-2"></i>
+                            Sales Forecast & Projections
+                        </h2>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="forecast-card">
+                                <h6 class="fw-bold mb-2">
+                                    <i class="fas fa-calendar-day me-2"></i>
+                                    Tomorrow
+                                </h6>
+                                <h4 id="tomorrowForecast">AED 0</h4>
+                                <small>Projected Sales</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="forecast-card">
+                                <h6 class="fw-bold mb-2">
+                                    <i class="fas fa-calendar-week me-2"></i>
+                                    This Week
+                                </h6>
+                                <h4 id="weekForecast">AED 0</h4>
+                                <small>Projected Sales</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="forecast-card">
+                                <h6 class="fw-bold mb-2">
+                                    <i class="fas fa-calendar-alt me-2"></i>
+                                    This Month
+                                </h6>
+                                <h4 id="monthForecast">AED 0</h4>
+                                <small>Projected Sales</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="forecast-card">
+                                <h6 class="fw-bold mb-2">
+                                    <i class="fas fa-chart-line me-2"></i>
+                                    Growth Rate
+                                </h6>
+                                <h4 id="growthRate">0%</h4>
+                                <small>Daily Average</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold mb-4">
+                                <i class="fas fa-crystal-ball text-primary me-2"></i>
+                                7-Day Sales Projection
+                            </h5>
+                            <div class="chart-container">
+                                <canvas id="forecastChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-4">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold mb-4">
+                                <i class="fas fa-bullseye text-primary me-2"></i>
+                                Target Achievement Forecast
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Monthly Target (AED)</label>
+                                    <input type="number" class="form-control mb-3" id="monthlyTarget" value="50000">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Days Remaining</label>
+                                    <input type="number" class="form-control mb-3" id="daysRemaining" value="15">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" id="calculateTargetBtn">
+                                <i class="fas fa-calculator me-2"></i> Calculate Target
+                            </button>
+                            <div id="targetResults" class="mt-4" style="display: none;">
+                                <div class="alert alert-info">
+                                    <h6 class="fw-bold">Target Analysis:</h6>
+                                    <p class="mb-1">Current Progress: <strong id="currentProgress">0%</strong></p>
+                                    <p class="mb-1">Required Daily Sales: <strong id="requiredDaily">AED 0</strong></p>
+                                    <p class="mb-0">Probability of Success: <strong id="successProb">0%</strong></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Report Page -->
+                <div id="reportPage" class="page" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center pt-4 pb-3 mb-4">
+                        <h2 class="fw-bold">
+                            <i class="fas fa-file-alt text-primary me-2"></i>
+                            Management Report
+                        </h2>
+                        <button class="btn btn-primary" onclick="window.print()">
+                            <i class="fas fa-print me-2"></i> Print Report
+                        </button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="text-center mb-4">
+                                <h3 class="fw-bold text-primary">Crispy Chicken Sales Performance Report</h3>
+                                <p class="text-muted">Report Generated: <span id="reportDate"></span></p>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <h5 class="fw-bold mb-3">Executive Summary</h5>
+                                    <p><strong>Total Sales:</strong> AED <span id="execTotalSales">0</span></p>
+                                    <p><strong>Total Transactions:</strong> <span id="execTransactions">0</span></p>
+                                    <p><strong>Avg Transaction Value:</strong> AED <span id="execAvgValue">0</span></p>
+                                    <p><strong>Active Branches:</strong> <span id="execBranches">0</span></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5 class="fw-bold mb-3">Key Insights</h5>
+                                    <p><strong>Top Branch:</strong> <span id="execTopBranch">-</span></p>
+                                    <p><strong>Top Branch Sales:</strong> AED <span id="execTopBranchSales">0</span></p>
+                                    <p><strong>Best Day:</strong> <span id="execPeakDay">-</span></p>
+                                    <p><strong>Growth Trend:</strong> <span id="execGrowth">-</span></p>
+                                </div>
+                            </div>
+
+                            <h5 class="fw-bold mb-3">Branch Performance Ranking</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Rank</th>
+                                            <th>Branch</th>
+                                            <th>Sales (AED)</th>
+                                            <th>Transactions</th>
+                                            <th>Avg Value</th>
+                                            <th>Market Share</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="reportBranchTable"></tbody>
+                                </table>
+                            </div>
+
+                            <h5 class="fw-bold mb-3 mt-4">Channel Performance</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Channel</th>
+                                            <th>Sales (AED)</th>
+                                            <th>Transactions</th>
+                                            <th>Percentage</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="reportChannelTable"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const initialSalesData = [
+            {Date: '2025-10-01', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 73, Sales: 3216},
+            {Date: '2025-10-01', Branch: 'Crispy Chicken Khaldia', Channel: 'Delivery', Transactions: 38, Sales: 1859.8},
+            {Date: '2025-10-01', Branch: 'Crispy Chicken Shabiya 11', Channel: 'Delivery', Transactions: 39, Sales: 1965},
+            {Date: '2025-10-01', Branch: 'Crispy Chicken Muroor', Channel: 'Delivery', Transactions: 42, Sales: 2024},
+            {Date: '2025-10-01', Branch: 'Crispy Chicken Al Barsha', Channel: 'Delivery', Transactions: 24, Sales: 1376},
+            {Date: '2025-10-01', Branch: 'Crispy Chicken Al Satwa', Channel: 'Delivery', Transactions: 11, Sales: 387},
+            {Date: '2025-10-01', Branch: 'Crispy Chicken Al Rgga', Channel: 'Delivery', Transactions: 5, Sales: 204},
+            {Date: '2025-10-02', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 62, Sales: 3238},
+            {Date: '2025-10-02', Branch: 'Crispy Chicken Khaldia', Channel: 'Delivery', Transactions: 28, Sales: 1492},
+            {Date: '2025-10-03', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 72, Sales: 3100},
+            {Date: '2025-10-03', Branch: 'Crispy Chicken Khaldia', Channel: 'Delivery', Transactions: 46, Sales: 2930},
+            {Date: '2025-10-04', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 84, Sales: 4833},
+            {Date: '2025-10-05', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 76, Sales: 2921},
+            {Date: '2025-10-06', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 101, Sales: 4363},
+            {Date: '2025-10-07', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 119, Sales: 5056},
+            {Date: '2025-10-01', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Dine-in', Transactions: 45, Sales: 1820},
+            {Date: '2025-10-02', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Dine-in', Transactions: 52, Sales: 2140},
+            {Date: '2025-10-03', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Takeaway', Transactions: 38, Sales: 1560}
+        ];
+
+        let salesData = [...initialSalesData];
+        let charts = {};
+        let filteredData = salesData;
+        let selectedRows = new Set();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            showPage('dashboard');
+            updateDashboard();
+            updateCurrentDate();
+            setDefaultDates();
+        });
+
+        function updateCurrentDate() {
+            const today = new Date().toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            document.getElementById('currentDate').textContent = today;
+        }
+
+        function setDefaultDates() {
+            const today = new Date();
+            const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+            
+            document.getElementById('filterStartDate').valueAsDate = weekAgo;
+            document.getElementById('filterEndDate').valueAsDate = today;
+            document.getElementById('entryDate').valueAsDate = today;
+        }
+
+        function setupEventListeners() {
+            document.querySelectorAll('[data-page]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.dataset.page;
+                    showPage(page);
+                    if (page === 'analytics') updateAnalytics();
+                    if (page === 'forecast') updateForecast();
+                    if (page === 'report') updateReport();
+                });
+            });
+
+            document.getElementById('applyFiltersBtn').addEventListener('click', applyFilters);
+            document.getElementById('clearFiltersBtn').addEventListener('click', clearFilters);
+            document.getElementById('exportDataBtn').addEventListener('click', exportCSV);
+            document.getElementById('importDataBtn').addEventListener('click', () => document.getElementById('csvFileInput').click());
+            document.getElementById('csvFileInput').addEventListener('change', importCSV);
+            document.getElementById('resetDataBtn').addEventListener('click', resetData);
+            document.getElementById('refreshDashboardBtn').addEventListener('click', updateDashboard);
+            document.getElementById('dataEntryForm').addEventListener('submit', addOrUpdateEntry);
+            document.getElementById('searchData').addEventListener('input', searchData);
+            document.getElementById('selectAllCheckbox').addEventListener('change', toggleSelectAll);
+            document.getElementById('deleteSelectedBtn').addEventListener('click', deleteSelected);
+            document.getElementById('compareBranchesBtn').addEventListener('click', compareBranches);
+            document.getElementById('comparePeriodsBtn').addEventListener('click', comparePeriods);
+            document.getElementById('calculateTargetBtn').addEventListener('click', calculateTarget);
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+            document.getElementById(pageId + 'Page').style.display = 'block';
+            
+            document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
+            document.querySelector(`[data-page="${pageId}"]`)?.classList.add('active');
+        }
+
+        function applyFilters() {
+            const startDate = document.getElementById('filterStartDate').value;
+            const endDate = document.getElementById('filterEndDate').value;
+            const branch = document.getElementById('filterBranch').value;
+            const channel = document.getElementById('filterChannel').value;
+
+            filteredData = salesData.filter(entry => {
+                let match = true;
+                if (startDate && entry.Date < startDate) match = false;
+                if (endDate && entry.Date > endDate) match = false;
+                if (branch && entry.Branch !== branch) match = false;
+                if (channel && entry.Channel !== channel) match = false;
+                return match;
+            });
+
+            updateDashboard();
+            showNotification('Filters applied successfully', 'success');
+        }
+
+        function clearFilters() {
+            document.getElementById('filterStartDate').value = '';
+            document.getElementById('filterEndDate').value = '';
+            document.getElementById('filterBranch').value = '';
+            document.getElementById('filterChannel').value = '';
+            filteredData = salesData;
+            setDefaultDates();
+            updateDashboard();
+            showNotification('Filters cleared', 'info');
+        }
+
+        function processSalesData() {
+            const branchSummary = {};
+            const dailySummary = {};
+            const channelSummary = {};
+            
+            filteredData.forEach(entry => {
+                if (!branchSummary[entry.Branch]) {
+                    branchSummary[entry.Branch] = { transactions: 0, sales: 0 };
+                }
+                branchSummary[entry.Branch].transactions += entry.Transactions;
+                branchSummary[entry.Branch].sales += entry.Sales;
+                
+                if (!dailySummary[entry.Date]) {
+                    dailySummary[entry.Date] = { transactions: 0, sales: 0 };
+                }
+                dailySummary[entry.Date].transactions += entry.Transactions;
+                dailySummary[entry.Date].sales += entry.Sales;
+
+                if (!channelSummary[entry.Channel]) {
+                    channelSummary[entry.Channel] = { transactions: 0, sales: 0 };
+                }
+                channelSummary[entry.Channel].transactions += entry.Transactions;
+                channelSummary[entry.Channel].sales += entry.Sales;
+            });
+            
+            return { branchSummary, dailySummary, channelSummary };
+        }
+
+        function updateDashboard() {
+            showLoading();
+            
+            const { branchSummary, dailySummary, channelSummary } = processSalesData();
+            
+            let totalSales = 0;
+            let totalTransactions = 0;
+            
+            Object.values(branchSummary).forEach(b => {
+                totalSales += b.sales;
+                totalTransactions += b.transactions;
+            });
+            
+            const avgTransaction = totalTransactions > 0 ? totalSales / totalTransactions : 0;
+            const activeBranches = Object.keys(branchSummary).length;
+            
+            animateValue('totalSales', 0, totalSales, 1000, 'AED ');
+            animateValue('totalTransactions', 0, totalTransactions, 1000, '');
+            animateValue('avgTransaction', 0, avgTransaction, 1000, 'AED ');
+            animateValue('activeBranches', 0, activeBranches, 1000, '');
+
+            // Calculate growth
+            const dates = Object.keys(dailySummary).sort();
+            if (dates.length >= 2) {
+                const recentSales = dailySummary[dates[dates.length - 1]].sales;
+                const previousSales = dailySummary[dates[dates.length - 2]].sales;
+                const growth = ((recentSales - previousSales) / previousSales * 100).toFixed(1);
+                document.getElementById('salesGrowth').innerHTML = `<i class="fas fa-arrow-${growth >= 0 ? 'up' : 'down'}"></i> ${Math.abs(growth)}%`;
+                document.getElementById('salesGrowth').className = `growth-indicator growth-${growth >= 0 ? 'up' : 'down'}`;
+            }
+
+            // Update goal progress
+            const goalAmount = 50000;
+            const progress = Math.min((totalSales / goalAmount) * 100, 100);
+            document.getElementById('salesGoalFill').style.width = progress + '%';
+            
+            updateBranchChart(branchSummary);
+            updateDailyChart(dailySummary);
+            updateChannelChart(channelSummary);
+            updateCurrentDataTable();
+            
+            hideLoading();
+        }
+
+        function updateBranchChart(branchSummary) {
+            const ctx = document.getElementById('branchChart');
+            if (!ctx) return;
+            
+            if (charts.branch) charts.branch.destroy();
+            
+            const sorted = Object.entries(branchSummary).sort((a, b) => b[1].sales - a[1].sales);
+            const branches = sorted.map(([name]) => name.replace('Crispy Chicken ', ''));
+            const sales = sorted.map(([, data]) => data.sales);
+            
+            charts.branch = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: branches,
+                    datasets: [{
+                        label: 'Sales (AED)',
+                        data: sales,
+                        backgroundColor: sales.map((_, i) => 
+                            i === 0 ? 'rgba(220, 53, 69, 0.9)' : 'rgba(220, 53, 69, 0.6)'
+                        ),
+                        borderColor: 'rgba(220, 53, 69, 1)',
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            callbacks: {
+                                label: (context) => `Sales: AED ${context.parsed.y.toFixed(2)}`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            ticks: {
+                                callback: (value) => 'AED ' + value
+                            }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    },
+                    animation: {
+                        duration: 1500,
+                        easing: 'easeInOutQuart'
+                    }
+                }
+            });
+        }
+
+        function updateDailyChart(dailySummary) {
+            const ctx = document.getElementById('dailyChart');
+            if (!ctx) return;
+            
+            if (charts.daily) charts.daily.destroy();
+            
+            const dates = Object.keys(dailySummary).sort();
+            const sales = dates.map(d => dailySummary[d].sales);
+            const transactions = dates.map(d => dailySummary[d].transactions);
+            
+            charts.daily = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Sales (AED)',
+                        data: sales,
+                        borderColor: 'rgba(220, 53, 69, 1)',
+                        backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointHoverRadius: 8,
+                        yAxisID: 'y',
+                    }, {
+                        label: 'Transactions',
+                        data: transactions,
+                        borderColor: 'rgba(13, 202, 240, 1)',
+                        backgroundColor: 'rgba(13, 202, 240, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        yAxisID: 'y1',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        if (context.dataset.label === 'Sales (AED)') {
+                                            label += 'AED ' + context.parsed.y.toFixed(2);
+                                        } else {
+                                            label += context.parsed.y;
+                                        }
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            ticks: {
+                                callback: (value) => 'AED ' + value
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            grid: { drawOnChartArea: false },
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    },
+                    animation: {
+                        duration: 1500,
+                        easing: 'easeInOutQuart'
+                    }
+                }
+            });
+        }
+
+        function updateChannelChart(channelSummary) {
+            const ctx = document.getElementById('channelChart');
+            if (!ctx) return;
+            
+            if (charts.channel) charts.channel.destroy();
+            
+            const channels = Object.keys(channelSummary);
+            const sales = channels.map(c => channelSummary[c].sales);
+            const colors = ['#dc3545', '#0dcaf0', '#198754'];
+            
+            charts.channel = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: channels,
+                    datasets: [{
+                        data: sales,
+                        backgroundColor: colors,
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.parsed;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `${context.label}: AED ${value.toFixed(2)} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true,
+                        duration: 1500
+                    }
+                }
+            });
+        }
+
+        function updateCurrentDataTable() {
+            const tbody = document.querySelector('#currentDataTable tbody');
+            tbody.innerHTML = '';
+            
+            filteredData.forEach((entry, index) => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td><input type="checkbox" class="row-checkbox" data-index="${index}"></td>
+                    <td>${entry.Date}</td>
+                    <td>${entry.Branch}</td>
+                    <td><span class="channel-badge channel-${entry.Channel.toLowerCase().replace('-', '')}">${entry.Channel}</span></td>
+                    <td>${entry.Transactions}</td>
+                    <td>AED ${entry.Sales.toFixed(2)}</td>
+                    <td>
+                        <button class="edit-btn btn-sm" data-index="${index}">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="delete-btn btn-sm" data-index="${index}">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </td>
+                `;
+                
+                row.querySelector('.edit-btn').addEventListener('click', () => editEntry(index));
+                row.querySelector('.delete-btn').addEventListener('click', () => deleteEntry(index));
+                row.querySelector('.row-checkbox').addEventListener('change', updateBulkActions);
+            });
+            
+            updateBulkActions();
+        }
+
+        function updateAnalytics() {
+            showLoading();
+            
+            const { branchSummary, dailySummary, channelSummary } = processSalesData();
+            
+            // Weekly Performance Chart
+            const weeklyCtx = document.getElementById('weeklyChart');
+            if (weeklyCtx) {
+                if (charts.weekly) charts.weekly.destroy();
+                
+                const weeklyData = {};
+                Object.keys(dailySummary).forEach(date => {
+                    const weekStart = new Date(date);
+                    weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+                    const weekKey = weekStart.toISOString().split('T')[0];
+                    
+                    if (!weeklyData[weekKey]) {
+                        weeklyData[weekKey] = { sales: 0, transactions: 0 };
+                    }
+                    weeklyData[weekKey].sales += dailySummary[date].sales;
+                    weeklyData[weekKey].transactions += dailySummary[date].transactions;
+                });
+                
+                const weeks = Object.keys(weeklyData).sort();
+                const sales = weeks.map(w => weeklyData[w].sales);
+                const transactions = weeks.map(w => weeklyData[w].transactions);
+                
+                charts.weekly = new Chart(weeklyCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: weeks.map(w => `Week ${new Date(w).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`),
+                        datasets: [{
+                            label: 'Sales (AED)',
+                            data: sales,
+                            backgroundColor: 'rgba(220, 53, 69, 0.8)',
+                            borderColor: 'rgba(220, 53, 69, 1)',
+                            borderWidth: 1,
+                            borderRadius: 5,
+                            yAxisID: 'y',
+                        }, {
+                            label: 'Transactions',
+                            data: transactions,
+                            backgroundColor: 'rgba(13, 202, 240, 0.8)',
+                            borderColor: 'rgba(13, 202, 240, 1)',
+                            borderWidth: 1,
+                            borderRadius: 5,
+                            yAxisID: 'y1',
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'top' }
+                        },
+                        scales: {
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: { display: true, text: 'Sales (AED)' }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                title: { display: true, text: 'Transactions' },
+                                grid: { drawOnChartArea: false }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Market Share Chart
+            const marketCtx = document.getElementById('marketShareChart');
+            if (marketCtx) {
+                if (charts.marketShare) charts.marketShare.destroy();
+                
+                const branches = Object.keys(branchSummary);
+                const sales = branches.map(b => branchSummary[b].sales);
+                const totalSales = sales.reduce((a, b) => a + b, 0);
+                const percentages = sales.map(s => ((s / totalSales) * 100).toFixed(1));
+                
+                charts.marketShare = new Chart(marketCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: branches.map(b => b.replace('Crispy Chicken ', '')),
+                        datasets: [{
+                            data: percentages,
+                            backgroundColor: [
+                                '#dc3545', '#0dcaf0', '#198754', '#ffc107', 
+                                '#6c757d', '#0d6efd', '#6610f1'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'right' },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.label}: ${context.parsed}%`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Best Performing Day
+            const dates = Object.keys(dailySummary).sort();
+            if (dates.length > 0) {
+                const bestDay = dates.reduce((max, date) => 
+                    dailySummary[date].sales > dailySummary[max].sales ? date : max
+                );
+                document.getElementById('bestPerformingDay').textContent = new Date(bestDay).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
+                document.getElementById('bestDaySales').textContent = dailySummary[bestDay].sales.toFixed(2);
+            }
+            
+            // Top Branch
+            const topBranch = Object.entries(branchSummary).sort((a, b) => b[1].sales - a[1].sales)[0];
+            if (topBranch) {
+                document.getElementById('topBranchName').textContent = topBranch[0].replace('Crispy Chicken ', '');
+                document.getElementById('topBranchRevenue').textContent = topBranch[1].sales.toFixed(2);
+            }
+            
+            // Avg Daily Growth
+            if (dates.length >= 2) {
+                const growthRates = [];
+                for (let i = 1; i < dates.length; i++) {
+                    const prev = dailySummary[dates[i-1]].sales;
+                    const curr = dailySummary[dates[i]].sales;
+                    if (prev > 0) {
+                        growthRates.push(((curr - prev) / prev) * 100);
+                    }
+                }
+                const avgGrowth = growthRates.length > 0 ? 
+                    (growthRates.reduce((a, b) => a + b, 0) / growthRates.length).toFixed(1) : 0;
+                document.getElementById('avgDailyGrowth').textContent = `${avgGrowth}%`;
+            }
+            
+            // Channel Comparison Chart
+            const channelCompCtx = document.getElementById('channelComparisonChart');
+            if (channelCompCtx) {
+                if (charts.channelComp) charts.channelComp.destroy();
+                
+                channels = Object.keys(channelSummary);
+                sales = channels.map(c => channelSummary[c].sales);
+                transactions = channels.map(c => channelSummary[c].transactions);
+                
+                charts.channelComp = new Chart(channelCompCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: channels,
+                        datasets: [{
+                            label: 'Sales (AED)',
+                            data: sales,
+                            backgroundColor: '#dc3545',
+                            yAxisID: 'y',
+                        }, {
+                            label: 'Transactions',
+                            data: transactions,
+                            backgroundColor: '#0dcaf0',
+                            yAxisID: 'y1',
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: { display: true, text: 'Sales (AED)' }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                title: { display: true, text: 'Transactions' },
+                                grid: { drawOnChartArea: false }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            hideLoading();
+        }
+
+        function updateForecast() {
+            showLoading();
+            
+            const { dailySummary } = processSalesData();
+            const dates = Object.keys(dailySummary).sort();
+            
+            if (dates.length > 0) {
+                // Simple moving average for forecast
+                const sales = dates.map(d => dailySummary[d].sales);
+                const avgDaily = sales.reduce((a, b) => a + b, 0) / sales.length;
+                
+                // Tomorrow's forecast
+                const tomorrow = new Date(dates[dates.length - 1]);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                document.getElementById('tomorrowForecast').textContent = `AED ${avgDaily.toFixed(2)}`;
+                
+                // Week forecast
+                const weekForecast = avgDaily * 7;
+                document.getElementById('weekForecast').textContent = `AED ${weekForecast.toFixed(2)}`;
+                
+                // Month forecast
+                const monthForecast = avgDaily * 30;
+                document.getElementById('monthForecast').textContent = `AED ${monthForecast.toFixed(2)}`;
+                
+                // Growth rate
+                if (sales.length >= 2) {
+                    const growth = ((sales[sales.length - 1] - sales[0]) / sales[0] * 100 / sales.length).toFixed(1);
+                    document.getElementById('growthRate').textContent = `${growth}%`;
+                }
+                
+                // 7-day projection chart
+                const forecastCtx = document.getElementById('forecastChart');
+                if (forecastCtx) {
+                    if (charts.forecast) charts.forecast.destroy();
+                    
+                    const projectionDates = [];
+                    const projectionSales = [];
+                    const lastDate = new Date(dates[dates.length - 1]);
+                    
+                    for (let i = 1; i <= 7; i++) {
+                        const date = new Date(lastDate);
+                        date.setDate(date.getDate() + i);
+                        projectionDates.push(date.toISOString().split('T')[0]);
+                        projectionSales.push(avgDaily);
+                    }
+                    
+                    charts.forecast = new Chart(forecastCtx, {
+                        type: 'line',
+                        data: {
+                            labels: [...dates, ...projectionDates],
+                            datasets: [{
+                                label: 'Actual Sales',
+                                data: sales,
+                                borderColor: '#dc3545',
+                                backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                                borderWidth: 3,
+                                pointRadius: 5,
+                                fill: true,
+                                tension: 0.4
+                            }, {
+                                label: 'Forecast',
+                                data: [...Array(dates.length).fill(null), ...projectionSales],
+                                borderColor: '#198754',
+                                backgroundColor: 'rgba(25, 135, 84, 0.1)',
+                                borderWidth: 3,
+                                borderDash: [5, 5],
+                                pointRadius: 5,
+                                fill: true,
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { position: 'top' }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: { callback: (value) => 'AED ' + value }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+            
+            hideLoading();
+        }
+
+        function updateReport() {
+            showLoading();
+            
+            const { branchSummary, dailySummary, channelSummary } = processSalesData();
+            
+            // Report date
+            document.getElementById('reportDate').textContent = new Date().toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            // Executive summary
+            let totalSales = 0;
+            let totalTransactions = 0;
+            let activeBranches = 0;
+            
+            Object.values(branchSummary).forEach(b => {
+                totalSales += b.sales;
+                totalTransactions += b.transactions;
+                activeBranches++;
+            });
+            
+            const avgTransaction = totalTransactions > 0 ? totalSales / totalTransactions : 0;
+            
+            document.getElementById('execTotalSales').textContent = totalSales.toFixed(2);
+            document.getElementById('execTransactions').textContent = totalTransactions;
+            document.getElementById('execAvgValue').textContent = avgTransaction.toFixed(2);
+            document.getElementById('execBranches').textContent = activeBranches;
+            
+            // Key insights
+            const topBranch = Object.entries(branchSummary).sort((a, b) => b[1].sales - a[1].sales)[0];
+            if (topBranch) {
+                document.getElementById('execTopBranch').textContent = topBranch[0].replace('Crispy Chicken ', '');
+                document.getElementById('execTopBranchSales').textContent = topBranch[1].sales.toFixed(2);
+            }
+            
+            const bestDay = Object.keys(dailySummary).sort((a, b) => 
+                dailySummary[b].sales - dailySummary[a].sales
+            )[0];
+            if (bestDay) {
+                document.getElementById('execPeakDay').textContent = new Date(bestDay).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+            }
+            
+            // Branch ranking table
+            const branchTable = document.getElementById('reportBranchTable');
+            branchTable.innerHTML = '';
+            
+            const sortedBranches = Object.entries(branchSummary).sort((a, b) => b[1].sales - a[1].sales);
+            const totalBranchSales = sortedBranches.reduce((sum, b) => sum + b[1].sales, 0);
+            
+            sortedBranches.forEach((branch, index) => {
+                const [name, data] = branch;
+                const avgValue = data.transactions > 0 ? data.sales / data.transactions : 0;
+                const marketShare = ((data.sales / totalBranchSales) * 100).toFixed(1);
+                
+                const row = branchTable.insertRow();
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${name}</td>
+                    <td>AED ${data.sales.toFixed(2)}</td>
+                    <td>${data.transactions}</td>
+                    <td>AED ${avgValue.toFixed(2)}</td>
+                    <td>${marketShare}%</td>
+                `;
+            });
+            
+            // Channel performance table
+            const channelTable = document.getElementById('reportChannelTable');
+            channelTable.innerHTML = '';
+            
+            const totalChannelSales = Object.values(channelSummary).reduce((sum, c) => sum + c.sales, 0);
+            
+            Object.entries(channelSummary).forEach(([channel, data]) => {
+                const percentage = ((data.sales / totalChannelSales) * 100).toFixed(1);
+                
+                const row = channelTable.insertRow();
+                row.innerHTML = `
+                    <td><span class="channel-badge channel-${channel.toLowerCase().replace('-', '')}">${channel}</span></td>
+                    <td>AED ${data.sales.toFixed(2)}</td>
+                    <td>${data.transactions}</td>
+                    <td>${percentage}%</td>
+                `;
+            });
+            
+            hideLoading();
+        }
+
+        function calculateTarget() {
+            const monthlyTarget = parseFloat(document.getElementById('monthlyTarget').value) || 50000;
+            const daysRemaining = parseInt(document.getElementById('daysRemaining').value) || 15;
+            
+            const { dailySummary } = processSalesData();
+            const dates = Object.keys(dailySummary).sort();
+            
+            if (dates.length > 0) {
+                const totalSales = Object.values(dailySummary).reduce((sum, d) => sum + d.sales, 0);
+                const daysPassed = dates.length;
+                const avgDailySales = totalSales / daysPassed;
+                
+                const currentProgress = (totalSales / monthlyTarget * 100).toFixed(1);
+                const requiredDaily = (monthlyTarget - totalSales) / daysRemaining;
+                const successProb = avgDailySales >= requiredDaily ? 100 : 0;
+                
+                document.getElementById('currentProgress').textContent = `${currentProgress}%`;
+                document.getElementById('requiredDaily').textContent = `AED ${requiredDaily.toFixed(2)}`;
+                document.getElementById('successProb').textContent = `${successProb}%`;
+                
+                document.getElementById('targetResults').style.display = 'block';
+            }
+        }
+
+        function compareBranches() {
+            const branch1 = document.getElementById('compareBranch1').value;
+            const branch2 = document.getElementById('compareBranch2').value;
+            
+            if (!branch1 || !branch2) {
+                showNotification('Please select two branches to compare', 'error');
+                return;
+            }
+            
+            const { branchSummary } = processSalesData();
+            
+            if (!branchSummary[branch1] || !branchSummary[branch2]) {
+                showNotification('One or both branches not found in data', 'error');
+                return;
+            }
+            
+            const data1 = branchSummary[branch1];
+            const data2 = branchSummary[branch2];
+            
+            const comparisonCtx = document.getElementById('comparisonChart');
+            if (comparisonCtx) {
+                if (charts.comparison) charts.comparison.destroy();
+                
+                charts.comparison = new Chart(comparisonCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Sales (AED)', 'Transactions', 'Avg Value (AED)'],
+                        datasets: [{
+                            label: branch1,
+                            data: [data1.sales, data1.transactions, data1.transactions > 0 ? data1.sales / data1.transactions : 0],
+                            backgroundColor: 'rgba(220, 53, 69, 0.8)'
+                        }, {
+                            label: branch2,
+                            data: [data2.sales, data2.transactions, data2.transactions > 0 ? data2.sales / data2.transactions : 0],
+                            backgroundColor: 'rgba(13, 202, 240, 0.8)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'top' }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Display comparison stats
+            const statsContainer = document.getElementById('comparisonStats');
+            statsContainer.innerHTML = `
+                <div class="col-md-6">
+                    <div class="comparison-card">
+                        <h6 class="fw-bold">${branch1}</h6>
+                        <p>Sales: AED ${data1.sales.toFixed(2)}</p>
+                        <p>Transactions: ${data1.transactions}</p>
+                        <p>Avg Value: AED ${data1.transactions > 0 ? (data1.sales / data1.transactions).toFixed(2) : 0}</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="comparison-card">
+                        <h6 class="fw-bold">${branch2}</h6>
+                        <p>Sales: AED ${data2.sales.toFixed(2)}</p>
+                        <p>Transactions: ${data2.transactions}</p>
+                        <p>Avg Value: AED ${data2.transactions > 0 ? (data2.sales / data2.transactions).toFixed(2) : 0}</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('comparisonResults').style.display = 'block';
+            showNotification('Branch comparison completed', 'success');
+        }
+
+        function comparePeriods() {
+            const period1Start = document.getElementById('period1Start').value;
+            const period1End = document.getElementById('period1End').value;
+            const period2Start = document.getElementById('period2Start').value;
+            const period2End = document.getElementById('period2End').value;
+            
+            if (!period1Start || !period1End || !period2Start || !period2End) {
+                showNotification('Please select both periods to compare', 'error');
+                return;
+            }
+            
+            // Filter data for period 1
+            const period1Data = salesData.filter(entry => {
+                return entry.Date >= period1Start && entry.Date <= period1End;
+            });
+            
+            // Filter data for period 2
+            const period2Data = salesData.filter(entry => {
+                return entry.Date >= period2Start && entry.Date <= period2End;
+            });
+            
+            // Calculate summary for each period
+            const period1Summary = period1Data.reduce((sum, entry) => {
+                sum.sales += entry.Sales;
+                sum.transactions += entry.Transactions;
+                return sum;
+            }, { sales: 0, transactions: 0 });
+            
+            const period2Summary = period2Data.reduce((sum, entry) => {
+                sum.sales += entry.Sales;
+                sum.transactions += entry.Transactions;
+                return sum;
+            }, { sales: 0, transactions: 0 });
+            
+            const comparisonCtx = document.getElementById('comparisonChart');
+            if (comparisonCtx) {
+                if (charts.comparison) charts.comparison.destroy();
+                
+                charts.comparison = new Chart(comparisonCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Sales (AED)', 'Transactions'],
+                        datasets: [{
+                            label: `Period 1 (${period1Start} to ${period1End})`,
+                            data: [period1Summary.sales, period1Summary.transactions],
+                            backgroundColor: 'rgba(220, 53, 69, 0.8)'
+                        }, {
+                            label: `Period 2 (${period2Start} to ${period2End})`,
+                            data: [period2Summary.sales, period2Summary.transactions],
+                            backgroundColor: 'rgba(13, 202, 240, 0.8)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'top' }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Display comparison stats
+            const statsContainer = document.getElementById('comparisonStats');
+            statsContainer.innerHTML = `
+                <div class="col-md-6">
+                    <div class="comparison-card">
+                        <h6 class="fw-bold">Period 1 (${period1Start} to ${period1End})</h6>
+                        <p>Sales: AED ${period1Summary.sales.toFixed(2)}</p>
+                        <p>Transactions: ${period1Summary.transactions}</p>
+                        <p>Avg Value: AED ${period1Summary.transactions > 0 ? (period1Summary.sales / period1Summary.transactions).toFixed(2) : 0}</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="comparison-card">
+                        <h6 class="fw-bold">Period 2 (${period2Start} to ${period2End})</h6>
+                        <p>Sales: AED ${period2Summary.sales.toFixed(2)}</p>
+                        <p>Transactions: ${period2Summary.transactions}</p>
+                        <p>Avg Value: AED ${period2Summary.transactions > 0 ? (period2Summary.sales / period2Summary.transactions).toFixed(2) : 0}</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('comparisonResults').style.display = 'block';
+            showNotification('Period comparison completed', 'success');
+        }
+
+        function addOrUpdateEntry(e) {
+            e.preventDefault();
+            
+            const date = document.getElementById('entryDate').value;
+            const branch = document.getElementById('entryBranch').value;
+            const channel = document.getElementById('entryChannel').value;
+            const transactions = parseInt(document.getElementById('entryTransactions').value);
+            const sales = parseFloat(document.getElementById('entrySales').value);
+            const editIndex = document.getElementById('editIndex').value;
+            
+            if (!date || !branch || !channel || isNaN(transactions) || isNaN(sales)) {
+                showNotification('Please fill all fields correctly', 'error');
+                return;
+            }
+            
+            const newEntry = { Date: date, Branch: branch, Channel: channel, Transactions: transactions, Sales: sales };
+            
+            if (editIndex) {
+                // Update existing entry
+                salesData[parseInt(editIndex)] = newEntry;
+                showNotification('Entry updated successfully', 'success');
+                document.getElementById('submitBtnText').textContent = 'Add Data';
+                document.getElementById('editIndex').value = '';
+            } else {
+                // Add new entry
+                salesData.push(newEntry);
+                showNotification('Entry added successfully', 'success');
+            }
+            
+            // Reset form
+            document.getElementById('dataEntryForm').reset();
+            document.getElementById('entryDate').valueAsDate = new Date();
+            
+            // Update dashboard
+            filteredData = salesData;
+            updateDashboard();
+            updateCurrentDataTable();
+        }
+
+        function editEntry(index) {
+            const entry = salesData[index];
+            
+            document.getElementById('entryDate').value = entry.Date;
+            document.getElementById('entryBranch').value = entry.Branch;
+            document.getElementById('entryChannel').value = entry.Channel;
+            document.getElementById('entryTransactions').value = entry.Transactions;
+            document.getElementById('entrySales').value = entry.Sales;
+            document.getElementById('editIndex').value = index;
+            document.getElementById('submitBtnText').textContent = 'Update Data';
+            
+            // Switch to data entry page
+            showPage('data-entry');
+        }
+
+        function deleteEntry(index) {
+            if (confirm('Are you sure you want to delete this entry?')) {
+                salesData.splice(index, 1);
+                filteredData = salesData;
+                updateDashboard();
+                updateCurrentDataTable();
+                showNotification('Entry deleted successfully', 'success');
+            }
+        }
+
+        function searchData() {
+            const searchTerm = document.getElementById('searchData').value.toLowerCase();
+            const rows = document.querySelectorAll('#currentDataTable tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        function toggleSelectAll(e) {
+            const checkboxes = document.querySelectorAll('.row-checkbox');
+            checkboxes.forEach(cb => cb.checked = e.target.checked);
+            updateBulkActions();
+        }
+
+        function updateBulkActions() {
+            const checkboxes = document.querySelectorAll('.row-checkbox:checked');
+            const deleteBtn = document.getElementById('deleteSelectedBtn');
+            
+            if (checkboxes.length > 0) {
+                deleteBtn.style.display = 'inline-block';
+                selectedRows = new Set(Array.from(checkboxes).map(cb => cb.dataset.index));
+            } else {
+                deleteBtn.style.display = 'none';
+                selectedRows.clear();
+            }
+        }
+
+        function deleteSelected() {
+            if (confirm(`Are you sure you want to delete ${selectedRows.size} selected entries?`)) {
+                // Convert to array and sort in descending order to avoid index shifting issues
+                const indicesToDelete = Array.from(selectedRows).map(Number).sort((a, b) => b - a);
+                
+                indicesToDelete.forEach(index => {
+                    salesData.splice(index, 1);
+                });
+                
+                filteredData = salesData;
+                updateDashboard();
+                updateCurrentDataTable();
+                showNotification(`${selectedRows.size} entries deleted successfully`, 'success');
+                
+                // Reset selection
+                document.getElementById('selectAllCheckbox').checked = false;
+                selectedRows.clear();
+            }
+        }
+
+        function exportCSV() {
+            const headers = ['Date', 'Branch', 'Channel', 'Transactions', 'Sales'];
+            const csvContent = [
+                headers.join(','),
+                ...salesData.map(row => 
+                    `${row.Date},${row.Branch},${row.Channel},${row.Transactions},${row.Sales}`
+                )
+            ].join('\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'crispy_chicken_sales.csv');
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showNotification('Data exported successfully', 'success');
+        }
+
+        function importCSV(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const csv = event.target.result;
+                    const lines = csv.split('\n');
+                    
+                    // Skip header
+                    for (let i = 1; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (!line) continue;
+                        
+                        const [date, branch, channel, transactions, sales] = line.split(',');
+                        
+                        if (date && branch && channel && transactions && sales) {
+                            salesData.push({
+                                Date: date.trim(),
+                                Branch: branch.trim(),
+                                Channel: channel.trim(),
+                                Transactions: parseInt(transactions),
+                                Sales: parseFloat(sales)
+                            });
+                        }
+                    }
+                    
+                    filteredData = salesData;
+                    updateDashboard();
+                    updateCurrentDataTable();
+                    showNotification('Data imported successfully', 'success');
+                } catch (error) {
+                    showNotification('Error importing data. Please check the CSV format.', 'error');
+                }
+            };
+            
+            reader.readAsText(file);
+            
+            // Reset file input
+            e.target.value = '';
+        }
+
+        function resetData() {
+            if (confirm('Are you sure you want to reset all data to initial values?')) {
+                salesData = [...initialSalesData];
+                filteredData = salesData;
+                updateDashboard();
+                updateCurrentDataTable();
+                showNotification('Data reset to initial values', 'info');
+            }
+        }
+
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
+        function showLoading() {
+            document.getElementById('loadingSpinner').style.display = 'block';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingSpinner').style.display = 'none';
+        }
+
+        function animateValue(id, start, end, duration, prefix = '') {
+            const element = document.getElementById(id);
+            const range = end - start;
+            const increment = end > start ? 1 : -1;
+            const stepTime = Math.abs(Math.floor(duration / range));
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment * (range / duration) * 16;
+                if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+                    current = end;
+                    clearInterval(timer);
+                }
+                element.textContent = prefix + current.toFixed(2);
+            }, stepTime);
+        }
+    </script>
+</body>
+</html>
