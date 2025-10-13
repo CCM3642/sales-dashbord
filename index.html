@@ -1,106 +1,2246 @@
-// Update management report
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crispy Chicken Sales Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #dc3545;
+            --secondary-color: #6c757d;
+            --success-color: #198754;
+            --info-color: #0dcaf0;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --crispy-red: #e63946;
+            --crispy-orange: #f1faee;
+            --crispy-blue: #a8dadc;
+            --crispy-green: #457b9d;
+            --crispy-dark: #1d3557;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--crispy-red) !important;
+        }
+        
+        .sidebar {
+            min-height: calc(100vh - 56px);
+            background-color: var(--crispy-dark);
+            color: white;
+            padding-top: 20px;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .sidebar .nav-link.active {
+            background-color: var(--crispy-red);
+            color: white;
+        }
+        
+        .main-content {
+            padding: 20px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+            font-weight: 600;
+        }
+        
+        .metric-card {
+            border-left: 4px solid var(--crispy-red);
+        }
+        
+        .metric-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+        
+        .metric-label {
+            font-size: 0.875rem;
+            color: var(--secondary-color);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        .branch-chart-container {
+            height: 400px;
+        }
+        
+        .daily-chart-container {
+            height: 400px;
+        }
+        
+        .weekly-chart-container {
+            height: 400px;
+        }
+        
+        .monthly-chart-container {
+            height: 400px;
+        }
+        
+        .target-chart-container {
+            height: 400px;
+        }
+        
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .btn-primary {
+            background-color: var(--crispy-red);
+            border-color: var(--crispy-red);
+        }
+        
+        .btn-primary:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+        
+        .form-control:focus {
+            border-color: var(--crispy-red);
+            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+        }
+        
+        .data-entry-form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        .notification.show {
+            opacity: 1;
+        }
+        
+        .notification.success {
+            background-color: var(--success-color);
+        }
+        
+        .notification.error {
+            background-color: var(--danger-color);
+        }
+        
+        .notification.info {
+            background-color: var(--info-color);
+        }
+        
+        .management-report {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        
+        .report-header {
+            border-bottom: 2px solid var(--crispy-red);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .report-section {
+            margin-bottom: 30px;
+        }
+        
+        .report-section h3 {
+            color: var(--crispy-red);
+            margin-bottom: 15px;
+        }
+        
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .report-table th, .report-table td {
+            border: 1px solid #dee2e6;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        
+        .report-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .report-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .recommendation-list {
+            padding-left: 20px;
+        }
+        
+        .recommendation-list li {
+            margin-bottom: 8px;
+        }
+        
+        .save-options {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .save-options h5 {
+            margin-bottom: 15px;
+            color: var(--crispy-dark);
+        }
+        
+        .data-status {
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .data-status.saved {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+        
+        .data-status.unsaved {
+            background-color: #f8d7da;
+            color: #842029;
+        }
+        
+        .tab-content {
+            padding: 20px 0;
+        }
+        
+        .nav-tabs .nav-link {
+            color: var(--crispy-dark);
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--crispy-red);
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                top: 56px;
+                bottom: 0;
+                left: 0;
+                z-index: 100;
+                width: 250px;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .metric-card {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-drumstick-bite me-2"></i> Crispy Chicken Sales Dashboard
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" id="dashboardLink">
+                            <i class="fas fa-chart-line me-1"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="dataEntryLink">
+                            <i class="fas fa-edit me-1"></i> Data Entry
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="reportLink">
+                            <i class="fas fa-file-alt me-1"></i> Management Report
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block sidebar collapse" id="sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" data-page="dashboard">
+                                <i class="fas fa-chart-line me-2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-page="data-entry">
+                                <i class="fas fa-edit me-2"></i> Data Entry
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-page="report">
+                                <i class="fas fa-file-alt me-2"></i> Management Report
+                            </a>
+                        </li>
+                        <li class="nav-item mt-4">
+                            <a class="nav-link" href="#" id="saveDataBtn">
+                                <i class="fas fa-save me-2"></i> Save Data
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="loadDataBtn">
+                                <i class="fas fa-upload me-2"></i> Load Data
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="exportDataBtn">
+                                <i class="fas fa-file-export me-2"></i> Export Data
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="resetDataBtn">
+                                <i class="fas fa-redo me-2"></i> Reset Data
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <!-- Dashboard Page -->
+                <div id="dashboardPage" class="page">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Sales Performance Dashboard</h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <div class="btn-group me-2">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="refreshDashboardBtn">
+                                    <i class="fas fa-sync-alt"></i> Refresh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Key Metrics -->
+                    <div class="row mb-4">
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card metric-card">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Sales</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800 metric-value" id="totalSales">AED 0.00</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-money-bill-wave fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card metric-card">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Transactions</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800 metric-value" id="totalTransactions">0</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card metric-card">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Avg. Transaction</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800 metric-value" id="avgTransaction">AED 0.00</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-chart-bar fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card metric-card">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Target</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800 metric-value" id="overallTarget">AED 0.00</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-bullseye fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabs -->
+                    <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="branch-tab" data-bs-toggle="tab" data-bs-target="#branch" type="button" role="tab">Branch Performance</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="daily-tab" data-bs-toggle="tab" data-bs-target="#daily" type="button" role="tab">Daily Trends</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="weekly-tab" data-bs-toggle="tab" data-bs-target="#weekly" type="button" role="tab">Weekly Trends</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="monthly-tab" data-bs-toggle="tab" data-bs-target="#monthly" type="button" role="tab">Monthly Trends</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="target-tab" data-bs-toggle="tab" data-bs-target="#target" type="button" role="tab">Target Plan</button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="dashboardTabsContent">
+                        <!-- Branch Performance Tab -->
+                        <div class="tab-pane fade show active" id="branch" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-store me-2"></i> Branch Delivery Performance
+                                </div>
+                                <div class="card-body">
+                                    <div class="branch-chart-container">
+                                        <canvas id="branchChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card mt-4">
+                                <div class="card-header">
+                                    <i class="fas fa-table me-2"></i> Branch Performance Details
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-container">
+                                        <table class="table table-striped table-hover" id="branchTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Branch</th>
+                                                    <th>Total Transactions</th>
+                                                    <th>Total Sales (AED)</th>
+                                                    <th>Avg. Transaction Value</th>
+                                                    <th>Avg. Daily Sales</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data will be inserted here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Daily Trends Tab -->
+                        <div class="tab-pane fade" id="daily" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-chart-line me-2"></i> Daily Delivery Trends
+                                </div>
+                                <div class="card-body">
+                                    <div class="daily-chart-container">
+                                        <canvas id="dailyChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card mt-4">
+                                <div class="card-header">
+                                    <i class="fas fa-table me-2"></i> Daily Performance Details
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-container">
+                                        <table class="table table-striped table-hover" id="dailyTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Day of Week</th>
+                                                    <th>Total Transactions</th>
+                                                    <th>Total Sales (AED)</th>
+                                                    <th>Avg. Transaction Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data will be inserted here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Weekly Trends Tab -->
+                        <div class="tab-pane fade" id="weekly" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-calendar-week me-2"></i> Weekly Delivery Trends
+                                </div>
+                                <div class="card-body">
+                                    <div class="weekly-chart-container">
+                                        <canvas id="weeklyChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card mt-4">
+                                <div class="card-header">
+                                    <i class="fas fa-table me-2"></i> Weekly Performance Details
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-container">
+                                        <table class="table table-striped table-hover" id="weeklyTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Week</th>
+                                                    <th>Start Date</th>
+                                                    <th>End Date</th>
+                                                    <th>Total Transactions</th>
+                                                    <th>Total Sales (AED)</th>
+                                                    <th>Avg. Transaction Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data will be inserted here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Monthly Trends Tab -->
+                        <div class="tab-pane fade" id="monthly" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-calendar-alt me-2"></i> Monthly Delivery Trends
+                                </div>
+                                <div class="card-body">
+                                    <div class="monthly-chart-container">
+                                        <canvas id="monthlyChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card mt-4">
+                                <div class="card-header">
+                                    <i class="fas fa-table me-2"></i> Monthly Performance Details
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-container">
+                                        <table class="table table-striped table-hover" id="monthlyTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Month</th>
+                                                    <th>Year</th>
+                                                    <th>Total Transactions</th>
+                                                    <th>Total Sales (AED)</th>
+                                                    <th>Avg. Transaction Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data will be inserted here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Target Plan Tab -->
+                        <div class="tab-pane fade" id="target" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-bullseye me-2"></i> Variable Target Distribution Plan
+                                </div>
+                                <div class="card-body">
+                                    <div class="target-chart-container">
+                                        <canvas id="targetChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card mt-4">
+                                <div class="card-header">
+                                    <i class="fas fa-table me-2"></i> Target Distribution Details
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-container">
+                                        <table class="table table-striped table-hover" id="targetTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Branch</th>
+                                                    <th>Current Sales (AED)</th>
+                                                    <th>Growth Rate</th>
+                                                    <th>Performance Score</th>
+                                                    <th>Target Sales (AED)</th>
+                                                    <th>Target Increase (AED)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data will be inserted here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Entry Page -->
+                <div id="dataEntryPage" class="page" style="display: none;">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Sales Data Entry</h1>
+                    </div>
+
+                    <!-- Data Entry Form -->
+                    <div class="data-entry-form">
+                        <h4 class="mb-4">Add New Sales Data</h4>
+                        <form id="dataEntryForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="entryDate" class="form-label">Date</label>
+                                    <input type="date" class="form-control" id="entryDate" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="entryBranch" class="form-label">Branch</label>
+                                    <select class="form-select" id="entryBranch" required>
+                                        <option value="">Select Branch</option>
+                                        <option value="Crispy Chicken-Hamdan St">Crispy Chicken-Hamdan St</option>
+                                        <option value="Crispy Chicken Khaldia">Crispy Chicken Khaldia</option>
+                                        <option value="Crispy Chicken Shabiya 11">Crispy Chicken Shabiya 11</option>
+                                        <option value="Crispy Chicken Muroor">Crispy Chicken Muroor</option>
+                                        <option value="Crispy Chicken Al Barsha">Crispy Chicken Al Barsha</option>
+                                        <option value="Crispy Chicken Al Satwa">Crispy Chicken Al Satwa</option>
+                                        <option value="Crispy Chicken Al Rgga">Crispy Chicken Al Rgga</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="entryChannel" class="form-label">Channel</label>
+                                    <select class="form-select" id="entryChannel" required>
+                                        <option value="Delivery">Delivery</option>
+                                        <option value="Dine-in">Dine-in</option>
+                                        <option value="Takeaway">Takeaway</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="entryTransactions" class="form-label">Transactions</label>
+                                    <input type="number" class="form-control" id="entryTransactions" min="0" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="entrySales" class="form-label">Sales (AED)</label>
+                                    <input type="number" class="form-control" id="entrySales" min="0" step="0.01" required>
+                                </div>
+                                <div class="col-md-6 mb-3 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-plus-circle me-2"></i> Add Data
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Data Status -->
+                    <div class="data-status saved" id="dataStatus">
+                        <i class="fas fa-check-circle me-2"></i> All changes are saved
+                    </div>
+
+                    <!-- Save Options -->
+                    <div class="save-options">
+                        <h5>Data Management</h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <button class="btn btn-primary w-100" id="saveDataBtn2">
+                                    <i class="fas fa-save me-2"></i> Save Data Locally
+                                </button>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <button class="btn btn-info w-100" id="loadDataBtn2">
+                                    <i class="fas fa-upload me-2"></i> Load Data
+                                </button>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <button class="btn btn-success w-100" id="exportDataBtn2">
+                                    <i class="fas fa-file-export me-2"></i> Export to CSV
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Current Data Table -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <i class="fas fa-table me-2"></i> Current Sales Data
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="table table-striped table-hover" id="currentDataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Branch</th>
+                                            <th>Channel</th>
+                                            <th>Transactions</th>
+                                            <th>Sales (AED)</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Data will be inserted here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Management Report Page -->
+                <div id="reportPage" class="page" style="display: none;">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Management Report</h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <div class="btn-group me-2">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="generateReportBtn">
+                                    <i class="fas fa-sync-alt"></i> Generate Report
+                                </button>
+                            </div>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-primary" id="downloadReportBtn">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="management-report">
+                        <div class="report-header">
+                            <h2 class="text-center">CRISPY CHICKEN DELIVERY PERFORMANCE REPORT</h2>
+                            <p class="text-center text-muted">Report Date: <span id="reportDate"></span></p>
+                            <p class="text-center text-muted">Data Period: <span id="reportPeriod"></span></p>
+                        </div>
+
+                        <!-- Executive Summary -->
+                        <div class="report-section">
+                            <h3>Executive Summary</h3>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Total Current Sales:</strong> AED <span id="execTotalSales">0.00</span></p>
+                                    <p><strong>Overall Target:</strong> AED <span id="execTarget">0.00</span> (10% increase)</p>
+                                    <p><strong>Total Transactions:</strong> <span id="execTransactions">0</span></p>
+                                    <p><strong>Avg. Transaction Value:</strong> AED <span id="execAvgValue">0.00</span></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Peak Day:</strong> <span id="execPeakDay"></span></p>
+                                    <p><strong>Peak Day Sales:</strong> AED <span id="execPeakSales">0.00</span></p>
+                                    <p><strong>Top Branch:</strong> <span id="execTopBranch"></span></p>
+                                    <p><strong>Top Branch Sales:</strong> AED <span id="execTopBranchSales">0.00</span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Branch Performance Analysis -->
+                        <div class="report-section">
+                            <h3>Branch Delivery Performance Analysis</h3>
+                            <div class="chart-container mb-4">
+                                <canvas id="reportBranchChart"></canvas>
+                            </div>
+                            
+                            <table class="report-table">
+                                <thead>
+                                    <tr>
+                                        <th>Branch</th>
+                                        <th>Total Transactions</th>
+                                        <th>Total Sales (AED)</th>
+                                        <th>Avg. Transaction Value</th>
+                                        <th>Avg. Daily Sales</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reportBranchTableBody">
+                                    <!-- Data will be inserted here -->
+                                </tbody>
+                            </table>
+                            
+                            <div class="mt-3">
+                                <p><strong>Key Findings:</strong></p>
+                                <ul>
+                                    <li>Top performing branch: <span id="reportTopBranch"></span></li>
+                                    <li>Highest transaction value: <span id="reportHighValueBranch"></span></li>
+                                    <li>Lowest performing branches: <span id="reportLowBranches"></span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Daily Trend Analysis -->
+                        <div class="report-section">
+                            <h3>Daily Delivery Trend Analysis</h3>
+                            <div class="chart-container mb-4">
+                                <canvas id="reportDailyChart"></canvas>
+                            </div>
+                            
+                            <table class="report-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Day of Week</th>
+                                        <th>Total Transactions</th>
+                                        <th>Total Sales (AED)</th>
+                                        <th>Avg. Transaction Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reportDailyTableBody">
+                                    <!-- Data will be inserted here -->
+                                </tbody>
+                            </table>
+                            
+                            <div class="mt-3">
+                                <p><strong>Performance Trends:</strong></p>
+                                <ul>
+                                    <li>Peak day: <span id="reportPeakDay"></span> (<span id="reportPeakDayOfWeek"></span>) - AED <span id="reportPeakDaySales"></span></li>
+                                    <li>Lowest day: <span id="reportLowDay"></span> (<span id="reportLowDayOfWeek"></span>) - AED <span id="reportLowDaySales"></span></li>
+                                    <li>Weekend effect: Weekend sales (Fri-Sat) average AED <span id="reportWeekendAvg"></span> vs weekday AED <span id="reportWeekdayAvg"></span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Weekly Trend Analysis -->
+                        <div class="report-section">
+                            <h3>Weekly Delivery Trend Analysis</h3>
+                            <div class="chart-container mb-4">
+                                <canvas id="reportWeeklyChart"></canvas>
+                            </div>
+                            
+                            <table class="report-table">
+                                <thead>
+                                    <tr>
+                                        <th>Week</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Total Transactions</th>
+                                        <th>Total Sales (AED)</th>
+                                        <th>Avg. Transaction Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reportWeeklyTableBody">
+                                    <!-- Data will be inserted here -->
+                                </tbody>
+                            </table>
+                            
+                            <div class="mt-3">
+                                <p><strong>Weekly Performance Trends:</strong></p>
+                                <ul>
+                                    <li>Peak week: <span id="reportPeakWeek"></span> - AED <span id="reportPeakWeekSales"></span></li>
+                                    <li>Lowest week: <span id="reportLowWeek"></span> - AED <span id="reportLowWeekSales"></span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Monthly Trend Analysis -->
+                        <div class="report-section">
+                            <h3>Monthly Delivery Trend Analysis</h3>
+                            <div class="chart-container mb-4">
+                                <canvas id="reportMonthlyChart"></canvas>
+                            </div>
+                            
+                            <table class="report-table">
+                                <thead>
+                                    <tr>
+                                        <th>Month</th>
+                                        <th>Year</th>
+                                        <th>Total Transactions</th>
+                                        <th>Total Sales (AED)</th>
+                                        <th>Avg. Transaction Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reportMonthlyTableBody">
+                                    <!-- Data will be inserted here -->
+                                </tbody>
+                            </table>
+                            
+                            <div class="mt-3">
+                                <p><strong>Monthly Performance Trends:</strong></p>
+                                <ul>
+                                    <li>Peak month: <span id="reportPeakMonth"></span> - AED <span id="reportPeakMonthSales"></span></li>
+                                    <li>Lowest month: <span id="reportLowMonth"></span> - AED <span id="reportLowMonthSales"></span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Target Plan -->
+                        <div class="report-section">
+                            <h3>Variable Target Distribution Plan</h3>
+                            <div class="chart-container mb-4">
+                                <canvas id="reportTargetChart"></canvas>
+                            </div>
+                            
+                            <table class="report-table">
+                                <thead>
+                                    <tr>
+                                        <th>Branch</th>
+                                        <th>Current Sales (AED)</th>
+                                        <th>Growth Rate</th>
+                                        <th>Performance Score</th>
+                                        <th>Target Sales (AED)</th>
+                                        <th>Target Increase (AED)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reportTargetTableBody">
+                                    <!-- Data will be inserted here -->
+                                </tbody>
+                            </table>
+                            
+                            <div class="mt-3">
+                                <p><strong>Overall Target:</strong> AED <span id="reportOverallTarget"></span> (10% increase from current AED <span id="reportCurrentTotal"></span>)</p>
+                                
+                                <p><strong>Target Distribution Strategy:</strong></p>
+                                <ul>
+                                    <li><strong>High Performers</strong> (Hamdan St, Khaldia): Focus on maintaining quality during peak periods</li>
+                                    <li><strong>Mid Performers</strong> (Shabiya 11, Muroor, Al Barsha): Implement promotional offers during low-traffic days</li>
+                                    <li><strong>Low Performers</strong> (Al Satwa, Al Rgga): Conduct market analysis and targeted marketing campaigns</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Management Recommendations -->
+                        <div class="report-section">
+                            <h3>Management Recommendations</h3>
+                            <ol class="recommendation-list">
+                                <li>
+                                    <strong>Operational Improvements:</strong>
+                                    <ul>
+                                        <li>Implement demand forecasting for peak days (especially weekends)</li>
+                                        <li>Optimize staff scheduling based on historical delivery patterns</li>
+                                        <li>Standardize order processing across all branches</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <strong>Performance Monitoring:</strong>
+                                    <ul>
+                                        <li>Track daily performance against targets with weekly reviews</li>
+                                        <li>Implement real-time dashboard for delivery metrics</li>
+                                        <li>Conduct monthly performance reviews with branch managers</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <strong>Growth Initiatives:</strong>
+                                    <ul>
+                                        <li>Launch loyalty program for repeat delivery customers</li>
+                                        <li>Introduce time-based promotions during low-traffic periods</li>
+                                        <li>Explore partnerships with food delivery platforms for wider reach</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <strong>Resource Allocation:</strong>
+                                    <ul>
+                                        <li>Allocate additional delivery staff to high-performing branches during peak hours</li>
+                                        <li>Invest in training programs for underperforming branches</li>
+                                        <li>Consider menu adjustments based on local preferences at low-performing branches</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <strong>Performance Incentives:</strong>
+                                    <ul>
+                                        <li>Implement bonus structure for branches exceeding targets</li>
+                                        <li>Recognize top-performing branches in company communications</li>
+                                        <li>Create healthy competition between branches with monthly performance awards</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <!-- Hidden file input for loading data -->
+    <input type="file" id="fileInput" style="display: none;" accept=".json,.csv">
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Define initial sales data
+        const initialSalesData = [
+            {Date: '10/01/2025', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 73, Sales: 3216},
+            {Date: '10/01/2025', Branch: 'Crispy Chicken Khaldia', Channel: 'Delivery', Transactions: 38, Sales: 1859.8},
+            {Date: '10/01/2025', Branch: 'Crispy Chicken Shabiya 11', Channel: 'Delivery', Transactions: 39, Sales: 1965},
+            {Date: '10/01/2025', Branch: 'Crispy Chicken Muroor', Channel: 'Delivery', Transactions: 42, Sales: 2024},
+            {Date: '10/01/2025', Branch: 'Crispy Chicken Al Barsha', Channel: 'Delivery', Transactions: 24, Sales: 1376},
+            {Date: '10/01/2025', Branch: 'Crispy Chicken Al Satwa', Channel: 'Delivery', Transactions: 11, Sales: 387},
+            {Date: '10/01/2025', Branch: 'Crispy Chicken Al Rgga', Channel: 'Delivery', Transactions: 5, Sales: 204},
+            {Date: '10/02/2025', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 62, Sales: 3238},
+            {Date: '10/02/2025', Branch: 'Crispy Chicken Khaldia', Channel: 'Delivery', Transactions: 28, Sales: 1492},
+            {Date: '10/02/2025', Branch: 'Crispy Chicken Shabiya 11', Channel: 'Delivery', Transactions: 44, Sales: 2057},
+            {Date: '10/02/2025', Branch: 'Crispy Chicken Muroor', Channel: 'Delivery', Transactions: 40, Sales: 1945},
+            {Date: '10/02/2025', Branch: 'Crispy Chicken Al Barsha', Channel: 'Delivery', Transactions: 30, Sales: 1644},
+            {Date: '10/02/2025', Branch: 'Crispy Chicken Al Satwa', Channel: 'Delivery', Transactions: 10, Sales: 527},
+            {Date: '10/02/2025', Branch: 'Crispy Chicken Al Rgga', Channel: 'Delivery', Transactions: 4, Sales: 146},
+            {Date: '10/03/2025', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 72, Sales: 3100},
+            {Date: '10/03/2025', Branch: 'Crispy Chicken Khaldia', Channel: 'Delivery', Transactions: 46, Sales: 2930},
+            {Date: '10/03/2025', Branch: 'Crispy Chicken Shabiya 11', Channel: 'Delivery', Transactions: 40, Sales: 1828},
+            {Date: '10/03/2025', Branch: 'Crispy Chicken Muroor', Channel: 'Delivery', Transactions: 32, Sales: 1617},
+            {Date: '10/03/2025', Branch: 'Crispy Chicken Al Barsha', Channel: 'Delivery', Transactions: 29, Sales: 1127},
+            {Date: '10/03/2025', Branch: 'Crispy Chicken Al Satwa', Channel: 'Delivery', Transactions: 11, Sales: 427},
+            {Date: '10/03/2025', Branch: 'Crispy Chicken Al Rgga', Channel: 'Delivery', Transactions: 10, Sales: 475},
+            {Date: '10/04/2025', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 84, Sales: 4833},
+            {Date: '10/04/2025', Branch: 'Crispy Chicken Khaldia', Channel: 'Delivery', Transactions: 43, Sales: 2400},
+            {Date: '10/04/2025', Branch: 'Crispy Chicken Shabiya 11', Channel: 'Delivery', Transactions: 31, Sales: 1447},
+            {Date: '10/04/2025', Branch: 'Crispy Chicken Muroor', Channel: 'Delivery', Transactions: 36, Sales: 2299},
+            {Date: '10/04/2025', Branch: 'Crispy Chicken Al Barsha', Channel: 'Delivery', Transactions: 20, Sales: 936},
+            {Date: '10/04/2025', Branch: 'Crispy Chicken Al Satwa', Channel: 'Delivery', Transactions: 11, Sales: 566},
+            {Date: '10/04/2025', Branch: 'Crispy Chicken Al Rgga', Channel: 'Delivery', Transactions: 15, Sales: 554},
+            {Date: '10/05/2025', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 76, Sales: 2921},
+            {Date: '10/05/2025', Branch: 'Crispy Chicken Khaldia', Channel: 'Delivery', Transactions: 43, Sales: 1982},
+            {Date: '10/05/2025', Branch: 'Crispy Chicken Shabiya 11', Channel: 'Delivery', Transactions: 29, Sales: 1344},
+            {Date: '10/05/2025', Branch: 'Crispy Chicken Muroor', Channel: 'Delivery', Transactions: 20, Sales: 1126},
+            {Date: '10/05/2025', Branch: 'Crispy Chicken Al Barsha', Channel: 'Delivery', Transactions: 25, Sales: 1089},
+            {Date: '10/05/2025', Branch: 'Crispy Chicken Al Satwa', Channel: 'Delivery', Transactions: 13, Sales: 462},
+            {Date: '10/05/2025', Branch: 'Crispy Chicken Al Rgga', Channel: 'Delivery', Transactions: 8, Sales: 241},
+            {Date: '10/06/2025', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 101, Sales: 4363},
+            {Date: '10/06/2025', Branch: 'Crispy Chicken Khaldia', Channel: 'Delivery', Transactions: 54, Sales: 2113},
+            {Date: '10/06/2025', Branch: 'Crispy Chicken Shabiya 11', Channel: 'Delivery', Transactions: 61, Sales: 2714.8},
+            {Date: '10/06/2025', Branch: 'Crispy Chicken Muroor', Channel: 'Delivery', Transactions: 47, Sales: 2124},
+            {Date: '10/06/2025', Branch: 'Crispy Chicken Al Barsha', Channel: 'Delivery', Transactions: 57, Sales: 4201},
+            {Date: '10/06/2025', Branch: 'Crispy Chicken Al Satwa', Channel: 'Delivery', Transactions: 20, Sales: 848},
+            {Date: '10/06/2025', Branch: 'Crispy Chicken Al Rgga', Channel: 'Delivery', Transactions: 18, Sales: 708},
+            {Date: '10/07/2025', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 119, Sales: 5056},
+            {Date: '10/07/2025', Branch: 'Crispy Chicken Khaldia', Channel: 'Delivery', Transactions: 50, Sales: 2175},
+            {Date: '10/07/2025', Branch: 'Crispy Chicken Shabiya 11', Channel: 'Delivery', Transactions: 80, Sales: 3475},
+            {Date: '10/07/2025', Branch: 'Crispy Chicken Muroor', Channel: 'Delivery', Transactions: 46, Sales: 1957},
+            {Date: '10/07/2025', Branch: 'Crispy Chicken Al Barsha', Channel: 'Delivery', Transactions: 44, Sales: 2590},
+            {Date: '10/07/2025', Branch: 'Crispy Chicken Al Satwa', Channel: 'Delivery', Transactions: 18, Sales: 705},
+            {Date: '10/07/2025', Branch: 'Crispy Chicken Al Rgga', Channel: 'Delivery', Transactions: 19, Sales: 823},
+            {Date: '10/08/2025', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 58, Sales: 2568},
+            {Date: '10/08/2025', Branch: 'Crispy Chicken Khaldia', Channel: 'Delivery', Transactions: 24, Sales: 1037},
+            {Date: '10/08/2025', Branch: 'Crispy Chicken Shabiya 11', Channel: 'Delivery', Transactions: 30, Sales: 1574},
+            {Date: '10/08/2025', Branch: 'Crispy Chicken Muroor', Channel: 'Delivery', Transactions: 81, Sales: 1404},
+            {Date: '10/08/2025', Branch: 'Crispy Chicken Al Barsha', Channel: 'Delivery', Transactions: 29, Sales: 1891},
+            {Date: '10/08/2025', Branch: 'Crispy Chicken Al Satwa', Channel: 'Delivery', Transactions: 5, Sales: 148},
+            {Date: '10/08/2025', Branch: 'Crispy Chicken Al Rgga', Channel: 'Delivery', Transactions: 10, Sales: 519},
+            {Date: '10/09/2025', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 53, Sales: 2738},
+            {Date: '10/09/2025', Branch: 'Crispy Chicken Khaldia', Channel: 'Delivery', Transactions: 31, Sales: 2112},
+            {Date: '10/09/2025', Branch: 'Crispy Chicken Shabiya 11', Channel: 'Delivery', Transactions: 35, Sales: 1487},
+            {Date: '10/09/2025', Branch: 'Crispy Chicken Muroor', Channel: 'Delivery', Transactions: 35, Sales: 1978},
+            {Date: '10/09/2025', Branch: 'Crispy Chicken Al Barsha', Channel: 'Delivery', Transactions: 17, Sales: 733},
+            {Date: '10/09/2025', Branch: 'Crispy Chicken Al Satwa', Channel: 'Delivery', Transactions: 5, Sales: 184},
+            {Date: '10/09/2025', Branch: 'Crispy Chicken Al Rgga', Channel: 'Delivery', Transactions: 13, Sales: 408},
+            {Date: '10/10/2025', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 65, Sales: 2900},
+            {Date: '10/10/2025', Branch: 'Crispy Chicken Khaldia', Channel: 'Delivery', Transactions: 46, Sales: 2943},
+            {Date: '10/10/2025', Branch: 'Crispy Chicken Shabiya 11', Channel: 'Delivery', Transactions: 45, Sales: 2411},
+            {Date: '10/10/2025', Branch: 'Crispy Chicken Muroor', Channel: 'Delivery', Transactions: 39, Sales: 2261},
+            {Date: '10/10/2025', Branch: 'Crispy Chicken Al Barsha', Channel: 'Delivery', Transactions: 25, Sales: 1523},
+            {Date: '10/10/2025', Branch: 'Crispy Chicken Al Satwa', Channel: 'Delivery', Transactions: 12, Sales: 976},
+            {Date: '10/10/2025', Branch: 'Crispy Chicken Al Rgga', Channel: 'Delivery', Transactions: 10, Sales: 573}
+        ];
+
+        // Initialize sales data with the initial data
+        let salesData = [...initialSalesData];
+
+        // Chart instances
+        let chartInstances = {
+            branch: null,
+            daily: null,
+            weekly: null,
+            monthly: null,
+            target: null,
+            reportBranch: null,
+            reportDaily: null,
+            reportWeekly: null,
+            reportMonthly: null,
+            reportTarget: null
+        };
+
+        // Initialize dashboard when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing dashboard...');
+            
+            // Load data from localStorage if available
+            loadDataFromStorage();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Show dashboard page by default
+            showPage('dashboard');
+            
+            // Initialize dashboard after DOM is ready
+            setTimeout(() => {
+                console.log('Sales data length after loading:', salesData.length);
+                updateDashboard();
+                updateCurrentDataTable();
+                console.log('Dashboard initialization complete');
+            }, 500);
+        });
+
+        // Set up event listeners
+        function setupEventListeners() {
+            console.log('Setting up event listeners...');
+            
+            // Navigation links
+            document.getElementById('dashboardLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                showPage('dashboard');
+            });
+            
+            document.getElementById('dataEntryLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                showPage('data-entry');
+            });
+            
+            document.getElementById('reportLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                showPage('report');
+                setTimeout(() => {
+                    updateManagementReport();
+                }, 100);
+            });
+            
+            // Sidebar navigation
+            document.querySelectorAll('.sidebar .nav-link[data-page]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.getAttribute('data-page');
+                    showPage(page);
+                });
+            });
+            
+            // Data management buttons
+            document.getElementById('saveDataBtn').addEventListener('click', saveDataToStorage);
+            document.getElementById('loadDataBtn').addEventListener('click', triggerFileLoad);
+            document.getElementById('exportDataBtn').addEventListener('click', exportDataToCSV);
+            document.getElementById('resetDataBtn').addEventListener('click', resetData);
+            
+            // Data entry form
+            document.getElementById('dataEntryForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                addDataEntry();
+            });
+            
+            // Data entry page buttons
+            document.getElementById('saveDataBtn2').addEventListener('click', saveDataToStorage);
+            document.getElementById('loadDataBtn2').addEventListener('click', triggerFileLoad);
+            document.getElementById('exportDataBtn2').addEventListener('click', exportDataToCSV);
+            
+            // Dashboard refresh button
+            document.getElementById('refreshDashboardBtn').addEventListener('click', updateDashboard);
+            
+            // Report buttons
+            document.getElementById('generateReportBtn').addEventListener('click', updateManagementReport);
+            document.getElementById('downloadReportBtn').addEventListener('click', downloadReport);
+            
+            // File input change
+            document.getElementById('fileInput').addEventListener('change', handleFileLoad);
+            
+            console.log('Event listeners setup complete');
+        }
+
+        // Show page
+        function showPage(pageId) {
+            console.log('Showing page:', pageId);
+            
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.style.display = 'none';
+            });
+            
+            // Show selected page
+            if (pageId === 'dashboard') {
+                document.getElementById('dashboardPage').style.display = 'block';
+                // Update dashboard when switching to it
+                setTimeout(() => {
+                    updateDashboard();
+                }, 100);
+            } else if (pageId === 'data-entry') {
+                document.getElementById('dataEntryPage').style.display = 'block';
+            } else if (pageId === 'report') {
+                document.getElementById('reportPage').style.display = 'block';
+                setTimeout(() => {
+                    updateManagementReport();
+                }, 100);
+            }
+            
+            // Update navbar active state
+            document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            if (pageId === 'dashboard') {
+                document.getElementById('dashboardLink').classList.add('active');
+            } else if (pageId === 'data-entry') {
+                document.getElementById('dataEntryLink').classList.add('active');
+            } else if (pageId === 'report') {
+                document.getElementById('reportLink').classList.add('active');
+            }
+            
+            // Update sidebar active state
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            const sidebarLink = document.querySelector(`.sidebar .nav-link[data-page="${pageId}"]`);
+            if (sidebarLink) {
+                sidebarLink.classList.add('active');
+            }
+        }
+
+        // Load data from localStorage if available
+        function loadDataFromStorage() {
+            const savedData = localStorage.getItem('crispyChickenSalesData');
+            if (savedData) {
+                try {
+                    const parsedData = JSON.parse(savedData);
+                    if (Array.isArray(parsedData) && parsedData.length > 0) {
+                        salesData = parsedData;
+                        console.log('Loaded data from localStorage:', salesData.length, 'records');
+                        return;
+                    } else {
+                        console.warn('Saved data is empty or invalid, resetting to initial data');
+                    }
+                } catch (e) {
+                    console.error('Error parsing saved data:', e);
+                    console.warn('Resetting to initial data');
+                }
+            } else {
+                console.log('No saved data found, using initial data');
+            }
+            
+            // If we reach here, reset to initial data
+            salesData = [...initialSalesData];
+        }
+
+        // Save data to localStorage
+        function saveDataToStorage() {
+            try {
+                localStorage.setItem('crispyChickenSalesData', JSON.stringify(salesData));
+                updateDataStatus(true);
+                showNotification('Data saved successfully!', 'success');
+            } catch (e) {
+                console.error('Error saving data:', e);
+                showNotification('Error saving data', 'error');
+            }
+        }
+
+        // Update data status indicator
+        function updateDataStatus(saved) {
+            const statusElement = document.getElementById('dataStatus');
+            if (saved) {
+                statusElement.className = 'data-status saved';
+                statusElement.innerHTML = '<i class="fas fa-check-circle me-2"></i> All changes are saved';
+            } else {
+                statusElement.className = 'data-status unsaved';
+                statusElement.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i> You have unsaved changes';
+            }
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.className = `notification ${type}`;
+            }, 3000);
+        }
+
+        // Process sales data
+        function processSalesData() {
+            console.log('Processing sales data...');
+            console.log('Sales data length:', salesData.length);
+            
+            if (salesData.length === 0) {
+                console.warn('No sales data available');
+                showNotification('No sales data available', 'warning');
+                return { 
+                    branchSummary: {}, 
+                    dailySummary: {},
+                    weeklySummary: {},
+                    monthlySummary: {}
+                };
+            }
+            
+            // Calculate branch summary
+            const branchSummary = {};
+            const dailySummary = {};
+            const weeklySummary = {};
+            const monthlySummary = {};
+            
+            salesData.forEach(entry => {
+                // Branch summary
+                if (!branchSummary[entry.Branch]) {
+                    branchSummary[entry.Branch] = {
+                        Total_Transactions: 0,
+                        Total_Sales: 0,
+                        Unique_Days: new Set(),
+                        Dates: []
+                    };
+                }
+                
+                branchSummary[entry.Branch].Total_Transactions += entry.Transactions;
+                branchSummary[entry.Branch].Total_Sales += entry.Sales;
+                branchSummary[entry.Branch].Unique_Days.add(entry.Date);
+                branchSummary[entry.Branch].Dates.push(entry.Date);
+                
+                // Daily summary
+                if (!dailySummary[entry.Date]) {
+                    dailySummary[entry.Date] = {
+                        Total_Transactions: 0,
+                        Total_Sales: 0,
+                        Day_of_Week: new Date(entry.Date).toLocaleDateString('en-US', { weekday: 'long' })
+                    };
+                }
+                
+                dailySummary[entry.Date].Total_Transactions += entry.Transactions;
+                dailySummary[entry.Date].Total_Sales += entry.Sales;
+                
+                // Weekly summary - FIXED
+                const date = new Date(entry.Date);
+                const weekStart = new Date(date);
+                weekStart.setDate(date.getDate() - date.getDay()); // Set to Sunday of the week
+                const weekKey = weekStart.toISOString().split('T')[0];
+                
+                const weekEnd = new Date(weekStart);
+                weekEnd.setDate(weekStart.getDate() + 6); // End of the week (Saturday)
+                
+                if (!weeklySummary[weekKey]) {
+                    weeklySummary[weekKey] = {
+                        Week_Start: weekStart.toISOString().split('T')[0],
+                        Week_End: weekEnd.toISOString().split('T')[0],
+                        Total_Transactions: 0,
+                        Total_Sales: 0
+                    };
+                }
+                
+                weeklySummary[weekKey].Total_Transactions += entry.Transactions;
+                weeklySummary[weekKey].Total_Sales += entry.Sales;
+                
+                // Monthly summary
+                const monthKey = `${date.getFullYear()}-${date.getMonth() + 1}`;
+                
+                if (!monthlySummary[monthKey]) {
+                    monthlySummary[monthKey] = {
+                        Month: date.getMonth() + 1,
+                        Year: date.getFullYear(),
+                        Total_Transactions: 0,
+                        Total_Sales: 0
+                    };
+                }
+                
+                monthlySummary[monthKey].Total_Transactions += entry.Transactions;
+                monthlySummary[monthKey].Total_Sales += entry.Sales;
+            });
+            
+            // Calculate averages for branch summary
+            Object.keys(branchSummary).forEach(branch => {
+                const summary = branchSummary[branch];
+                summary.Avg_Transaction_Value = summary.Total_Sales / summary.Total_Transactions;
+                summary.Unique_Days = summary.Unique_Days.size;
+                summary.Avg_Daily_Transactions = summary.Total_Transactions / summary.Unique_Days;
+                summary.Avg_Daily_Sales = summary.Total_Sales / summary.Unique_Days;
+            });
+            
+            // Calculate averages for daily summary
+            Object.keys(dailySummary).forEach(date => {
+                const summary = dailySummary[date];
+                summary.Avg_Transaction_Value = summary.Total_Sales / summary.Total_Transactions;
+            });
+            
+            // Calculate averages for weekly summary
+            Object.keys(weeklySummary).forEach(week => {
+                const summary = weeklySummary[week];
+                summary.Avg_Transaction_Value = summary.Total_Sales / summary.Total_Transactions;
+            });
+            
+            // Calculate averages for monthly summary
+            Object.keys(monthlySummary).forEach(month => {
+                const summary = monthlySummary[month];
+                summary.Avg_Transaction_Value = summary.Total_Sales / summary.Total_Transactions;
+            });
+            
+            console.log('Processed data for', Object.keys(branchSummary).length, 'branches,', 
+                        Object.keys(dailySummary).length, 'days,', 
+                        Object.keys(weeklySummary).length, 'weeks, and', 
+                        Object.keys(monthlySummary).length, 'months');
+            
+            return { branchSummary, dailySummary, weeklySummary, monthlySummary };
+        }
+
+        // Calculate target plan
+        function calculateTargetPlan(branchSummary) {
+            const targetData = {};
+            let totalSales = 0;
+            
+            // Calculate total sales
+            Object.keys(branchSummary).forEach(branch => {
+                totalSales += branchSummary[branch].Total_Sales;
+            });
+            
+            const overallTarget = totalSales * 1.10; // 10% increase
+            
+            // Calculate growth rates (simplified for this example)
+            Object.keys(branchSummary).forEach(branch => {
+                const summary = branchSummary[branch];
+                
+                // Simplified growth rate calculation
+                const growthRate = Math.random() * 0.3 - 0.1; // Random between -10% and +20%
+                
+                // Performance score (combination of sales share and growth)
+                const salesShare = summary.Total_Sales / totalSales;
+                const performanceScore = (salesShare * 0.7) + (growthRate * 0.3);
+                
+                // Calculate target
+                const weight = performanceScore / Object.keys(branchSummary).reduce((sum, b) => {
+                    const s = branchSummary[b];
+                    const sh = s.Total_Sales / totalSales;
+                    const gr = Math.random() * 0.3 - 0.1;
+                    const ps = (sh * 0.7) + (gr * 0.3);
+                    return sum + ps;
+                }, 0);
+                
+                const targetSales = overallTarget * weight;
+                const targetIncrease = targetSales - summary.Total_Sales;
+                
+                targetData[branch] = {
+                    Total_Sales: summary.Total_Sales,
+                    Growth_Rate: growthRate,
+                    Performance_Score: performanceScore,
+                    Target_Sales: targetSales,
+                    Target_Increase: targetIncrease
+                };
+            });
+            
+            return { targetData, overallTarget };
+        }
+
+        // Update dashboard metrics
+        function updateDashboardMetrics() {
+            console.log('Updating dashboard metrics...');
+            console.log('Sales data length:', salesData.length);
+            
+            try {
+                const { branchSummary } = processSalesData();
+                const { targetData, overallTarget } = calculateTargetPlan(branchSummary);
+                
+                // Calculate total metrics
+                let totalSales = 0;
+                let totalTransactions = 0;
+                
+                Object.keys(branchSummary).forEach(branch => {
+                    totalSales += branchSummary[branch].Total_Sales;
+                    totalTransactions += branchSummary[branch].Total_Transactions;
+                });
+                
+                const avgTransaction = totalSales / totalTransactions;
+                
+                // Update DOM
+                document.getElementById('totalSales').textContent = `AED ${totalSales.toFixed(2)}`;
+                document.getElementById('totalTransactions').textContent = totalTransactions.toLocaleString();
+                document.getElementById('avgTransaction').textContent = `AED ${avgTransaction.toFixed(2)}`;
+                document.getElementById('overallTarget').textContent = `AED ${overallTarget.toFixed(2)}`;
+                
+                console.log('Metrics updated:', { totalSales, totalTransactions, avgTransaction, overallTarget });
+            } catch (error) {
+                console.error('Error updating dashboard metrics:', error);
+                showNotification('Error updating dashboard metrics', 'error');
+            }
+        }
+
+        // Update branch chart
+        function updateBranchChart() {
+            console.log('Updating branch chart...');
+            
+            try {
+                const { branchSummary } = processSalesData();
+                
+                const branches = Object.keys(branchSummary);
+                const sales = branches.map(branch => branchSummary[branch].Total_Sales);
+                
+                const canvas = document.getElementById('branchChart');
+                if (!canvas) {
+                    console.error('Canvas element with ID "branchChart" not found');
+                    return;
+                }
+                
+                const ctx = canvas.getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (chartInstances.branch) {
+                    chartInstances.branch.destroy();
+                }
+                
+                chartInstances.branch = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: branches,
+                        datasets: [{
+                            label: 'Total Sales (AED)',
+                            data: sales,
+                            backgroundColor: [
+                                'rgba(220, 53, 69, 0.7)',
+                                'rgba(255, 193, 7, 0.7)',
+                                'rgba(32, 201, 151, 0.7)',
+                                'rgba(13, 202, 240, 0.7)',
+                                'rgba(111, 66, 193, 0.7)',
+                                'rgba(253, 126, 20, 0.7)',
+                                'rgba(40, 167, 69, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgba(220, 53, 69, 1)',
+                                'rgba(255, 193, 7, 1)',
+                                'rgba(32, 201, 151, 1)',
+                                'rgba(13, 202, 240, 1)',
+                                'rgba(111, 66, 193, 1)',
+                                'rgba(253, 126, 20, 1)',
+                                'rgba(40, 167, 69, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Sales (AED)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Branch'
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Total Sales by Branch'
+                            },
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+                
+                console.log('Branch chart updated successfully');
+            } catch (error) {
+                console.error('Error updating branch chart:', error);
+                showNotification('Error updating branch chart', 'error');
+            }
+        }
+
+        // Update daily chart
+        function updateDailyChart() {
+            console.log('Updating daily chart...');
+            
+            try {
+                const { dailySummary } = processSalesData();
+                
+                const dates = Object.keys(dailySummary).sort();
+                const sales = dates.map(date => dailySummary[date].Total_Sales);
+                const transactions = dates.map(date => dailySummary[date].Total_Transactions);
+                
+                const canvas = document.getElementById('dailyChart');
+                if (!canvas) {
+                    console.error('Canvas element with ID "dailyChart" not found');
+                    return;
+                }
+                
+                const ctx = canvas.getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (chartInstances.daily) {
+                    chartInstances.daily.destroy();
+                }
+                
+                chartInstances.daily = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: dates,
+                        datasets: [
+                            {
+                                label: 'Sales (AED)',
+                                data: sales,
+                                borderColor: 'rgba(220, 53, 69, 1)',
+                                backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: 'Transactions',
+                                data: transactions,
+                                borderColor: 'rgba(32, 201, 151, 1)',
+                                backgroundColor: 'rgba(32, 201, 151, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y1'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Sales (AED)'
+                                }
+                            },
+                            y1: {
+                                beginAtZero: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Transactions'
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Date'
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Daily Delivery Performance Trends'
+                            }
+                        }
+                    }
+                });
+                
+                console.log('Daily chart updated successfully');
+            } catch (error) {
+                console.error('Error updating daily chart:', error);
+                showNotification('Error updating daily chart', 'error');
+            }
+        }
+
+        // Update weekly chart
+        function updateWeeklyChart() {
+            console.log('Updating weekly chart...');
+            
+            try {
+                const { weeklySummary } = processSalesData();
+                
+                const weeks = Object.keys(weeklySummary).sort();
+                const sales = weeks.map(week => weeklySummary[week].Total_Sales);
+                const transactions = weeks.map(week => weeklySummary[week].Total_Transactions);
+                
+                const canvas = document.getElementById('weeklyChart');
+                if (!canvas) {
+                    console.error('Canvas element with ID "weeklyChart" not found');
+                    return;
+                }
+                
+                const ctx = canvas.getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (chartInstances.weekly) {
+                    chartInstances.weekly.destroy();
+                }
+                
+                chartInstances.weekly = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: weeks.map(week => `Week ${weeks.indexOf(week) + 1}`),
+                        datasets: [
+                            {
+                                label: 'Sales (AED)',
+                                data: sales,
+                                borderColor: 'rgba(220, 53, 69, 1)',
+                                backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: 'Transactions',
+                                data: transactions,
+                                borderColor: 'rgba(32, 201, 151, 1)',
+                                backgroundColor: 'rgba(32, 201, 151, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y1'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Sales (AED)'
+                                }
+                            },
+                            y1: {
+                                beginAtZero: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Transactions'
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Week'
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Weekly Delivery Performance Trends'
+                            }
+                        }
+                    }
+                });
+                
+                console.log('Weekly chart updated successfully');
+            } catch (error) {
+                console.error('Error updating weekly chart:', error);
+                showNotification('Error updating weekly chart', 'error');
+            }
+        }
+
+        // Update monthly chart
+        function updateMonthlyChart() {
+            console.log('Updating monthly chart...');
+            
+            try {
+                const { monthlySummary } = processSalesData();
+                
+                const months = Object.keys(monthlySummary).sort();
+                const sales = months.map(month => monthlySummary[month].Total_Sales);
+                const transactions = months.map(month => monthlySummary[month].Total_Transactions);
+                
+                const canvas = document.getElementById('monthlyChart');
+                if (!canvas) {
+                    console.error('Canvas element with ID "monthlyChart" not found');
+                    return;
+                }
+                
+                const ctx = canvas.getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (chartInstances.monthly) {
+                    chartInstances.monthly.destroy();
+                }
+                
+                chartInstances.monthly = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: months.map(month => {
+                            const [year, monthNum] = month.split('-');
+                            return new Date(year, monthNum - 1).toLocaleDateString('en-US', { month: 'short' });
+                        }),
+                        datasets: [
+                            {
+                                label: 'Sales (AED)',
+                                data: sales,
+                                borderColor: 'rgba(220, 53, 69, 1)',
+                                backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: 'Transactions',
+                                data: transactions,
+                                borderColor: 'rgba(32, 201, 151, 1)',
+                                backgroundColor: 'rgba(32, 201, 151, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y1'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Sales (AED)'
+                                }
+                            },
+                            y1: {
+                                beginAtZero: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Transactions'
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Month'
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Monthly Delivery Performance Trends'
+                            }
+                        }
+                    }
+                });
+                
+                console.log('Monthly chart updated successfully');
+            } catch (error) {
+                console.error('Error updating monthly chart:', error);
+                showNotification('Error updating monthly chart', 'error');
+            }
+        }
+
+        // Update target chart
+        function updateTargetChart() {
+            console.log('Updating target chart...');
+            
+            try {
+                const { branchSummary } = processSalesData();
+                const { targetData } = calculateTargetPlan(branchSummary);
+                
+                const branches = Object.keys(branchSummary);
+                const currentSales = branches.map(branch => branchSummary[branch].Total_Sales);
+                const targetSales = branches.map(branch => targetData[branch].Target_Sales);
+                
+                const canvas = document.getElementById('targetChart');
+                if (!canvas) {
+                    console.error('Canvas element with ID "targetChart" not found');
+                    return;
+                }
+                
+                const ctx = canvas.getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (chartInstances.target) {
+                    chartInstances.target.destroy();
+                }
+                
+                chartInstances.target = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: branches,
+                        datasets: [
+                            {
+                                label: 'Current Sales (AED)',
+                                data: currentSales,
+                                backgroundColor: 'rgba(111, 66, 193, 0.7)',
+                                borderColor: 'rgba(111, 66, 193, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Target Sales (AED)',
+                                data: targetSales,
+                                backgroundColor: 'rgba(220, 53, 69, 0.7)',
+                                borderColor: 'rgba(220, 53, 69, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Sales (AED)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Branch'
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Branch Sales Targets'
+                            }
+                        }
+                    }
+                });
+                
+                console.log('Target chart updated successfully');
+            } catch (error) {
+                console.error('Error updating target chart:', error);
+                showNotification('Error updating target chart', 'error');
+            }
+        }
+
+        // Update branch table
+        function updateBranchTable() {
+            console.log('Updating branch table...');
+            
+            try {
+                const { branchSummary } = processSalesData();
+                
+                const tableBody = document.getElementById('branchTable').getElementsByTagName('tbody')[0];
+                if (!tableBody) {
+                    console.error('Table body for branchTable not found');
+                    return;
+                }
+                
+                tableBody.innerHTML = '';
+                
+                Object.keys(branchSummary).forEach(branch => {
+                    const summary = branchSummary[branch];
+                    
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).textContent = branch;
+                    row.insertCell(1).textContent = summary.Total_Transactions.toLocaleString();
+                    row.insertCell(2).textContent = `AED ${summary.Total_Sales.toFixed(2)}`;
+                    row.insertCell(3).textContent = `AED ${summary.Avg_Transaction_Value.toFixed(2)}`;
+                    row.insertCell(4).textContent = `AED ${summary.Avg_Daily_Sales.toFixed(2)}`;
+                });
+                
+                console.log('Branch table updated successfully');
+            } catch (error) {
+                console.error('Error updating branch table:', error);
+                showNotification('Error updating branch table', 'error');
+            }
+        }
+
+        // Update daily table
+        function updateDailyTable() {
+            console.log('Updating daily table...');
+            
+            try {
+                const { dailySummary } = processSalesData();
+                
+                const tableBody = document.getElementById('dailyTable').getElementsByTagName('tbody')[0];
+                if (!tableBody) {
+                    console.error('Table body for dailyTable not found');
+                    return;
+                }
+                
+                tableBody.innerHTML = '';
+                
+                Object.keys(dailySummary).sort().forEach(date => {
+                    const summary = dailySummary[date];
+                    
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).textContent = date;
+                    row.insertCell(1).textContent = summary.Day_of_Week;
+                    row.insertCell(2).textContent = summary.Total_Transactions.toLocaleString();
+                    row.insertCell(3).textContent = `AED ${summary.Total_Sales.toFixed(2)}`;
+                    row.insertCell(4).textContent = `AED ${summary.Avg_Transaction_Value.toFixed(2)}`;
+                });
+                
+                console.log('Daily table updated successfully');
+            } catch (error) {
+                console.error('Error updating daily table:', error);
+                showNotification('Error updating daily table', 'error');
+            }
+        }
+
+        // Update weekly table
+        function updateWeeklyTable() {
+            console.log('Updating weekly table...');
+            
+            try {
+                const { weeklySummary } = processSalesData();
+                
+                const tableBody = document.getElementById('weeklyTable').getElementsByTagName('tbody')[0];
+                if (!tableBody) {
+                    console.error('Table body for weeklyTable not found');
+                    return;
+                }
+                
+                tableBody.innerHTML = '';
+                
+                Object.keys(weeklySummary).sort().forEach(week => {
+                    const summary = weeklySummary[week];
+                    
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).textContent = `Week ${Object.keys(weeklySummary).indexOf(week) + 1}`;
+                    row.insertCell(1).textContent = summary.Week_Start;
+                    row.insertCell(2).textContent = summary.Week_End;
+                    row.insertCell(3).textContent = summary.Total_Transactions.toLocaleString();
+                    row.insertCell(4).textContent = `AED ${summary.Total_Sales.toFixed(2)}`;
+                    row.insertCell(5).textContent = `AED ${summary.Avg_Transaction_Value.toFixed(2)}`;
+                });
+                
+                console.log('Weekly table updated successfully');
+            } catch (error) {
+                console.error('Error updating weekly table:', error);
+                showNotification('Error updating weekly table', 'error');
+            }
+        }
+
+        // Update monthly table
+        function updateMonthlyTable() {
+            console.log('Updating monthly table...');
+            
+            try {
+                const { monthlySummary } = processSalesData();
+                
+                const tableBody = document.getElementById('monthlyTable').getElementsByTagName('tbody')[0];
+                if (!tableBody) {
+                    console.error('Table body for monthlyTable not found');
+                    return;
+                }
+                
+                tableBody.innerHTML = '';
+                
+                Object.keys(monthlySummary).sort().forEach(month => {
+                    const summary = monthlySummary[month];
+                    
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).textContent = new Date(summary.Year, summary.Month - 1).toLocaleDateString('en-US', { month: 'long' });
+                    row.insertCell(1).textContent = summary.Year;
+                    row.insertCell(2).textContent = summary.Total_Transactions.toLocaleString();
+                    row.insertCell(3).textContent = `AED ${summary.Total_Sales.toFixed(2)}`;
+                    row.insertCell(4).textContent = `AED ${summary.Avg_Transaction_Value.toFixed(2)}`;
+                });
+                
+                console.log('Monthly table updated successfully');
+            } catch (error) {
+                console.error('Error updating monthly table:', error);
+                showNotification('Error updating monthly table', 'error');
+            }
+        }
+
+        // Update target table
+        function updateTargetTable() {
+            console.log('Updating target table...');
+            
+            try {
+                const { branchSummary } = processSalesData();
+                const { targetData } = calculateTargetPlan(branchSummary);
+                
+                const tableBody = document.getElementById('targetTable').getElementsByTagName('tbody')[0];
+                if (!tableBody) {
+                    console.error('Table body for targetTable not found');
+                    return;
+                }
+                
+                tableBody.innerHTML = '';
+                
+                Object.keys(branchSummary).forEach(branch => {
+                    const summary = branchSummary[branch];
+                    const target = targetData[branch];
+                    
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).textContent = branch;
+                    row.insertCell(1).textContent = `AED ${summary.Total_Sales.toFixed(2)}`;
+                    row.insertCell(2).textContent = `${(target.Growth_Rate * 100).toFixed(2)}%`;
+                    row.insertCell(3).textContent = target.Performance_Score.toFixed(2);
+                    row.insertCell(4).textContent = `AED ${target.Target_Sales.toFixed(2)}`;
+                    row.insertCell(5).textContent = `AED ${target.Target_Increase.toFixed(2)}`;
+                });
+                
+                console.log('Target table updated successfully');
+            } catch (error) {
+                console.error('Error updating target table:', error);
+                showNotification('Error updating target table', 'error');
+            }
+        }
+
+        // Update current data table
+        function updateCurrentDataTable() {
+            console.log('Updating current data table...');
+            
+            try {
+                const tableBody = document.getElementById('currentDataTable').getElementsByTagName('tbody')[0];
+                if (!tableBody) {
+                    console.error('Table body for currentDataTable not found');
+                    return;
+                }
+                
+                tableBody.innerHTML = '';
+                
+                salesData.forEach((entry, index) => {
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).textContent = entry.Date;
+                    row.insertCell(1).textContent = entry.Branch;
+                    row.insertCell(2).textContent = entry.Channel;
+                    row.insertCell(3).textContent = entry.Transactions;
+                    row.insertCell(4).textContent = `AED ${entry.Sales.toFixed(2)}`;
+                    
+                    const actionsCell = row.insertCell(5);
+                    actionsCell.innerHTML = `
+                        <button class="btn btn-sm btn-danger" onclick="deleteEntry(${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    `;
+                });
+                
+                console.log('Current data table updated successfully');
+            } catch (error) {
+                console.error('Error updating current data table:', error);
+                showNotification('Error updating current data table', 'error');
+            }
+        }
+
+        // Delete entry
+        function deleteEntry(index) {
+            console.log('Deleting entry at index:', index);
+            
+            try {
+                salesData.splice(index, 1);
+                updateCurrentDataTable();
+                updateDataStatus(false);
+                updateDashboard();
+                showNotification('Entry deleted successfully', 'success');
+            } catch (error) {
+                console.error('Error deleting entry:', error);
+                showNotification('Error deleting entry', 'error');
+            }
+        }
+
+        // Update dashboard
+        function updateDashboard() {
+            console.log('Updating dashboard...');
+            
+            try {
+                updateDashboardMetrics();
+                updateBranchChart();
+                updateDailyChart();
+                updateWeeklyChart();
+                updateMonthlyChart();
+                updateTargetChart();
+                updateBranchTable();
+                updateDailyTable();
+                updateWeeklyTable();
+                updateMonthlyTable();
+                updateTargetTable();
+                console.log('Dashboard updated successfully');
+            } catch (error) {
+                console.error('Error updating dashboard:', error);
+                showNotification('Error updating dashboard', 'error');
+            }
+        }
+
+        // Update management report
         function updateManagementReport() {
             console.log('Updating management report...');
             
             try {
-                // Get filtered data
-                const filteredData = getFilteredSalesData();
-                
-                // Process filtered data
-                const branchSummary = {};
-                const dailySummary = {};
-                const weeklySummary = {};
-                const monthlySummary = {};
-                
-                filteredData.forEach(entry => {
-                    // Branch summary
-                    if (!branchSummary[entry.Branch]) {
-                        branchSummary[entry.Branch] = {
-                            Total_Transactions: 0,
-                            Total_Sales: 0,
-                            Unique_Days: new Set(),
-                            Dates: []
-                        };
-                    }
-                    
-                    branchSummary[entry.Branch].Total_Transactions += entry.Transactions;
-                    branchSummary[entry.Branch].Total_Sales += entry.Sales;
-                    branchSummary[entry.Branch].Unique_Days.add(entry.Date);
-                    branchSummary[entry.Branch].Dates.push(entry.Date);
-                    
-                    // Daily summary
-                    if (!dailySummary[entry.Date]) {
-                        dailySummary[entry.Date] = {
-                            Total_Transactions: 0,
-                            Total_Sales: 0,
-                            Day_of_Week: new Date(entry.Date).toLocaleDateString('en-US', { weekday: 'long' })
-                        };
-                    }
-                    
-                    dailySummary[entry.Date].Total_Transactions += entry.Transactions;
-                    dailySummary[entry.Date].Total_Sales += entry.Sales;
-                    
-                    // Weekly summary
-                    const date = new Date(entry.Date);
-                    const weekStart = new Date(date);
-                    weekStart.setDate(date.getDate() - date.getDay());
-                    const weekKey = weekStart.toISOString().split('T')[0];
-                    
-                    const weekEnd = new Date(weekStart);
-                    weekEnd.setDate(weekStart.getDate() + 6);
-                    
-                    if (!weeklySummary[weekKey]) {
-                        weeklySummary[weekKey] = {
-                            Week_Start: weekStart.toISOString().split('T')[0],
-                            Week_End: weekEnd.toISOString().split('T')[0],
-                            Total_Transactions: 0,
-                            Total_Sales: 0
-                        };
-                    }
-                    
-                    weeklySummary[weekKey].Total_Transactions += entry.Transactions;
-                    weeklySummary[weekKey].Total_Sales += entry.Sales;
-                    
-                    // Monthly summary
-                    const monthKey = `${date.getFullYear()}-${date.getMonth() + 1}`;
-                    
-                    if (!monthlySummary[monthKey]) {
-                        monthlySummary[monthKey] = {
-                            Month: date.getMonth() + 1,
-                            Year: date.getFullYear(),
-                            Total_Transactions: 0,
-                            Total_Sales: 0
-                        };
-                    }
-                    
-                    monthlySummary[monthKey].Total_Transactions += entry.Transactions;
-                    monthlySummary[monthKey].Total_Sales += entry.Sales;
-                });
-                
-                // Calculate averages
-                Object.keys(branchSummary).forEach(branch => {
-                    const summary = branchSummary[branch];
-                    summary.Avg_Transaction_Value = summary.Total_Sales / summary.Total_Transactions;
-                    summary.Unique_Days = summary.Unique_Days.size;
-                    summary.Avg_Daily_Transactions = summary.Total_Transactions / summary.Unique_Days;
-                    summary.Avg_Daily_Sales = summary.Total_Sales / summary.Unique_Days;
-                });
-                
-                Object.keys(dailySummary).forEach(date => {
-                    const summary = dailySummary[date];
-                    summary.Avg_Transaction_Value = summary.Total_Sales / summary.Total_Transactions;
-                });
-                
-                Object.keys(weeklySummary).forEach(week => {
-                    const summary = weeklySummary[week];
-                    summary.Avg_Transaction_Value = summary.Total_Sales / summary.Total_Transactions;
-                });
-                
-                Object.keys(monthlySummary).forEach(month => {
-                    const summary = monthlySummary[month];
-                    summary.Avg_Transaction_Value = summary.Total_Sales / summary.Total_Transactions;
-                });
-                
+                const { branchSummary, dailySummary, weeklySummary, monthlySummary } = processSalesData();
                 const { targetData, overallTarget } = calculateTargetPlan(branchSummary);
                 
                 // Set report date
@@ -125,9 +2265,6 @@
                 
                 const avgTransaction = totalSales / totalTransactions;
                 
-                // Calculate growth rates (comparing to previous period if available)
-                const targetProgressPercent = (totalSales / overallTarget) * 100;
-                
                 // Find peak day
                 let peakDay = '';
                 let peakSales = 0;
@@ -150,7 +2287,7 @@
                     }
                 });
                 
-                // Update executive summary with KPI cards
+                // Update executive summary
                 document.getElementById('execTotalSales').textContent = totalSales.toFixed(2);
                 document.getElementById('execTarget').textContent = overallTarget.toFixed(2);
                 document.getElementById('execTransactions').textContent = totalTransactions.toLocaleString();
@@ -159,15 +2296,6 @@
                 document.getElementById('execPeakSales').textContent = peakSales.toFixed(2);
                 document.getElementById('execTopBranch').textContent = topBranch;
                 document.getElementById('execTopBranchSales').textContent = topBranchSales.toFixed(2);
-                
-                // Update target progress
-                document.getElementById('targetProgress').textContent = targetProgressPercent.toFixed(1);
-                document.getElementById('targetProgressBar').style.width = `${Math.min(targetProgressPercent, 100)}%`;
-                
-                // Update growth indicators (simplified - you can enhance this)
-                document.getElementById('salesGrowth').textContent = '+10.0%';
-                document.getElementById('transactionsGrowth').textContent = '+8.5%';
-                document.getElementById('avgGrowth').textContent = '+1.5%';
                 
                 // Update report findings
                 document.getElementById('reportTopBranch').textContent = topBranch;
@@ -294,14 +2422,14 @@
                 document.getElementById('reportCurrentTotal').textContent = totalSales.toFixed(2);
                 
                 // Update report tables
-                updateReportBranchTableEnhanced(branchSummary, totalSales);
+                updateReportBranchTable(branchSummary);
                 updateReportDailyTable(dailySummary);
                 updateReportWeeklyTable(weeklySummary);
                 updateReportMonthlyTable(monthlySummary);
                 updateReportTargetTable(branchSummary, targetData);
                 
                 // Update report charts
-                updateReportBranchChart();
+                updateReportBranchChart(branchSummary);
                 updateReportDailyChart(dailySummary);
                 updateReportWeeklyChart(weeklySummary);
                 updateReportMonthlyChart(monthlySummary);
@@ -313,10 +2441,10 @@
                 showNotification('Error updating management report', 'error');
             }
         }
-        
-        // Update report branch table with market share
-        function updateReportBranchTableEnhanced(branchSummary, totalSales) {
-            console.log('Updating enhanced report branch table...');
+
+        // Update report branch table
+        function updateReportBranchTable(branchSummary) {
+            console.log('Updating report branch table...');
             
             try {
                 const tableBody = document.getElementById('reportBranchTableBody');
@@ -329,7 +2457,6 @@
                 
                 Object.keys(branchSummary).forEach(branch => {
                     const summary = branchSummary[branch];
-                    const marketShare = (summary.Total_Sales / totalSales) * 100;
                     
                     const row = tableBody.insertRow();
                     row.insertCell(0).textContent = branch;
@@ -337,63 +2464,763 @@
                     row.insertCell(2).textContent = summary.Total_Sales.toFixed(2);
                     row.insertCell(3).textContent = summary.Avg_Transaction_Value.toFixed(2);
                     row.insertCell(4).textContent = summary.Avg_Daily_Sales.toFixed(2);
-                    row.insertCell(5).textContent = marketShare.toFixed(1) + '%';
+                });
+                
+                console.log('Report branch table updated successfully');
+            } catch (error) {
+                console.error('Error updating report branch table:', error);
+                showNotification('Error updating report branch table', 'error');
+            }
+        }
+
+        // Update report daily table
+        function updateReportDailyTable(dailySummary) {
+            console.log('Updating report daily table...');
+            
+            try {
+                const tableBody = document.getElementById('reportDailyTableBody');
+                if (!tableBody) {
+                    console.error('Table body for reportDailyTableBody not found');
+                    return;
+                }
+                
+                tableBody.innerHTML = '';
+                
+                Object.keys(dailySummary).sort().forEach(date => {
+                    const summary = dailySummary[date];
                     
-                    // Add highlighting for top performers
-                    if (marketShare > 20) {
-                        row.style.backgroundColor = '#d1e7dd';
-                    } else if (marketShare < 5) {
-                        row.style.backgroundColor = '#f8d7da';
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).textContent = date;
+                    row.insertCell(1).textContent = summary.Day_of_Week;
+                    row.insertCell(2).textContent = summary.Total_Transactions.toLocaleString();
+                    row.insertCell(3).textContent = summary.Total_Sales.toFixed(2);
+                    row.insertCell(4).textContent = summary.Avg_Transaction_Value.toFixed(2);
+                });
+                
+                console.log('Report daily table updated successfully');
+            } catch (error) {
+                console.error('Error updating report daily table:', error);
+                showNotification('Error updating report daily table', 'error');
+            }
+        }
+
+        // Update report weekly table
+        function updateReportWeeklyTable(weeklySummary) {
+            console.log('Updating report weekly table...');
+            
+            try {
+                const tableBody = document.getElementById('reportWeeklyTableBody');
+                if (!tableBody) {
+                    console.error('Table body for reportWeeklyTableBody not found');
+                    return;
+                }
+                
+                tableBody.innerHTML = '';
+                
+                Object.keys(weeklySummary).sort().forEach(week => {
+                    const summary = weeklySummary[week];
+                    
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).textContent = `Week ${Object.keys(weeklySummary).indexOf(week) + 1}`;
+                    row.insertCell(1).textContent = summary.Week_Start;
+                    row.insertCell(2).textContent = summary.Week_End;
+                    row.insertCell(3).textContent = summary.Total_Transactions.toLocaleString();
+                    row.insertCell(4).textContent = summary.Total_Sales.toFixed(2);
+                    row.insertCell(5).textContent = summary.Avg_Transaction_Value.toFixed(2);
+                });
+                
+                console.log('Report weekly table updated successfully');
+            } catch (error) {
+                console.error('Error updating report weekly table:', error);
+                showNotification('Error updating report weekly table', 'error');
+            }
+        }
+
+        // Update report monthly table
+        function updateReportMonthlyTable(monthlySummary) {
+            console.log('Updating report monthly table...');
+            
+            try {
+                const tableBody = document.getElementById('reportMonthlyTableBody');
+                if (!tableBody) {
+                    console.error('Table body for reportMonthlyTableBody not found');
+                    return;
+                }
+                
+                tableBody.innerHTML = '';
+                
+                Object.keys(monthlySummary).sort().forEach(month => {
+                    const summary = monthlySummary[month];
+                    
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).textContent = new Date(summary.Year, summary.Month - 1).toLocaleDateString('en-US', { month: 'long' });
+                    row.insertCell(1).textContent = summary.Year;
+                    row.insertCell(2).textContent = summary.Total_Transactions.toLocaleString();
+                    row.insertCell(3).textContent = summary.Total_Sales.toFixed(2);
+                    row.insertCell(4).textContent = summary.Avg_Transaction_Value.toFixed(2);
+                });
+                
+                console.log('Report monthly table updated successfully');
+            } catch (error) {
+                console.error('Error updating report monthly table:', error);
+                showNotification('Error updating report monthly table', 'error');
+            }
+        }
+
+        // Update report target table
+        function updateReportTargetTable(branchSummary, targetData) {
+            console.log('Updating report target table...');
+            
+            try {
+                const tableBody = document.getElementById('reportTargetTableBody');
+                if (!tableBody) {
+                    console.error('Table body for reportTargetTableBody not found');
+                    return;
+                }
+                
+                tableBody.innerHTML = '';
+                
+                Object.keys(branchSummary).forEach(branch => {
+                    const summary = branchSummary[branch];
+                    const target = targetData[branch];
+                    
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).textContent = branch;
+                    row.insertCell(1).textContent = summary.Total_Sales.toFixed(2);
+                    row.insertCell(2).textContent = `${(target.Growth_Rate * 100).toFixed(2)}%`;
+                    row.insertCell(3).textContent = target.Performance_Score.toFixed(2);
+                    row.insertCell(4).textContent = target.Target_Sales.toFixed(2);
+                    row.insertCell(5).textContent = target.Target_Increase.toFixed(2);
+                });
+                
+                console.log('Report target table updated successfully');
+            } catch (error) {
+                console.error('Error updating report target table:', error);
+                showNotification('Error updating report target table', 'error');
+            }
+        }
+
+        // Update report branch chart
+        function updateReportBranchChart(branchSummary) {
+            console.log('Updating report branch chart...');
+            
+            try {
+                const branches = Object.keys(branchSummary);
+                const sales = branches.map(branch => branchSummary[branch].Total_Sales);
+                
+                const canvas = document.getElementById('reportBranchChart');
+                if (!canvas) {
+                    console.error('Canvas element with ID "reportBranchChart" not found');
+                    return;
+                }
+                
+                const ctx = canvas.getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (chartInstances.reportBranch) {
+                    chartInstances.reportBranch.destroy();
+                }
+                
+                chartInstances.reportBranch = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: branches,
+                        datasets: [{
+                            label: 'Total Sales (AED)',
+                            data: sales,
+                            backgroundColor: [
+                                'rgba(220, 53, 69, 0.7)',
+                                'rgba(255, 193, 7, 0.7)',
+                                'rgba(32, 201, 151, 0.7)',
+                                'rgba(13, 202, 240, 0.7)',
+                                'rgba(111, 66, 193, 0.7)',
+                                'rgba(253, 126, 20, 0.7)',
+                                'rgba(40, 167, 69, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgba(220, 53, 69, 1)',
+                                'rgba(255, 193, 7, 1)',
+                                'rgba(32, 201, 151, 1)',
+                                'rgba(13, 202, 240, 1)',
+                                'rgba(111, 66, 193, 1)',
+                                'rgba(253, 126, 20, 1)',
+                                'rgba(40, 167, 69, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Sales (AED)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Branch'
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Total Sales by Branch'
+                            },
+                            legend: {
+                                display: false
+                            }
+                        }
                     }
                 });
                 
-                console.log('Enhanced report branch table updated successfully');
+                console.log('Report branch chart updated successfully');
             } catch (error) {
-                console.error('Error updating enhanced report branch table:', error);
+                console.error('Error updating report branch chart:', error);
+                showNotification('Error updating report branch chart', 'error');
             }
-        }                <!-- Management Report Page -->
-                <div id="reportPage" class="page" style="display: none;">
-                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                        <h1 class="h2">Management Report</h1>
-                        <div class="btn-toolbar mb-2 mb-md-0">
-                            <div class="btn-group me-2">
-                                <select class="form-select form-select-sm" id="reportPeriodFilter">
-                                    <option value="all">All Time</option>
-                                    <option value="week">Last Week</option>
-                                    <option value="month">Last Month</option>
-                                    <option value="custom">Custom Range</option>
-                                </select>
-                            </div>
-                            <div class="btn-group me-2">
-                                <button type="button" class="btn btn-sm btn-outline-secondary" id="generateReportBtn">
-                                    <i class="fas fa-sync-alt"></i> Refresh
-                                </button>
-                            </div>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-primary" id="downloadReportBtn">
-                                    <i class="fas fa-download"></i> Download PDF
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Custom Date Range Picker (hidden by default) -->
-                    <div id="customDateRange" class="card mb-3" style="display: none;">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="form-label">Start Date</label>
-                                    <input type="date" class="form-control" id="reportStartDate">
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">End Date</label>
-                                    <input type="date" class="form-control" id="reportEndDate">
-                                </div>
-                                <div class="col-md-4 d-flex align-items-end">
-                                    <button type="button" class="btn btn-primary w-100" id="applyDateRange">
-                                        <i class="fas fa-filter"></i> Apply Filter
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        }
+
+        // Update report daily chart
+        function updateReportDailyChart(dailySummary) {
+            console.log('Updating report daily chart...');
+            
+            try {
+                const dates = Object.keys(dailySummary).sort();
+                const sales = dates.map(date => dailySummary[date].Total_Sales);
+                const transactions = dates.map(date => dailySummary[date].Total_Transactions);
+                
+                const canvas = document.getElementById('reportDailyChart');
+                if (!canvas) {
+                    console.error('Canvas element with ID "reportDailyChart" not found');
+                    return;
+                }
+                
+                const ctx = canvas.getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (chartInstances.reportDaily) {
+                    chartInstances.reportDaily.destroy();
+                }
+                
+                chartInstances.reportDaily = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: dates,
+                        datasets: [
+                            {
+                                label: 'Sales (AED)',
+                                data: sales,
+                                borderColor: 'rgba(220, 53, 69, 1)',
+                                backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: 'Transactions',
+                                data: transactions,
+                                borderColor: 'rgba(32, 201, 151, 1)',
+                                backgroundColor: 'rgba(32, 201, 151, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y1'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Sales (AED)'
+                                }
+                            },
+                            y1: {
+                                beginAtZero: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Transactions'
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Date'
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Daily Delivery Performance Trends'
+                            }
+                        }
+                    }
+                });
+                
+                console.log('Report daily chart updated successfully');
+            } catch (error) {
+                console.error('Error updating report daily chart:', error);
+                showNotification('Error updating report daily chart', 'error');
+            }
+        }
+
+        // Update report weekly chart
+        function updateReportWeeklyChart(weeklySummary) {
+            console.log('Updating report weekly chart...');
+            
+            try {
+                const weeks = Object.keys(weeklySummary).sort();
+                const sales = weeks.map(week => weeklySummary[week].Total_Sales);
+                const transactions = weeks.map(week => weeklySummary[week].Total_Transactions);
+                
+                const canvas = document.getElementById('reportWeeklyChart');
+                if (!canvas) {
+                    console.error('Canvas element with ID "reportWeeklyChart" not found');
+                    return;
+                }
+                
+                const ctx = canvas.getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (chartInstances.reportWeekly) {
+                    chartInstances.reportWeekly.destroy();
+                }
+                
+                chartInstances.reportWeekly = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: weeks.map(week => `Week ${weeks.indexOf(week) + 1}`),
+                        datasets: [
+                            {
+                                label: 'Sales (AED)',
+                                data: sales,
+                                borderColor: 'rgba(220, 53, 69, 1)',
+                                backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: 'Transactions',
+                                data: transactions,
+                                borderColor: 'rgba(32, 201, 151, 1)',
+                                backgroundColor: 'rgba(32, 201, 151, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y1'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Sales (AED)'
+                                }
+                            },
+                            y1: {
+                                beginAtZero: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Transactions'
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Week'
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Weekly Delivery Performance Trends'
+                            }
+                        }
+                    }
+                });
+                
+                console.log('Report weekly chart updated successfully');
+            } catch (error) {
+                console.error('Error updating report weekly chart:', error);
+                showNotification('Error updating report weekly chart', 'error');
+            }
+        }
+
+        // Update report monthly chart
+        function updateReportMonthlyChart(monthlySummary) {
+            console.log('Updating report monthly chart...');
+            
+            try {
+                const months = Object.keys(monthlySummary).sort();
+                const sales = months.map(month => monthlySummary[month].Total_Sales);
+                const transactions = months.map(month => monthlySummary[month].Total_Transactions);
+                
+                const canvas = document.getElementById('reportMonthlyChart');
+                if (!canvas) {
+                    console.error('Canvas element with ID "reportMonthlyChart" not found');
+                    return;
+                }
+                
+                const ctx = canvas.getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (chartInstances.reportMonthly) {
+                    chartInstances.reportMonthly.destroy();
+                }
+                
+                chartInstances.reportMonthly = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: months.map(month => {
+                            const [year, monthNum] = month.split('-');
+                            return new Date(year, monthNum - 1).toLocaleDateString('en-US', { month: 'short' });
+                        }),
+                        datasets: [
+                            {
+                                label: 'Sales (AED)',
+                                data: sales,
+                                borderColor: 'rgba(220, 53, 69, 1)',
+                                backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: 'Transactions',
+                                data: transactions,
+                                borderColor: 'rgba(32, 201, 151, 1)',
+                                backgroundColor: 'rgba(32, 201, 151, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y1'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Sales (AED)'
+                                }
+                            },
+                            y1: {
+                                beginAtZero: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Transactions'
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Month'
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Monthly Delivery Performance Trends'
+                            }
+                        }
+                    }
+                });
+                
+                console.log('Report monthly chart updated successfully');
+            } catch (error) {
+                console.error('Error updating report monthly chart:', error);
+                showNotification('Error updating report monthly chart', 'error');
+            }
+        }
+
+        // Update report target chart
+        function updateReportTargetChart(branchSummary, targetData) {
+            console.log('Updating report target chart...');
+            
+            try {
+                const branches = Object.keys(branchSummary);
+                const currentSales = branches.map(branch => branchSummary[branch].Total_Sales);
+                const targetSales = branches.map(branch => targetData[branch].Target_Sales);
+                
+                const canvas = document.getElementById('reportTargetChart');
+                if (!canvas) {
+                    console.error('Canvas element with ID "reportTargetChart" not found');
+                    return;
+                }
+                
+                const ctx = canvas.getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (chartInstances.reportTarget) {
+                    chartInstances.reportTarget.destroy();
+                }
+                
+                chartInstances.reportTarget = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: branches,
+                        datasets: [
+                            {
+                                label: 'Current Sales (AED)',
+                                data: currentSales,
+                                backgroundColor: 'rgba(111, 66, 193, 0.7)',
+                                borderColor: 'rgba(111, 66, 193, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Target Sales (AED)',
+                                data: targetSales,
+                                backgroundColor: 'rgba(220, 53, 69, 0.7)',
+                                borderColor: 'rgba(220, 53, 69, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Sales (AED)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Branch'
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Branch Sales Targets'
+                            }
+                        }
+                    }
+                });
+                
+                console.log('Report target chart updated successfully');
+            } catch (error) {
+                console.error('Error updating report target chart:', error);
+                showNotification('Error updating report target chart', 'error');
+            }
+        }
+
+        // Add data entry
+        function addDataEntry() {
+            console.log('Adding data entry...');
+            
+            try {
+                const date = document.getElementById('entryDate').value;
+                const branch = document.getElementById('entryBranch').value;
+                const channel = document.getElementById('entryChannel').value;
+                const transactions = parseInt(document.getElementById('entryTransactions').value);
+                const sales = parseFloat(document.getElementById('entrySales').value);
+                
+                // Validate inputs
+                if (!date || !branch || !channel || isNaN(transactions) || isNaN(sales)) {
+                    showNotification('Please fill all fields with valid data', 'error');
+                    return;
+                }
+                
+                // Add to sales data
+                salesData.push({
+                    Date: date,
+                    Branch: branch,
+                    Channel: channel,
+                    Transactions: transactions,
+                    Sales: sales
+                });
+                
+                // Update UI
+                updateCurrentDataTable();
+                updateDataStatus(false);
+                updateDashboard();
+                
+                // Reset form
+                document.getElementById('dataEntryForm').reset();
+                
+                showNotification('Data entry added successfully', 'success');
+            } catch (error) {
+                console.error('Error adding data entry:', error);
+                showNotification('Error adding data entry', 'error');
+            }
+        }
+
+        // Trigger file load
+        function triggerFileLoad() {
+            document.getElementById('fileInput').click();
+        }
+
+        // Handle file load
+        function handleFileLoad(event) {
+            console.log('Handling file load...');
+            
+            try {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const content = e.target.result;
+                        
+                        if (file.name.endsWith('.json')) {
+                            salesData = JSON.parse(content);
+                        } else if (file.name.endsWith('.csv')) {
+                            // Simple CSV parser
+                            const lines = content.split('\n');
+                            const headers = lines[0].split(',');
+                            
+                            salesData = [];
+                            for (let i = 1; i < lines.length; i++) {
+                                if (lines[i].trim() === '') continue;
+                                
+                                const values = lines[i].split(',');
+                                salesData.push({
+                                    Date: values[0],
+                                    Branch: values[1],
+                                    Channel: values[2],
+                                    Transactions: parseInt(values[3]),
+                                    Sales: parseFloat(values[4])
+                                });
+                            }
+                        }
+                        
+                        updateCurrentDataTable();
+                        updateDashboard();
+                        showNotification('Data loaded successfully', 'success');
+                    } catch (error) {
+                        console.error('Error parsing file:', error);
+                        showNotification('Error parsing file', 'error');
+                    }
+                };
+                
+                reader.readAsText(file);
+            } catch (error) {
+                console.error('Error loading file:', error);
+                showNotification('Error loading file', 'error');
+            }
+        }
+
+        // Export data to CSV
+        function exportDataToCSV() {
+            console.log('Exporting data to CSV...');
+            
+            try {
+                let csv = 'Date,Branch,Channel,Transactions,Sales\n';
+                
+                salesData.forEach(entry => {
+                    csv += `${entry.Date},${entry.Branch},${entry.Channel},${entry.Transactions},${entry.Sales}\n`;
+                });
+                
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `crispy_chicken_sales_${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                URL.revokeObjectURL(url);
+                
+                showNotification('Data exported successfully', 'success');
+            } catch (error) {
+                console.error('Error exporting data:', error);
+                showNotification('Error exporting data', 'error');
+            }
+        }
+
+        // Reset data
+        function resetData() {
+            console.log('Resetting data...');
+            
+            try {
+                if (confirm('Are you sure you want to reset all data? This cannot be undone.')) {
+                    salesData = [...initialSalesData];
+                    updateCurrentDataTable();
+                    updateDashboard();
+                    showNotification('Data reset successfully', 'success');
+                }
+            } catch (error) {
+                console.error('Error resetting data:', error);
+                showNotification('Error resetting data', 'error');
+            }
+        }
+
+        // Download report
+        function downloadReport() {
+            console.log('Downloading report...');
+            
+            try {
+                // Create a simple HTML report
+                const reportContent = document.getElementById('reportPage').innerHTML;
+                
+                const blob = new Blob([reportContent], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `crispy_chicken_report_${new Date().toISOString().split('T')[0]}.html`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                URL.revokeObjectURL(url);
+                
+                showNotification('Report downloaded successfully', 'success');
+            } catch (error) {
+                console.error('Error downloading report:', error);
+                showNotification('Error downloading report', 'error');
+            }
+        }
+    </script>
+</body>
+</html>
