@@ -1794,6 +1794,36 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* New branch highlight */
+        .new-branch-badge {
+            background: var(--accent-color);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 8px;
+            font-weight: 500;
+            animation: pulse 2s infinite;
+        }
+
+        .outlet-card.new-branch {
+            border-top: 5px solid var(--accent-color);
+            position: relative;
+        }
+
+        .outlet-card.new-branch::after {
+            content: 'NEW';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--accent-color);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -1880,7 +1910,7 @@
                             </div>
                             <div class="stat-detail">
                                 <span class="stat-label">Branches Active:</span>
-                                <span class="stat-amount">6/6</span>
+                                <span class="stat-amount">7/7</span>
                             </div>
                         </div>
                         
@@ -1901,7 +1931,7 @@
                             </div>
                             <div class="stat-detail">
                                 <span class="stat-label">Branches Active:</span>
-                                <span class="stat-amount">6/6</span>
+                                <span class="stat-amount">7/7</span>
                             </div>
                         </div>
                         
@@ -1967,6 +1997,7 @@
                                     <option value="Muroor">Crispy Chicken - Muroor</option>
                                     <option value="Al Barsha">Crispy Chicken - Al Barsha</option>
                                     <option value="Al Satwa">Crispy Chicken - Al Satwa</option>
+                                    <option value="ALRegga">Crispy Chicken - ALRegga</option>
                                 </select>
                             </div>
                             <div class="filter-item">
@@ -2177,6 +2208,7 @@
                                     <option value="Muroor">Crispy Chicken - Muroor</option>
                                     <option value="Al Barsha">Crispy Chicken - Al Barsha</option>
                                     <option value="Al Satwa">Crispy Chicken - Al Satwa</option>
+                                    <option value="ALRegga">Crispy Chicken - ALRegga</option>
                                 </select>
                             </div>
                         </div>
@@ -2347,6 +2379,7 @@
                                     <option value="Muroor">Muroor</option>
                                     <option value="Al Barsha">Al Barsha</option>
                                     <option value="Al Satwa">Al Satwa</option>
+                                    <option value="ALRegga">ALRegga</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -2475,7 +2508,7 @@
 
     <script>
         // --- GLOBAL STATE & CONFIG ---
-        const ALL_BRANCHES = ['Hamdan St', 'Khaldia', 'Shabiya 11', 'Muroor', 'Al Barsha', 'Al Satwa'];
+        const ALL_BRANCHES = ['Hamdan St', 'Khaldia', 'Shabiya 11', 'Muroor', 'Al Barsha', 'Al Satwa', 'ALRegga'];
         const STATE_KEY = 'dashboardState';
         const DATA_KEY = 'deliveryData';
 
@@ -2545,6 +2578,8 @@
             { year: '2025', month: 'July', branch: 'Al Satwa', revenue: 24685, orders: 528 },
             { year: '2025', month: 'August', branch: 'Al Satwa', revenue: 22476, orders: 492 },
             { year: '2025', month: 'September', branch: 'Al Satwa', revenue: 23066, orders: 495 },
+            // NEW BRANCH: ALRegga - Started in September 2025
+            { year: '2025', month: 'September', branch: 'ALRegga', revenue: 1993, orders: 45 },
             // 2024 Data
             { year: '2024', month: 'January', branch: 'Hamdan St', revenue: 130332, orders: 2797 },
             { year: '2024', month: 'February', branch: 'Hamdan St', revenue: 119033, orders: 2797 },
@@ -2920,11 +2955,14 @@
                 if (data.revenueChange > 5) performanceClass = 'positive';
                 else if (data.revenueChange < -5) performanceClass = 'negative';
                 
+                // Check if this is the new ALRegga branch
+                const isNewBranch = branch === 'ALRegga';
+                
                 // Create outlet card
                 const outletCard = document.createElement('div');
-                outletCard.className = 'outlet-card';
+                outletCard.className = `outlet-card ${isNewBranch ? 'new-branch' : ''}`;
                 outletCard.innerHTML = `
-                    <h3>${branch} <span class="performance-indicator ${performanceClass}">${performanceClass === 'positive' ? 'High' : performanceClass === 'negative' ? 'Low' : 'Medium'} Performer</span></h3>
+                    <h3>${branch} ${isNewBranch ? '<span class="new-branch-badge">NEW</span>' : ''} <span class="performance-indicator ${performanceClass}">${performanceClass === 'positive' ? 'High' : performanceClass === 'negative' ? 'Low' : 'Medium'} Performer</span></h3>
                     <div class="outlet-stats">
                         <div class="outlet-stat">
                             <div class="outlet-stat-label">2024 Revenue</div>
